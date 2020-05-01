@@ -3,7 +3,15 @@
 
 This is a package of scripts that are used to create CG models of proteins/ribosomes, optimize CG force field parameters and run MD simulations for protein co- and post-translational folding. All the scripts are ready to use when users have added the directories in `$PATH` and have granted the execution permission (`chmod +x`) for all the scripts. 
 
-
+### Table of Contents
+  * [1. Create CG protein models and tune the force field parameters (*n*<sub>scale</sub>) for a given protein](#1-create-cg-protein-models-and-tune-the-force-field-parameters---n--sub-scale--sub---for-a-given-protein)
+    + [1.1. Tune *n*<sub>scale</sub> for a small single-domain protein that has experimental folding stability reported](#11-tune--n--sub-scale--sub--for-a-small-single-domain-protein-that-has-experimental-folding-stability-reported)
+    + [1.2. Tune *n*<sub>scale</sub> for a protein without experimental folding stability reported](#12-tune--n--sub-scale--sub--for-a-protein-without-experimental-folding-stability-reported)
+  * [2. Temperature quenching simulation](#2-temperature-quenching-simulation)
+  * [3. Create CG ribosome model](#3-create-cg-ribosome-model)
+  * [4. Simulation of co-translational folding](#4-simulation-of-co-translational-folding)
+  * [5. Simulation of post-translational folding](#5-simulation-of-post-translational-folding)
+  * [6. Backmapping from coarse-grained model to all-atom model](#6-backmapping-from-coarse-grained-model-to-all-atom-model)
 
 
 ### 1. Create CG protein models and tune the force field parameters (*n*<sub>scale</sub>) for a given protein
