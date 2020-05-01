@@ -16,7 +16,7 @@ This is a package of scripts that are used to create CG models of proteins/ribos
     Create the CG model .psf .top and .prm file that can be used for MD simulations. This script can be used to build CG model for a multi-domain protein. Need to get the modified Charmm and MMTSB installed prior to use. (Learn more)
   - CG_protein_parameterization/**parallel_temperature_REX.py**
     
-    Run parallel temperature replica exchange molecular dynamics (pt-REMD) simulation. This simulation is parallelized using multiple CPU processors. (Learn more)
+    Run parallel temperature replica exchange molecular dynamics (pt-REMD) simulation. This simulation is parallelized using multiple CPU processors. ([Learn more](../../parallel_temperature_REX))
   - CG_protein_parameterization/**opt_temp.pl**
   
     Optimize the temperature windows for pt-REMD simulation to ensure the good sampling quality around the melting temoerature of the given protein. (Learn more)
