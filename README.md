@@ -41,6 +41,8 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 | CG_protein_parameterization/**opt_nscal.pl** | An automated script to find the optimized *n*<sub>scale</sub> for each domain/interface according to 5 levels of *n*<sub>scale</sub> values trained by running the protocol in [Section 1.1](#11-tune-nscale-for-a-small-single-domain-protein-that-has-experimental-folding-stability-reported) for 18 small single-domain proteins. The MD simulator is OpenMM, which is different from that in script `opt_nscal_charmm.pl.pl`. (Learn more) |
 | CG_protein_parameterization/**opt_nscal_charmm.pl.pl** | This script has the same function with `opt_nscal.pl` but the levels of *n*<sub>scale</sub> values used in this script was trained by using Charmm for the same protein set. | 
 
+- To tune *n*<sub>scale</sub> that is compatible with OpenMM, run `opt_nscal.pl`; To tune *n*<sub>scale</sub> that is compatible with Charmm, run `opt_nscal_charmm.pl`.
+
 ### 2. Temperature quenching simulation
 - To estimate the folding rates for a given protein, you need to run temperature quenching simulation where the system is first heated to a very high temperature (usually 800 K) quickly to make protein totally unfolded and then cooled down to the physiological temperature to moniter the refolding of the protein.
 - Scripts will be used in this section:
