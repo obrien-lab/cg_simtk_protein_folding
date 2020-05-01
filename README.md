@@ -3,7 +3,7 @@
 
 This is a package of scripts that are used to create CG models of proteins/ribosomes, optimize CG force field parameters and run MD simulations for protein co- and post-translational folding. All the scripts are ready to use when users have added the directories in `$PATH` and have granted the execution permission (`chmod +x`) for all the scripts. 
 
-## Table of Contents
+
 
 
 ### 1. Create CG protein models and tune the force field parameters (*n*<sub>scale</sub>) for a given protein
