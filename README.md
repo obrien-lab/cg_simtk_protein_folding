@@ -53,6 +53,8 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 | CG_protein_parameterization/**T_quench_nbx_3.pl** | An automated script to build CG model from a pdb file and then run temperature quenching simulations. (Learn more) | 
 | CG_protein_parameterization/**analysis_Tq.pl** | Analyze the results of temperature quenching simulations, fit a single- or double- exponential function to the survival probability of the unfolded protein and then estimate the folding rate.  (Learn more) | 
 
+- To estimate the protein folding rate, you need to run `T_quench_nbx_3.pl` with optimized *n*<sub>scale</sub> values obtained from [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters---n--sub-scale--sub---for-a-given-protein) and then run `analysis_Tq.pl` to do the curve fitting.
+
 ### 3. Create CG ribosome model
 
 ### 4. Simulation of co-translational folding
