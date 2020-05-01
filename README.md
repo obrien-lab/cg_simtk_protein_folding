@@ -4,9 +4,9 @@
 This is a package of scripts that are used to create coarse-grained (CG) models of proteins/ribosomes, optimize CG force field parameters and run MD simulations for protein co- and post-translational folding. All the scripts are ready to use when users have added the directories in `$PATH` and have granted the execution permission (`chmod +x`) for all the scripts. 
 
 ### Table of Contents
-  * [1. Create CG protein models and tune the force field parameters (*n*<sub>scale</sub>) for a given protein](#1-create-cg-protein-models-and-tune-the-force-field-parameters---n--sub-scale--sub---for-a-given-protein)
-    + [1.1. Tune *n*<sub>scale</sub> for a small single-domain protein that has experimental folding stability reported](#11-tune--n--sub-scale--sub--for-a-small-single-domain-protein-that-has-experimental-folding-stability-reported)
-    + [1.2. Tune *n*<sub>scale</sub> for a protein without experimental folding stability reported](#12-tune--n--sub-scale--sub--for-a-protein-without-experimental-folding-stability-reported)
+  * [1. Create CG protein models and tune the force field parameters (*n*<sub>scale</sub>) for a given protein](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein)
+    + [1.1. Tune *n*<sub>scale</sub> for a small single-domain protein that has experimental folding stability reported](#11-tune-nscale-for-a-small-single-domain-protein-that-has-experimental-folding-stability-reported)
+    + [1.2. Tune *n*<sub>scale</sub> for a protein without experimental folding stability reported](#12-tune-nscale-for-a-protein-without-experimental-folding-stability-reported)
   * [2. Temperature quenching simulation](#2-temperature-quenching-simulation)
   * [3. Create CG ribosome model](#3-create-cg-ribosome-model)
   * [4. Simulation of co-translational folding](#4-simulation-of-co-translational-folding)
@@ -53,7 +53,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 | CG_protein_parameterization/**T_quench_nbx_3.pl** | An automated script to build CG model from a pdb file and then run temperature quenching simulations. (Learn more) | 
 | CG_protein_parameterization/**analysis_Tq.pl** | Analyze the results of temperature quenching simulations, fit a single- or double- exponential function to the survival probability of the unfolded protein and then estimate the folding rate.  (Learn more) | 
 
-- To estimate the protein folding rate, you need to run `T_quench_nbx_3.pl` with optimized *n*<sub>scale</sub> values obtained from [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters---n--sub-scale--sub---for-a-given-protein) and then run `analysis_Tq.pl` to do the curve fitting.
+- To estimate the protein folding rate, you need to run `T_quench_nbx_3.pl` with optimized *n*<sub>scale</sub> values obtained from [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein) and then run `analysis_Tq.pl` to do the curve fitting.
 
 ### 3. Create CG ribosome model
 
