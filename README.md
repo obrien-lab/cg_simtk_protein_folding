@@ -57,7 +57,18 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 - To estimate the protein folding rate, you need to run `T_quench_nbx_3.pl` with optimized *n*<sub>scale</sub> values obtained from [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein) and then run `analysis_Tq.pl` to do the curve fitting.
 
 ### 3. Create CG ribosome model
-- The CG ribosome model is used to run continuous synthesis of a nascent chain combined with the CG protein model. The CG ribosome is usually fixed (no motion) during the simulation. The force field parameters thus only contain the nonbonding term.
+- The CG ribosome model is used to run continuous synthesis of a nascent chain that is parameterized with the CG protein model. The CG ribosome is usually fixed (not allow to move) during the simulation. The force field parameters thus only contain the nonbonding term. To speedup the computation, we usually truncate the ribosome to only contain the tails of P- and A-site tRNA molecules, the entire exit tunnel with a few atoms near the tunnel wall and the surface near the exit that may have contacts with the nascent chain.
+- Scripts will be used in this section:
+
+| Scripts | Instructions |
+| ------ | ------ |
+| CG_ribosome_parameterization/**gen_50S_pdb.py** | Get he necessary subunits from .cif file of the ribosome and create a pdb file contains those sbuunits. (Learn more) |
+| CG_ribosome_parameterization/**fix_orein_50S_pdb.py** | Add missing atoms and rotate/translate the subunits to a desired orientation for E. coli ribosome. (Learn more) |
+| CG_ribosome_parameterization/**fix_orein_60S_pdb.py** | Do the same thing with `fix_orein_50S_pdb.py` for S. cerevisiae ribosome. (Learn more) |
+| CG_ribosome_parameterization/**create_cg_ribosome_model.py** | Create the CG model for those re-orientated subunits, including .psf, .top, .cor and .prm files. (Learn more) |
+| CG_ribosome_parameterization/**truncate_ribosome.py** | Truncate the CG ribosome according to the centroid line of the exit tunnel. (Learn more) |
+| CG_ribosome_parameterization/**gen_ribosome_FF_v2.py** | Train collision diameters of CG ribosome beads from given ribosome structures. (Learn more) |
+
 - To create CG ribosome model, you need to download the .cif file of your ribosome from [RCSB PDB](https://www.rcsb.org/)
 
 ### 4. Simulation of co-translational folding
