@@ -28,7 +28,23 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 | Scripts | Instructions |
 | ------ | ------ |
 | CG_protein_parameterization/**create_cg_protein_model_v34_nbx3_multidomain.pl** | Create the CG model .psf .top and .prm file that can be used for MD simulations. This script can be used to build CG model for a multi-domain protein. Need to get the modified Charmm and MMTSB installed prior to use. (Learn more) | 
-| CG_protein_parameterization/**opt_nscal.pl** | An automated sript to find the optimized *n*<sub>scale</sub> for each domain/interface according to 5 levels of *n*<sub>scale</sub> values trained by running the protocol in [Section 2.1](#21-tune-nscale-for-a-small-single-domain-protein-that-has-experimental-folding-stability-reported) for 18 small single-domain proteins. The MD simulator is OpenMM, which is different from script `opt_nscal_charmm.pl.pl`. (Learn more) |
+| CG_protein_parameterization/**opt_nscal.pl** | An automated sript to find the optimized *n*<sub>scale</sub> for each domain/interface according to 5 levels of *n*<sub>scale</sub> values trained by running the protocol in [Section 2.1](#21-tune-nscale-for-a-small-single-domain-protein-that-has-experimental-folding-stability-reported) for 18 small single-domain proteins. The MD simulator is OpenMM, which is different from that in script `opt_nscal_charmm.pl.pl`. (Learn more) |
 | CG_protein_parameterization/**opt_nscal_charmm.pl.pl** | This script has the same function with `opt_nscal.pl` but the levels of *n*<sub>scale</sub> values used in this script was trained by using Charmm for the same protein set. | 
 
-### 3. 
+### 3. Temperature quenching simulation
+- To estimate the folding rates for a given protein, you need to run temperature quenching simulation where the system is first heated to a very high temperature (usually 800 K) quickly to make protein totally unfolded and then cooled down to the physiological temperature to moniter the refolding of the protein.
+- Scripts will be used in this section:
+
+| Scripts | Instructions |
+| ------ | ------ |
+| CG_protein_parameterization/**temperature_quenching.py** | Run temperature quenching simulation from the CG native structure of a given protein. This simulation is parallelized using multiple CPU processors. (Learn more) |
+| CG_protein_parameterization/**T_quench_nbx_3.pl** | An automated script to build CG model from a pdb file and then run temperature quenching simulations. (Learn more) | 
+| CG_protein_parameterization/**analysis_Tq.pl** | Analyze the results of temperature quenching simulations, fit a single- or double- exponential function to the survival probability of the unfolded protein and then estimate the folding rate.  (Learn more) | 
+
+### 4. Create CG ribosome model
+
+### 5. Simulation of co-translational folding
+
+### 6. Simulation of post-translational folding
+
+### 7. Backmapping from coarse-grained model to all-atom model
