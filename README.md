@@ -23,7 +23,7 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 
 | Scripts | Instructions |
 | ------ | ------ |
-| CG_protein_parameterization/**create_cg_protein_model_v34_0.37_nbx3.pl** | Create the CG model .psf .top and .prm file that can be used for MD simulations. This script can be only used to build CG model for a single domain protein. Need to get the modified Charmm and MMTSB installed prior to use. (Learn more) |
+| CG_protein_parameterization/**create_cg_protein_model_v34_0.37_nbx3.pl** | Create the CG model .psf .top .cor and .prm file that can be used for MD simulations. This script can be only used to build CG model for a single domain protein. Need to get the modified Charmm and MMTSB installed prior to use. (Learn more) |
 | CG_protein_parameterization/**parse_cg_prm.py** | Parse the parameters in .prm file and then create a .xml file for OpenMM use. (Learn more) |
 | CG_protein_parameterization/**parallel_temperature_REX.py** | Run parallel temperature replica exchange molecular dynamics (pt-REMD) simulation. This simulation is parallelized using multiple CPU processors. ([Learn more](../wikis/help_wiki/parallel_temperature_REX.py)) |
 | CG_protein_parameterization/**opt_temp.pl** | Optimize the temperature windows for pt-REMD simulation to ensure the good sampling quality around the melting temoerature of the given protein. (Learn more) |
@@ -39,7 +39,7 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 
 | Scripts | Instructions |
 | ------ | ------ |
-| CG_protein_parameterization/**create_cg_protein_model_v34_nbx3_multidomain.pl** | Create the CG model .psf .top and .prm file that can be used for MD simulations. This script can be used to build CG model for a multi-domain protein. Need to get the modified Charmm and MMTSB installed prior to use. (Learn more) | 
+| CG_protein_parameterization/**create_cg_protein_model_v34_nbx3_multidomain.pl** | Create the CG model .psf .top .cor and .prm file that can be used for MD simulations. This script can be used to build CG model for a multi-domain protein. Need to get the modified Charmm and MMTSB installed prior to use. (Learn more) | 
 | CG_protein_parameterization/**opt_nscal.pl** | An automated script to find the optimized *n*<sub>scale</sub> for each domain/interface according to 5 levels of *n*<sub>scale</sub> values trained by running the protocol in [Section 1.1](#11-tune-nscale-for-a-small-single-domain-protein-that-has-experimental-folding-stability-reported) for 18 small single-domain proteins. The MD simulator is OpenMM, which is different from that in script `opt_nscal_charmm.pl.pl`. (Learn more) |
 | CG_protein_parameterization/**opt_nscal_charmm.pl.pl** | This script has the same function with `opt_nscal.pl` but the levels of *n*<sub>scale</sub> values used in this script was trained by using Charmm for the same protein set. | 
 
@@ -98,12 +98,14 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 - To setup and run post-translation simulations on PSU ACI cluster, use `PTP_setup_v3.pl`.
 
 ### 6. Backmapping from coarse-grained model to all-atom model
-- CG model has a lot of benifits on saving computational costs and improving sampling efficiency. However, it loses the atomic-level accuracy of the molecular structure. A polish backmapping strategy can rebuild the all-atom structure from the CG C&alpha; model with a high-level accuracy. The rebuilt all-atom structure can be furthure used for visualization and simulation at all-atom level.
+- CG model has a lot of benifits on saving computational costs and improving sampling efficiency. However, it loses the atomic-level accuracy of the molecular structure. A polish backmapping strategy can rebuild the all-atom structure from the CG C&alpha; model with high accuracy. The rebuilt all-atom structure can be furthure used for visualization and simulation at all-atom level.
 - Scripts to be used in this section:
 
 | Scripts | Instructions |
 | ------ | ------ |
-| cell | cell |
-| cell | cell | 
+| Backmapping/**backmap.py** | Backmap the CG C&alpha; structure to its corresponding all-atom structure. (Learn more) <br>Scripts needed: `Backmapping/parse_cg_cacb_prm.py` and `CG_protein_parameterization/create_cg_protein_model_v34_0.37_nbx3.pl` |
+| Backmapping/**parse_cg_cacb_prm.py** | Parse the CG C&alpha;-side-chain model parameters and convert them into OpenMM .xml format. (Learn more) |
+
+- To backmap your CG C&alpha; structure, use `backmap.py`. Note that you need to install [PD2](https://github.com/jmacdona/pd2_public), [Pulchra](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html) and [Amber](http://ambermd.org/) before use this script.
 
 ### 7. Analysis of protein folding trajectories
