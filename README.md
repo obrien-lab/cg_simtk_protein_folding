@@ -72,7 +72,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 - To create CG ribosome model, you need to download the .cif file of your ribosome from [RCSB PDB](https://www.rcsb.org/). Use `gen_50S_pdb.py` to generate a pdb file that contains the assembly of subunits that you want to model. Note that the 50S in the script name doesn't restrict the scope of usage. You can use it to generate any assembly of subunits you want, no matter what the organism the ribosome belongs to. Then use `fix_orein_50S_pdb.py` for E. coli ribosome and `fix_orein_60S_pdb.py` for S. cerevisiae ribosome to get the re-orientated subunits, followed by using `create_cg_ribosome_model.py` to build the CG model for the assembly of subunits. Finally, use `truncate_ribosome.py` to generate the truncated CG ribosome .cor file. If you are interested in tunning force field parameters for CG ribosome model, use `gen_ribosome_FF_v2.py` to train your parameters using some high-resolution crystal structures or Cryo-EM structures. 
 
 ### 4. Simulation of co-translational folding
-- The simulation protocol for co-translational folding is called "Continuous Synthesis Protocol" (CSP). We add new amino acid on the A-site tRNA in the truncated CG ribosome and simulate the tRNA translocation and nascent chain elongation at a frequency based on experimental codon translation time.
+- The simulation protocol for co-translational folding is called "Continuous Synthesis Protocol" (CSP). We add new amino acid on the A-site tRNA in the truncated CG ribosome and simulate the tRNA translocation and nascent chain elongation at a frequency based on in vivo codon translation time.
 - Scripts will be used in this section:
 
 | Scripts | Instructions |
