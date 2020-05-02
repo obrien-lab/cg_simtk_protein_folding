@@ -16,7 +16,7 @@ This is a package of scripts that are used to create coarse-grained (CG) models 
 
 
 ### 1. Create CG protein models and tune the force field parameters (*n*<sub>scale</sub>) for a given protein
-To be able to create a CG Go-like model for a given protein, you need to get the scripts from Dr. Ed O'Brien lab first, including the modified Charmm executable and MMTSB package. Making the CG protein modeling work without Charmm and MMTSB is one of my future development for this toolkit.
+To be able to create a Go-like CG C&alpha; model for a given protein, you need to get the scripts from Dr. Ed O'Brien lab first, including the modified Charmm executable and MMTSB package. Making the CG protein modeling work without Charmm and MMTSB is one of my future development for this toolkit.
 #### 1.1. Tune *n*<sub>scale</sub> for a small single-domain protein that has experimental folding stability reported
 - For a small single-domain protein that has experimental folding stability reported, we use an enhanced sampling protocol i.e. replica exchange simulations to extensively sample the protein folding and unfolding and identify the *n*<sub>scale</sub> value to reproduce the experimental protein folding stability.
 - Scripts will be used in this section:
@@ -35,7 +35,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 
 #### 1.2. Tune *n*<sub>scale</sub> for a protein without experimental folding stability reported
 - For a protein without experimental folding stability reported, we use a stepwise optimization strategy to tune *n*<sub>scale</sub> according to 5 levels of *n*<sub>scale</sub>. The optimized *n*<sub>scale</sub> of an entire single-domain protein or one domain/interface of a multi-domain protein is identified as the lowest level that maintains the native structure. 
-- Scripts will be used in this section:
+- Scripts to be used in this section:
 
 | Scripts | Instructions |
 | ------ | ------ |
@@ -47,7 +47,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 
 ### 2. Temperature quenching simulation
 - To estimate the folding rates for a given protein, you need to run temperature quenching simulation where the system is first heated to a very high temperature (usually 800 K) quickly to make protein totally unfolded and then cooled down to the physiological temperature to moniter the refolding of the protein.
-- Scripts will be used in this section:
+- Scripts to be used in this section:
 
 | Scripts | Instructions |
 | ------ | ------ |
@@ -59,7 +59,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 
 ### 3. Create CG ribosome model
 - The CG ribosome model is used to run continuous synthesis of a nascent chain that is parameterized with the CG protein model. The CG ribosome is usually fixed (not allow to move) during the simulation. The force field parameters thus only contain the nonbonding term. To speedup the computation, we usually truncate the ribosome to only contain the tails of P- and A-site tRNA molecules, the entire exit tunnel with a few atoms near the tunnel wall and the surface near the exit that may have contacts with the nascent chain.
-- Scripts will be used in this section:
+- Scripts to be used in this section:
 
 | Scripts | Instructions |
 | ------ | ------ |
@@ -74,7 +74,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 
 ### 4. Simulation of co-translational folding
 - The simulation protocol for co-translational folding is called "Continuous Synthesis Protocol" (CSP). We add new amino acid on the A-site tRNA in the truncated CG ribosome and simulate the tRNA translocation and nascent chain elongation at a frequency based on in vivo codon translation time.
-- Scripts will be used in this section:
+- Scripts to be used in this section:
 
 | Scripts | Instructions |
 | ------ | ------ |
@@ -88,7 +88,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 
 ### 5. Simulation of post-translational folding
 - The simulation of post-translational folding is quite simple. The nascent chain structures that are disassociated from the ribosome will be obtained from [CSP](#4-simulation-of-co-translational-folding) and run Langevin dynamics (LD) in implicit water environment at the physiological temperature.
-- Scripts will be used in this section:
+- Scripts to be used in this section:
 
 | Scripts | Instructions |
 | ------ | ------ |
@@ -98,5 +98,12 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 - To setup and run post-translation simulations on PSU ACI cluster, use `PTP_setup_v3.pl`.
 
 ### 6. Backmapping from coarse-grained model to all-atom model
+- CG model has a lot of benifits on saving computational costs and improving sampling efficiency. However, it loses the atomic-level accuracy of the molecular structure. A polish backmapping strategy can rebuild the all-atom structure from the CG C&alpha; model with a high-level accuracy. The rebuilt all-atom structure can be furthure used for visualization and simulation at all-atom level.
+- Scripts to be used in this section:
+
+| Scripts | Instructions |
+| ------ | ------ |
+| cell | cell |
+| cell | cell | 
 
 ### 7. Analysis of protein folding trajectories
