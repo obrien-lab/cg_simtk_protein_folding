@@ -12,6 +12,7 @@ This is a package of scripts that are used to create coarse-grained (CG) models 
   * [4. Simulation of co-translational folding](#4-simulation-of-co-translational-folding)
   * [5. Simulation of post-translational folding](#5-simulation-of-post-translational-folding)
   * [6. Backmapping from coarse-grained model to all-atom model](#6-backmapping-from-coarse-grained-model-to-all-atom-model)
+  * [7. Analysis of protein folding trajectories](#7-analysis-of-protein-folding-trajectories)
 
 
 ### 1. Create CG protein models and tune the force field parameters (*n*<sub>scale</sub>) for a given protein
@@ -86,7 +87,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 - To run CSP, you need to prepare the CG protein model for your nascent chain according to [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein) and prepare the CG ribosome model according to [Section 3](#3-create-cg-ribosome-model). All the .psf, .top, .cor and .prm files are required in initialization of CSP. In addition, users have to provide a table of intrinsic codon translation time and the mRNA sequence of the nascent chain.
 
 ### 5. Simulation of post-translational folding
-- The simulation of post-translational folding is quite simple. The nascent chain conformation that are disassociated from the ribosome will be obtained from [CSP](#4-simulation-of-co-translational-folding) and run Langevin dynamics (LD) in implicit water environment at the physiological temperature.
+- The simulation of post-translational folding is quite simple. The nascent chain structures that are disassociated from the ribosome will be obtained from [CSP](#4-simulation-of-co-translational-folding) and run Langevin dynamics (LD) in implicit water environment at the physiological temperature.
 - Scripts will be used in this section:
 
 | Scripts | Instructions |
@@ -97,3 +98,5 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 - To setup and run post-translation simulations, use `PTP_setup_v3.pl`.
 
 ### 6. Backmapping from coarse-grained model to all-atom model
+
+### 7. Analysis of protein folding trajectories
