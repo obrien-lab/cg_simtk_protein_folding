@@ -31,7 +31,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 | CG_protein_parameterization/**analysis_folding_stability.pl** | Estimate the protein folding stability at a given temperature from pt-REMD data using WHAM. (Learn more) |
 | CG_protein_parameterization/**scan_nscal_nbx_3_REX.pl** | An automated script to call `create_cg_protein_model_v34_0.37_nbx3.pl`, `opt_temp.pl`, `parallel_temperature_REX.py` and `analysis_folding_stability.pl` to scan the protein folding stability profile as changing *n*<sub>scale</sub> value. The protein folding stability profile will be used to find the optimized *n*<sub>scale</sub> value for CG model parameterization. (Learn more) | 
 
-- To tune *n*<sub>scale</sub> for a given protein, run `scan_nscal_nbx_3_REX.pl` with a series of *n*<sub>scale</sub> values. Use `scan_nscal_nbx_3_REX.pl` again to analyze the results and get the protein stability profile. The optimized *n*<sub>scale</sub> is the value that reproduces the experimental protein folding stability.
+- To tune *n*<sub>scale</sub> for a given protein on PSU ACI cluster, run `scan_nscal_nbx_3_REX.pl` with a series of *n*<sub>scale</sub> values. Use `scan_nscal_nbx_3_REX.pl` again to analyze the results and get the protein stability profile. The optimized *n*<sub>scale</sub> is the value that reproduces the experimental protein folding stability.
 
 #### 1.2. Tune *n*<sub>scale</sub> for a protein without experimental folding stability reported
 - For a protein without experimental folding stability reported, we use a stepwise optimization strategy to tune *n*<sub>scale</sub> according to 5 levels of *n*<sub>scale</sub>. The optimized *n*<sub>scale</sub> of an entire single-domain protein or one domain/interface of a multi-domain protein is identified as the lowest level that maintains the native structure. 
@@ -43,7 +43,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 | CG_protein_parameterization/**opt_nscal.pl** | An automated script to find the optimized *n*<sub>scale</sub> for each domain/interface according to 5 levels of *n*<sub>scale</sub> values trained by running the protocol in [Section 1.1](#11-tune-nscale-for-a-small-single-domain-protein-that-has-experimental-folding-stability-reported) for 18 small single-domain proteins. The MD simulator is OpenMM, which is different from that in script `opt_nscal_charmm.pl.pl`. (Learn more) |
 | CG_protein_parameterization/**opt_nscal_charmm.pl.pl** | This script has the same function with `opt_nscal.pl` but the levels of *n*<sub>scale</sub> values used in this script was trained by using Charmm for the same protein set. | 
 
-- To tune *n*<sub>scale</sub> that is compatible with OpenMM, run `opt_nscal.pl`; To tune *n*<sub>scale</sub> that is compatible with Charmm, run `opt_nscal_charmm.pl`.
+- On PSU ACI cluster, to tune *n*<sub>scale</sub> that is compatible with OpenMM, run `opt_nscal.pl`; To tune *n*<sub>scale</sub> that is compatible with Charmm, run `opt_nscal_charmm.pl`.
 
 ### 2. Temperature quenching simulation
 - To estimate the folding rates for a given protein, you need to run temperature quenching simulation where the system is first heated to a very high temperature (usually 800 K) quickly to make protein totally unfolded and then cooled down to the physiological temperature to moniter the refolding of the protein.
@@ -55,7 +55,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 | CG_protein_parameterization/**T_quench_nbx_3.pl** | An automated script to build CG model from a pdb file and then run temperature quenching simulations. (Learn more) | 
 | CG_protein_parameterization/**analysis_Tq.pl** | Analyze the results of temperature quenching simulations, fit a single- or double- exponential function to the survival probability of the unfolded protein and then estimate the folding rate.  (Learn more) | 
 
-- To estimate the protein folding rate, you need to run `T_quench_nbx_3.pl` with optimized *n*<sub>scale</sub> values obtained from [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein) and then run `analysis_Tq.pl` to do the curve fitting.
+- To estimate the protein folding rate on PSU ACI cluster, you need to run `T_quench_nbx_3.pl` with optimized *n*<sub>scale</sub> values obtained from [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein) and then run `analysis_Tq.pl` to do the curve fitting.
 
 ### 3. Create CG ribosome model
 - The CG ribosome model is used to run continuous synthesis of a nascent chain that is parameterized with the CG protein model. The CG ribosome is usually fixed (not allow to move) during the simulation. The force field parameters thus only contain the nonbonding term. To speedup the computation, we usually truncate the ribosome to only contain the tails of P- and A-site tRNA molecules, the entire exit tunnel with a few atoms near the tunnel wall and the surface near the exit that may have contacts with the nascent chain.
@@ -95,7 +95,7 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 | Post_translational_folding/**post_trans_single_run_v2.py** | Run a single trajectory of post-translational folding. User can specify a walltime or a threshold to control the termination of the post-translational folding. (Learn more) |
 | Post_translational_folding/**PTP_setup_v3.pl** | Automated script to setup post-translation simulations after [CSP](#4-simulation-of-co-translational-folding). (Learn more) <br>Scripts needed: `Post-translational_folding/post_trans_single_run_v2.py` |
 
-- To setup and run post-translation simulations, use `PTP_setup_v3.pl`.
+- To setup and run post-translation simulations on PSU ACI cluster, use `PTP_setup_v3.pl`.
 
 ### 6. Backmapping from coarse-grained model to all-atom model
 
