@@ -109,3 +109,15 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 - To backmap your CG C&alpha; structure, use `backmap.py`. Note that you need to install [PD2](https://github.com/jmacdona/pd2_public), [Pulchra](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html) and [Amber](http://ambermd.org/) before use this script.
 
 ### 7. Analysis of protein folding trajectories
+- To analyze the protein folding process, we usually calculate the order parameters, such as the fraction of native contacts (Q), fraction of entangment changes (G) and fraction of chirality changes (K).
+- Scripts to be used in this section:
+
+| Scripts | Instructions |
+| ------ | ------ |
+| Analysis_protocol/**calc_native_contact_fraction_v2.pl** | Calculate Q vs. time for a given trajectory. (Learn more) |
+| Analysis_protocol/**calc_entanglement_number.pl** | Calculate G vs. time for a given trajectory. (Learn more) | 
+| Analysis_protocol/**calc_chirality_number.pl** | Calculate K vs. time for a given trajectory. (Learn more) | 
+| Analysis_protocol/**calc_cont_synth_qbb_vs_T.py** | Automated script to calculate Q vs. time for [CSP](#4-simulation-of-co-translational-folding) trajectoris. (Learn more) <br>Scripts needed: `Analysis_protocol/calc_native_contact_fraction_v2.pl` |
+| Analysis_protocol/**mrna_silent_mutation.pl** | Do silent mutation for a given mRNA sequence and a mutation scheme, such as fastest translation, slowest translation and random. (Learn more) |
+
+
