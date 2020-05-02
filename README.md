@@ -19,7 +19,7 @@ This is a package of scripts that are used to create coarse-grained (CG) models 
 To be able to create a Go-like CG C&alpha; model for a given protein, you need to get the scripts from Dr. Ed O'Brien lab first, including the modified Charmm executable and MMTSB package. Making the CG protein modeling work without Charmm and MMTSB is one of my future development for this toolkit.
 #### 1.1. Tune *n*<sub>scale</sub> for a small single-domain protein that has experimental folding stability reported
 - For a small single-domain protein that has experimental folding stability reported, we use an enhanced sampling protocol i.e. replica exchange simulations to extensively sample the protein folding and unfolding and identify the *n*<sub>scale</sub> value to reproduce the experimental protein folding stability.
-- Scripts will be used in this section:
+- Scripts to be used in this section:
 
 | Scripts | Instructions |
 | ------ | ------ |
