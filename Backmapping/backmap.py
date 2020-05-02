@@ -505,7 +505,7 @@ for opt, arg in opts:
 	elif opt in ("-c", "--cg_pdb"):
 		cg_pdb = arg
 
-cg_perl_script = 'create_cg_protein_model_v34.pl'
+cg_perl_script = 'create_cg_protein_model_v34_0.37_nbx3.pl'
 
 print("-> Cleaning PDB file %s"%aa_pdb)
 name = cg_pdb.split('/')[-1].split('.pdb')[0]
