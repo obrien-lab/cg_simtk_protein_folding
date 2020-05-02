@@ -86,5 +86,14 @@ To be able to create a CG Go-like model for a given protein, you need to get the
 - To run CSP, you need to prepare the CG protein model for your nascent chain according to [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein) and prepare the CG ribosome model according to [Section 3](#3-create-cg-ribosome-model). All the .psf, .top, .cor and .prm files are required in initialization of CSP. In addition, users have to provide a table of intrinsic codon translation time and the mRNA sequence of the nascent chain.
 
 ### 5. Simulation of post-translational folding
+- The simulation of post-translational folding is quite simple. The nascent chain conformation that are disassociated from the ribosome will be obtained from [CSP](#4-simulation-of-co-translational-folding) and run Langevin dynamics (LD) in implicit water environment at the physiological temperature.
+- Scripts will be used in this section:
+
+| Scripts | Instructions |
+| ------ | ------ |
+| Post-translational_folding/**post_trans_single_run_v2.py** | Run a single trajectory of post-translational folding. User can specify a walltime or a threshold to control the termination of the post-translational folding. (Learn more) |
+| Post-translational_folding/**PTP_setup_v3.pl** | Automated script to setup post-translation simulations after [CSP](#4-simulation-of-co-translational-folding). (Learn more) <br>Scripts needed: `Post-translational_folding/post_trans_single_run_v2.py` |
+
+- To setup and run post-translation simulations, use `PTP_setup_v3.pl`.
 
 ### 6. Backmapping from coarse-grained model to all-atom model
