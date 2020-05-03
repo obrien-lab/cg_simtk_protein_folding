@@ -85,6 +85,11 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 | Continuous_synthesis_protocol/**render_yeast_RNC.tcl** | Render the picture of *S. cerevisiae* ribosome-nascent-chain (RNC) complex in VMD. (Learn more) |
 
 - To run CSP, you need to prepare the CG protein model for your nascent chain according to [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein) and prepare the CG ribosome model according to [Section 3](#3-create-cg-ribosome-model). All the .psf, .top, .cor and .prm files are required in initialization of CSP. In addition, users have to provide a table of intrinsic codon translation time and the mRNA sequence of the nascent chain.
+- Below is a video of the entire continuous synthesis process using `continuous_synthesis_v6.py` for synthesizing Firfly luciferase (550 residue long) on the *E.coli* ribosome and visualized using `visualize_cont_synth.py` (time is shown in the experimental timescale):
+
+![Example video of synthesizing Firfly luciferase on the E.coli ribosome](wiki_data/Luc_fast_CSP.webm)
+
+The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in orange; The nascent chain is represented as Cartoon and colored according to the secondary structures; The flexible region of ribosomal protein L24 is shown in green. Only the last frame of the trajectory for each NC length is shown in this video.
 
 ### 5. Simulation of post-translational folding
 - The simulation of post-translational folding is quite simple. The nascent chain structures that are disassociated from the ribosome will be obtained from [CSP](#4-simulation-of-co-translational-folding) and run Langevin dynamics (LD) in implicit water environment at the physiological temperature.
