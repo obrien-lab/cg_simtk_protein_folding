@@ -1,7 +1,7 @@
 ## Coarse-grained Simulation Toolkits for Protein Folding
 #### Author: Dr. Yang Jiang
 
-This is a package of scripts that are used to create coarse-grained (CG) models of proteins/ribosomes, optimize CG force field parameters and run MD simulations for protein co- and post-translational folding. All the scripts are ready to use when users have added the directories in `$PATH` and have granted the execution permission (`chmod +x`) for all the scripts. 
+This is a package of scripts that are used to create coarse-grained (CG) models of proteins/ribosomes, optimize CG force field parameters and run MD simulations for protein co- and post-translational folding. All the scripts are ready to use when users have added the directories in `$PATH` and have granted the execution permission (`chmod +x`) for all the scripts. <br>:warning: Some of the scripts need modules and other softerware installed prior to use. Please click `Learn more` in the following script instruction tables to find detailed instruction of usage and basic theory used in the script.
 
 ### Table of Contents
   * [1. Create CG protein models and tune the force field parameters (*n*<sub>scale</sub>) for a given protein](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein)
