@@ -108,7 +108,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 
 | Scripts | Instructions |
 | ------ | ------ |
-| Backmapping/**backmap.py** | Backmap the CG C&alpha; structure to its corresponding all-atom structure. (Learn more) <br>Scripts needed: `Backmapping/parse_cg_cacb_prm.py` and `CG_protein_parameterization/create_cg_protein_model_v34_0.37_nbx3.pl` |
+| Backmapping/**backmap.py** | Backmap the CG C&alpha; structure to its corresponding all-atom structure. ([Learn more](../wikis/help_wiki/backmap.py)) <br>Scripts needed: `Backmapping/parse_cg_cacb_prm.py` and `CG_protein_parameterization/create_cg_protein_model_v34_0.37_nbx3.pl` |
 | Backmapping/**parse_cg_cacb_prm.py** | Parse the CG C&alpha;-side-chain model parameters and convert them into OpenMM .xml format. (Learn more) |
 
 - To backmap your CG C&alpha; structure, use `backmap.py`. Note that you need to install [PD2](https://github.com/jmacdona/pd2_public), [Pulchra](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html) and [Amber](http://ambermd.org/) before use this script.
