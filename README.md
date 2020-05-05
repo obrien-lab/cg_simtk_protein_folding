@@ -28,6 +28,7 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 | CG_protein_parameterization/**parallel_temperature_REX.py** | Run parallel temperature replica exchange molecular dynamics (pt-REMD) simulation. This simulation is parallelized using multiple CPU processors. ([Learn more](../wikis/help_wiki/parallel_temperature_REX.py)) |
 | CG_protein_parameterization/**opt_temp.pl** | Optimize the temperature windows for pt-REMD simulation to ensure the good sampling quality around the melting temperature of the given protein. ([Learn more](../wikis/help_wiki/opt_temp.pl)) |
 | CG_protein_parameterization/**check_sampling.pl** | Check the sampling quality for pt-REMD simulation. Insufficient sampling will cause problems and inaccuracy in estimating the protein folding stability. ([Learn more](../wikis/help_wiki/check_sampling.pl)) | 
+| CG_protein_parameterization/**dGns.pl** | Convert folding propability to folding stability at a given temperature. (Learn more) |
 | CG_protein_parameterization/**analysis_folding_stability.pl** | Estimate the protein folding stability at a given temperature from pt-REMD data using WHAM. (Learn more) |
 | CG_protein_parameterization/**scan_nscal_nbx_3_REX.pl** | An automated script to call `create_cg_protein_model_v34_0.37_nbx3.pl`, `opt_temp.pl`, `parallel_temperature_REX.py` and `analysis_folding_stability.pl` to scan the protein folding stability profile as changing *n*<sub>scale</sub> value. The protein folding stability profile will be used to find the optimized *n*<sub>scale</sub> value for CG model parameterization. (Learn more) | 
 
@@ -119,6 +120,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 
 | Scripts | Instructions |
 | ------ | ------ |
+| Analysis_protocol/**get_Ep_from_dcd.py** | Get potential energy from a dcd trajectory using OpenMM for a CG model. (Learn more) |
 | Analysis_protocol/**calc_native_contact_fraction_v2.pl** | Calculate Q vs. time for a given trajectory. (Learn more) |
 | Analysis_protocol/**calc_entanglement_number.pl** | Calculate G vs. time for a given trajectory. (Learn more) | 
 | Analysis_protocol/**calc_chirality_number.pl** | Calculate K vs. time for a given trajectory. (Learn more) | 
