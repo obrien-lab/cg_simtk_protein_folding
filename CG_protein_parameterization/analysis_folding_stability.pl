@@ -388,7 +388,7 @@ sub Calc_props
   my @threads = ();
   for(my $i = 1; $i <= $nwindows; $i++)
   {
-    my $t = threads->create('run_exe', "calc_native_contact_fraction.pl -i ../$prefix.cor -d domain_def.dat -s ../setup/secondary_struc_defs.txt -t ../aa${i}/mc1.dcd -b $start >> ../analysis.log 2>&1");
+    my $t = threads->create('run_exe', "calc_native_contact_fraction_v2.pl -i ../$prefix.cor -d domain_def.dat -s ../setup/secondary_struc_defs.txt -t ../aa${i}/mc1.dcd -b $start >> ../analysis.log 2>&1");
     push@threads, $t;
     $t->detach();
   }
