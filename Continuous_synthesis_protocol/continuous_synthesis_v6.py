@@ -121,6 +121,8 @@ def run_elongation(index, start_nascent_chain_length, total_nascent_chain_length
             fo.write('#'*92 + '\n')
             fo.write('--> All Done\n')
             fo.close()
+    os.chdir('../../')
+
 
 def elongation(nascent_chain_length, prot_psf, ribo_psf, previous_rnc_cor_file, simulation_steps, rand, out_file):
     global ppn, temp_prod, timestep, fbsolu, forcefield, constraint_tolerance, nsteps_save, ribo_resid_list
