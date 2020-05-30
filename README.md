@@ -25,11 +25,11 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 | ------ | ------ |
 | CG_protein_parameterization/**create_cg_protein_model_v34_0.37_nbx3.pl** | Create the CG model .psf .top .cor and .prm file that can be used for MD simulations. This script can be only used to build CG model for a single domain protein. Need to get the modified Charmm and MMTSB installed prior to use. (Learn more) |
 | CG_protein_parameterization/**parse_cg_prm.py** | Parse the parameters in .prm file and then create a .xml file for OpenMM use. (Learn more) |
-| CG_protein_parameterization/**parallel_temperature_REX.py** | Run parallel temperature replica exchange molecular dynamics (pt-REMD) simulation. This simulation is parallelized using multiple CPU processors. ([Learn more](../wikis/help_wiki/parallel_temperature_REX.py)) |
-| CG_protein_parameterization/**opt_temp.pl** | Optimize the temperature windows for pt-REMD simulation to ensure the good sampling quality around the melting temperature of the given protein. ([Learn more](../wikis/help_wiki/opt_temp.pl)) |
-| CG_protein_parameterization/**check_sampling.pl** | Check the sampling quality for pt-REMD simulation. Insufficient sampling will cause problems and inaccuracy in estimating the protein folding stability. ([Learn more](../wikis/help_wiki/check_sampling.pl)) | 
+| CG_protein_parameterization/**parallel_temperature_REX.py** | Run parallel temperature replica exchange molecular dynamics (pt-REMD) simulation. This simulation is parallelized using multiple CPU processors. ([Learn more](../../wikis/help_wiki/parallel_temperature_REX.py)) |
+| CG_protein_parameterization/**opt_temp.pl** | Optimize the temperature windows for pt-REMD simulation to ensure the good sampling quality around the melting temperature of the given protein. ([Learn more](../../wikis/help_wiki/opt_temp.pl)) |
+| CG_protein_parameterization/**check_sampling.pl** | Check the sampling quality for pt-REMD simulation. Insufficient sampling will cause problems and inaccuracy in estimating the protein folding stability. ([Learn more](../../wikis/help_wiki/check_sampling.pl)) | 
 | CG_protein_parameterization/**dGns.pl** | Convert folding propability *P*<sub>N</sub> to folding stability &Delta;*G*<sub>UN</sub> at a given temperature *T*: <br>$`\Delta G_{\text{UN}} (T)=-k_{\text{B}} T \cdot \mathrm{ln}[\frac{P_{\text{N}} (T)}{(1-P_{\text{N}} (T)}]`$. |
-| CG_protein_parameterization/**analysis_folding_stability.pl** | Estimate the protein folding stability at a given temperature from pt-REMD data using WHAM. ([Learn more](../wikis/help_wiki/analysis_folding_stability.pl)) |
+| CG_protein_parameterization/**analysis_folding_stability.pl** | Estimate the protein folding stability at a given temperature from pt-REMD data using WHAM. ([Learn more](../../wikis/help_wiki/analysis_folding_stability.pl)) |
 | CG_protein_parameterization/**scan_nscal_nbx_3_REX.pl** | An automated script to call `create_cg_protein_model_v34_0.37_nbx3.pl`, `opt_temp.pl`, `parallel_temperature_REX.py` and `analysis_folding_stability.pl` to scan the protein folding stability profile as changing *n*<sub>scale</sub> value. The protein folding stability profile will be used to find the optimized *n*<sub>scale</sub> value for CG model parameterization. (Learn more) | 
 
 - To tune *n*<sub>scale</sub> for a given protein on PSU ACI cluster, run `scan_nscal_nbx_3_REX.pl` with a series of *n*<sub>scale</sub> values. Use `scan_nscal_nbx_3_REX.pl` again to analyze the results and get the protein stability profile. The optimized *n*<sub>scale</sub> is the value that reproduces the experimental protein folding stability.
@@ -52,7 +52,7 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 
 | Scripts | Instructions |
 | ------ | ------ |
-| CG_protein_parameterization/**temperature_quenching.py** | Run temperature quenching simulation from the CG native structure of a given protein. This simulation is parallelized using multiple CPU processors. ([Learn more](../wikis/help_wiki/temperature_quenching.py)) |
+| CG_protein_parameterization/**temperature_quenching.py** | Run temperature quenching simulation from the CG native structure of a given protein. This simulation is parallelized using multiple CPU processors. ([Learn more](../../wikis/help_wiki/temperature_quenching.py)) |
 | CG_protein_parameterization/**T_quench_nbx_3.pl** | An automated script to build CG model from a pdb file and then run temperature quenching simulations. (Learn more) | 
 | CG_protein_parameterization/**analysis_Tq.pl** | Analyze the results of temperature quenching simulations, fit a single- or double- exponential function to the survival probability of the unfolded protein and then estimate the folding rate.  (Learn more) | 
 
@@ -79,7 +79,7 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 
 | Scripts | Instructions |
 | ------ | ------ |
-| Continuous_synthesis_protocol/**continuous_synthesis_v6.py** | Run continuous synthesis of a CG protein on a CG ribosome. Both parallelizations on CPU and GPU are supported. ([Learn more](../wikis/help_wiki/continuous_synthesis_v6.py)) <br>Scripts needed: `Continuous_synthesis_protocol/ribosome_traffic` and `CG_protein_parameterization/parse_cg_prm.py`. |
+| Continuous_synthesis_protocol/**continuous_synthesis_v6.py** | Run continuous synthesis of a CG protein on a CG ribosome. Both parallelizations on CPU and GPU are supported. ([Learn more](../../wikis/help_wiki/continuous_synthesis_v6.py)) <br>Scripts needed: `Continuous_synthesis_protocol/ribosome_traffic` and `CG_protein_parameterization/parse_cg_prm.py`. |
 | Continuous_synthesis_protocol/**ribosome_traffic** | Estimate the real codon translation time by taking into account of the ribosome traffic effects. (Learn more) | 
 | Continuous_synthesis_protocol/**visualize_cont_synth.py** | Generate movies of the continuous synthesis process. (Learn more) <br>Scripts needed: `Backmapping/backmap.py`, `Continuous_synthesis_protocol/render_ecoli_RNC.tcl` and `Continuous_synthesis_protocol/render_yeast_RNC.tcl` | 
 | Continuous_synthesis_protocol/**render_ecoli_RNC.tcl** | Render the picture of *E. coli* ribosome-nascent-chain (RNC) complex in VMD. (Learn more) | 
@@ -88,7 +88,7 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 - To run CSP, you need to prepare the CG protein model for your nascent chain according to [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein) and prepare the CG ribosome model according to [Section 3](#3-create-cg-ribosome-model). All the .psf, .top, .cor and .prm files are required in initialization of CSP. In addition, users have to provide a table of intrinsic codon translation time and the mRNA sequence of the nascent chain.
 - Below is a video of the entire continuous synthesis process using `continuous_synthesis_v6.py` for synthesizing Firfly luciferase (550 residue long) on the *E.coli* ribosome and visualized using `visualize_cont_synth.py` (time is shown in the experimental timescale):
 
-![Example video of synthesizing Firfly luciferase on the E.coli ribosome](../wikis/uploads/img/Luc_fast_CSP.mp4)
+![Example video of synthesizing Firfly luciferase on the E.coli ribosome](../../wikis/uploads/img/Luc_fast_CSP.mp4)
 
 The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in orange; The nascent chain is represented as Cartoon and colored according to the secondary structures; The flexible region of ribosomal protein L24 is shown in green. Only the last frame of the trajectory for each NC length is shown in this video.
 
@@ -109,7 +109,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 
 | Scripts | Instructions |
 | ------ | ------ |
-| Backmapping/**backmap.py** | Backmap the CG C&alpha; structure to its corresponding all-atom structure. ([Learn more](../wikis/help_wiki/backmap.py)) <br>Scripts needed: `Backmapping/parse_cg_cacb_prm.py` and `CG_protein_parameterization/create_cg_protein_model_v34_0.37_nbx3.pl` |
+| Backmapping/**backmap.py** | Backmap the CG C&alpha; structure to its corresponding all-atom structure. ([Learn more](../../wikis/help_wiki/backmap.py)) <br>Scripts needed: `Backmapping/parse_cg_cacb_prm.py` and `CG_protein_parameterization/create_cg_protein_model_v34_0.37_nbx3.pl` |
 | Backmapping/**parse_cg_cacb_prm.py** | Parse the CG C&alpha;-side-chain model parameters and convert them into OpenMM .xml format. (Learn more) |
 
 - To backmap your CG C&alpha; structure, use `backmap.py`. Note that you need to install [PD2](https://github.com/jmacdona/pd2_public), [Pulchra](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html) and [Amber](http://ambermd.org/) before use this script.
