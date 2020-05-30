@@ -40,7 +40,7 @@ usage = '\nUsage: python continuous_synthesis.py\n' \
         '  restart = 0\n'
 
 def run_elongation(index, start_nascent_chain_length, total_nascent_chain_length, previous_rnc_cor_file):
-    global prot_psf_pmd, ribo_psf_pmd, ribo_resid_list, codon_list
+    global prot_psf_pmd, ribo_psf_pmd, ribo_resid_list, codon_list, use_gpu, dev_index_list
     global ppn, temp_prod, timestep, fbsolu, forcefield, constraint_tolerance, nsteps_save, scale_factor
     global nonbond_cutoff, switch_cutoff
     global time_stage_1, time_stage_2, real_mean_fpt_list, intrinsic_mean_fpt_list, ribosome_traffic
@@ -50,6 +50,16 @@ def run_elongation(index, start_nascent_chain_length, total_nascent_chain_length
     if not os.path.exists(traj_dir):
         os.mkdir(traj_dir)
     os.chdir(traj_dir)
+    
+    if use_gpu == 0:
+        properties = {'Threads': str(ppn)}
+        platform = Platform.getPlatformByName('CPU')
+    else:
+        #dev_index = dev_index_list[int(multiprocessing.current_process().name.split('-')[-1])-1]
+        dev_index = int(multiprocessing.current_process().name.split('-')[-1])-1
+        properties = {'CudaPrecision': 'mixed'}
+        properties["DeviceIndex"] = "%d"%(dev_index);
+        platform = Platform.getPlatformByName('CUDA')
 
     for nascent_chain_length in range(start_nascent_chain_length, total_nascent_chain_length+1):
         rand = random.randint(10,1000000000)
@@ -109,7 +119,7 @@ def run_elongation(index, start_nascent_chain_length, total_nascent_chain_length
         fo.close()
 
         previous_rnc_cor_file = elongation(nascent_chain_length, prot_psf_pmd, ribo_psf_pmd, previous_rnc_cor_file, 
-            [step_stage_1, step_stage_2, step_stage_3], rand, out_file)
+            [step_stage_1, step_stage_2, step_stage_3], rand, out_file, properties, platform)
         if previous_rnc_cor_file == False:
             break
         elif nascent_chain_length < len(prot_psf_pmd.residues):
@@ -124,7 +134,7 @@ def run_elongation(index, start_nascent_chain_length, total_nascent_chain_length
     os.chdir('../../')
 
 
-def elongation(nascent_chain_length, prot_psf, ribo_psf, previous_rnc_cor_file, simulation_steps, rand, out_file):
+def elongation(nascent_chain_length, prot_psf, ribo_psf, previous_rnc_cor_file, simulation_steps, rand, out_file, properties, platform):
     global ppn, temp_prod, timestep, fbsolu, forcefield, constraint_tolerance, nsteps_save, ribo_resid_list
     global use_gpu, ribo_free_mask
 
@@ -132,6 +142,13 @@ def elongation(nascent_chain_length, prot_psf, ribo_psf, previous_rnc_cor_file, 
     
     rnc_psf_pmd.save('rnc_l'+str(nascent_chain_length)+'.psf', overwrite=True)
     rnc_psf = CharmmPsfFile('rnc_l'+str(nascent_chain_length)+'.psf')
+    
+    top = rnc_psf.topology
+    # re-name residues that are changed by openmm
+    for resid, res in enumerate(top.residues()):
+        if res.name != rnc_psf_pmd.residues[resid].name:
+            res.name = rnc_psf_pmd.residues[resid].name
+    
     # renumber ribosome resid
     idx = 0
     for res in rnc_psf_pmd.residues:
@@ -170,18 +187,11 @@ def elongation(nascent_chain_length, prot_psf, ribo_psf, previous_rnc_cor_file, 
     current_rnc_cor = previous_rnc_cor.positions
     # add new amino acid bead to RNC
 
-    top = rnc_psf.topology
+    # build residue template map
     template_map = {}
     for chain in top.chains():
         for res in chain.residues():
             template_map[res] = res.name
-
-    if use_gpu == 0:
-        properties = {'Threads': str(ppn)}
-        platform = Platform.getPlatformByName('CPU')
-    else:
-        properties = {'CudaPrecision': 'mixed'}
-        platform = Platform.getPlatformByName('CUDA')
 
     seeded_random = random.Random(rand)
 
@@ -245,7 +255,10 @@ def A_site_tRNA_binding(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd,
     # minimize steric clashes of the newly inserted residue
     integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
     integrator.setRandomNumberSeed(rand)
-    simulation = Simulation(top, system, integrator, platform, properties)
+    try:
+        simulation = Simulation(top, system, integrator, platform, properties)
+    except Exception as e:
+        traceback.print_exc()
     simulation.context.setPositions(current_rnc_cor)
 
     energy = simulation.context.getState(getEnergy=True).getPotentialEnergy().value_in_unit(kilocalorie/mole)
@@ -1049,13 +1062,16 @@ def combine_ribo_prot_param(ribo_param_file, prot_param_file):
         else:
             param_str_list[section] += line + '\n'
     f_p.close()
-
-    f = open('setup/rnc.prm', 'w')
+    
+    prefix = '/'.join(ribo_param_file.strip().split('/')[:-1])
+    f = open(prefix+'/rnc.prm', 'w')
     f.write('* This CHARMM .prm file describes a Go model of nascent chain and ribosome structure\n*\n\n')
     for i in range(len(param_str_list)):
         f.write(param_str_list[i]+'\n')
     f.write('END\n')
     f.close()
+    
+    return (prefix+'/rnc.prm')
 # END Auto-combine ribosome and protein parameter files
 
 # parse mask
@@ -1482,14 +1498,15 @@ for i in range(num_traj):
         previous_rnc_cor_list.append('rnc_l'+str(start_res[i]-1)+'_stage_3_final.cor')
 
 # combine ribosome forcefield with protein forcefield
-combine_ribo_prot_param(ribo_param, prot_param)
-os.system('parse_cg_prm.py -t "'+ribo_top+' '+prot_top+'" -p setup/rnc.prm')
-forcefield = ForceField('setup/rnc.xml')
+rnc_prm_file = combine_ribo_prot_param(ribo_param, prot_param)
+os.system('parse_cg_prm.py -t "'+ribo_top+' '+prot_top+'" -p '+rnc_prm_file)
+forcefield = ForceField(rnc_prm_file.split('.prm')[0]+'.xml')
 
 # Build mean translation time list
 real_mean_fpt_list = []
 intrinsic_mean_fpt_list = []
 if not mrna_seq == '':
+    mrna_seq_file = mrna_seq
     f = open(mrna_seq)
     mrna_seq = f.read().strip().split('\n')
     mrna_seq = ''.join(mrna_seq)
@@ -1524,10 +1541,11 @@ if uniform_ta == 0:
         codon_list.append(codon)
 
     if ribosome_traffic == 1:
-        fo = open('setup/mrna.dat', 'w')
+        mrna_seq_prefix = '/'.join(mrna_seq_file.strip().split('/')[:-1])
+        fo = open(mrna_seq_prefix+'/mrna.dat', 'w')
         fo.write(mrna_seq+'\n')
         fo.close()
-        shell_out = os.popen('ribosome_traffic setup/mrna.dat '+trans_times+' '+str(initiation_rate)).readlines()
+        shell_out = os.popen('ribosome_traffic '+mrna_seq_prefix+'/mrna.dat '+trans_times+' '+str(initiation_rate)).readlines()
         # populate map_resid_to_codon with codon positon : codon type pairs
         print('AA insertion time (s) considering ribosome traffic:')
         for i in range(int(len(mrna_seq)/3)):
@@ -1545,6 +1563,14 @@ else:
         intrinsic_mean_fpt_list.append(uniform_mfpt)
         real_mean_fpt_list.append(uniform_mfpt)
 # END Build mean translation time list
+# assign GPU device index
+dev_index_list = []
+if use_gpu != 0:
+    dev_index_list = os.getenv('CUDA_VISIBLE_DEVICES').strip().split(',')
+    dev_index_list = [int(d) for d in dev_index_list]
+    if len(dev_index_list) != int(tpn/ppn):
+        print('Error: # of available GPU devices (%d) does not equal to tpn/ppn (%d)'%(len(dev_index_list), int(tpn/ppn)))
+        sys.exit()
 
 ###### Continuous Synthesis ######
 nprocess = int(tpn/ppn)
@@ -1562,7 +1588,7 @@ log_file_object.close()
 print('Setup process pool containing %d processors'%nprocess)
 pool = multiprocessing.Pool(nprocess)
 for i in range(1, num_traj + 1):
-    pool.apply_async(run_elongation, (i, start_res[i-1], total_nascent_chain_length, previous_rnc_cor_list[i-1]))
+    pool.apply_async(run_elongation, (i, start_res[i-1], total_nascent_chain_length, previous_rnc_cor_list[i-1], ))
 
 start_time = [time.time() for i in range(num_traj)]
 end_time = [time.time() for i in range(num_traj)]
