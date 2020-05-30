@@ -24,7 +24,7 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 | Scripts | Instructions |
 | ------ | ------ |
 | CG_protein_parameterization/**create_cg_protein_model_v34_0.37_nbx3.pl** | Create the CG model .psf .top .cor and .prm file that can be used for MD simulations. This script can be only used to build CG model for a single domain protein. Need to get the modified Charmm and MMTSB installed prior to use. (Learn more) |
-| CG_protein_parameterization/**parse_cg_prm.py** | Parse the parameters in .prm file and then create a .xml file for OpenMM use. (Learn more) |
+| CG_protein_parameterization/**parse_cg_prm.py** | Parse the parameters in .prm file and then create a .xml file for OpenMM use. ([Learn more](../../wikis/help_wiki/parse_cg_prm.py)) |
 | CG_protein_parameterization/**parallel_temperature_REX.py** | Run parallel temperature replica exchange molecular dynamics (pt-REMD) simulation. This simulation is parallelized using multiple CPU processors. ([Learn more](../../wikis/help_wiki/parallel_temperature_REX.py)) |
 | CG_protein_parameterization/**opt_temp.pl** | Optimize the temperature windows for pt-REMD simulation to ensure the good sampling quality around the melting temperature of the given protein. ([Learn more](../../wikis/help_wiki/opt_temp.pl)) |
 | CG_protein_parameterization/**check_sampling.pl** | Check the sampling quality for pt-REMD simulation. Insufficient sampling will cause problems and inaccuracy in estimating the protein folding stability. ([Learn more](../../wikis/help_wiki/check_sampling.pl)) | 
