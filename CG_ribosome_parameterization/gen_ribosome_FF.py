@@ -9,16 +9,17 @@ usage = '\nUsage: python gen_ribosome_FF.py\n' \
 
 
 #################################### Data ####################################
-protein_cg_name_list = ['SA', 'SC', 'SN', 'SE', 'SF', 'SG', 'SH', 'SI', 'SK', 
-						'SL', 'SM', 'SP', 'SQ', 'SR', 'SS', 'ST', 'SV', 'SW', 'SY']
+protein_cg_name_list = ['SA', 'SC', 'SD', 'SE', 'SF', 'SG', 'SH', 'SI', 'SK', 'SL',
+						'SM', 'SN', 'SP', 'SQ', 'SR', 'SS', 'ST', 'SV', 'SW', 'SY']
 ribo_cg_name_list = ['P', 'R', 'PU1', 'PU2', 'PY']
 
+# from Dan
 #protein_cg_R = [3.753086, 4.078775, 4.231107, 4.414068, 4.740325, 3.358232, 4.532358, 4.607911, 4.740325, 
 #				4.607911, 4.607911, 4.141056, 4.480555, 4.887845, 3.861931, 4.186565, 4.359399, 5.047691, 4.809537]
 
-protein_rvdw = [2.51958406732374, 2.73823091624513, 2.79030096923572, 2.96332591119925, 3.18235414984794, 2.25450393833984, 3.04273820988499, 3.09345983013354, 3.18235414984794, 
-				3.09345983013354, 3.09345983013354, 2.78004241717965, 3.00796101305807, 3.28138980397453, 2.59265585208464, 2.81059478021734, 2.92662460060742, 3.38869998431408, 
-				3.22881842919248];
+# from Ed
+protein_cg_R = [2.862278, 3.030648, 3.142894, 3.367386, 3.535755, 2.525540, 3.423509, 3.423509, 3.535755, 3.423509, 
+				3.423509, 3.199017, 3.086771, 3.423509, 3.704125, 2.918401, 3.142894, 3.311263, 3.816371, 3.591879]
 
 #################################### MAIN ####################################
 pdb_list = ''
@@ -52,7 +53,7 @@ fo.close()
 
 dist_map_NC = [[['-' for i in (ribo_cg_name_list)] for j in protein_cg_name_list] for k in pdb_list]
 dist_map_L24 = [[['-' for i in (ribo_cg_name_list)] for j in protein_cg_name_list] for k in pdb_list]
-collision_diameter = [[['-' for i in (protein_cg_name_list)] for j in protein_cg_name_list] for k in pdb_list]
+collision_diameter = [['-' for i in (protein_cg_name_list)] for k in pdb_list]
 for i in range(len(pdb_list)):
 	pdb = pdb_list[i]
 	pdb_struct = pmd.load_file(pdb+'_cg/50S_cg.pdb')
@@ -122,32 +123,25 @@ for i in range(len(pdb_list)):
 	fo.write('\n')
 	fo.close()
 	########## get ribosomal protein collision diameter ##########
-	for prot_atm_idx_1, prot_atm_name_1 in enumerate(protein_cg_name_list):
+	for prot_atm_idx, prot_atm_name in enumerate(protein_cg_name_list):
 		for atm_1 in pdb_struct.atoms:
-			if atm_1.name == prot_atm_name_1 and atm_1.residue.segid != 'NC':
+			if atm_1.name == prot_atm_name and atm_1.residue.segid != 'NC':
 				segid_1 = atm_1.residue.segid
-				for prot_atm_idx_2, prot_atm_name_2 in enumerate(protein_cg_name_list):
-					for atm_2 in pdb_struct.atoms:
-						if atm_2.name == prot_atm_name_2 and not (atm_2.residue.segid == segid_1 and abs(atm_2.idx - atm_1.idx) < 3):
-							if collision_diameter[i][prot_atm_idx_1][prot_atm_idx_2] == '-':
-								collision_diameter[i][prot_atm_idx_1][prot_atm_idx_2] = 3*protein_rvdw[prot_atm_idx_1]
-							dist = ((atm_1.xx - atm_2.xx)**2 + (atm_1.xy - atm_2.xy)**2 + (atm_1.xz - atm_2.xz)**2)**0.5
-							if collision_diameter[i][prot_atm_idx_1][prot_atm_idx_2] > dist:
-								collision_diameter[i][prot_atm_idx_1][prot_atm_idx_2] = dist
+				for atm_2 in pdb_struct.atoms:
+					if atm_2.residue.segid != segid_1 and not (atm_2.residue.segid in ['NC', '23S', '5S', 'AtR', 'PtR', 'EtR']):
+						if collision_diameter[i][prot_atm_idx] == '-':
+							collision_diameter[i][prot_atm_idx] = 9999999
+						dist = ((atm_1.xx - atm_2.xx)**2 + (atm_1.xy - atm_2.xy)**2 + (atm_1.xz - atm_2.xz)**2)**0.5
+						if collision_diameter[i][prot_atm_idx] > dist:
+							collision_diameter[i][prot_atm_idx] = dist
 	fo = open('RP_results.dat', 'a')
 	fo.write('PDB: %s\n'%pdb)
-	fo.write('%8s '%' ')
-	for rn in protein_cg_name_list:
-		fo.write('%8s '%rn)
-	fo.write('\n')
 	for j, pn in enumerate(protein_cg_name_list):
 		fo.write('%8s '%pn)
-		for k, rn in enumerate(protein_cg_name_list):
-			if collision_diameter[i][j][k] == '-':
-				fo.write('%8s '%collision_diameter[i][j][k])
-			else:
-				fo.write('%8.4f '%collision_diameter[i][j][k])
-		fo.write('\n')
+		if collision_diameter[i][j] == '-':
+			fo.write('%8s\n'%collision_diameter[i][j])
+		else:
+			fo.write('%8.4f\n'%collision_diameter[i][j])
 	fo.write('\n')
 	fo.close()
 
@@ -156,8 +150,7 @@ for i in range(len(pdb_list)):
 ########## Average ###########
 NC_avg = [['-' for i in (ribo_cg_name_list)] for j in protein_cg_name_list]
 L24_avg = [['-' for i in (ribo_cg_name_list)] for j in protein_cg_name_list]
-collision_diameter_avg = [['-' for i in (protein_cg_name_list)] for j in protein_cg_name_list]
-collision_diameter_avg_avg = ['-' for i in protein_cg_name_list]
+collision_diameter_avg = ['-' for j in protein_cg_name_list]
 fo = open('NC_results.dat', 'a')
 fo.write('D_min_AVERAGE\n')
 fo.write('%8s '%' ')
@@ -215,67 +208,43 @@ fo.write('\n')
 fo.close()
 
 fo = open('RP_results.dat', 'a')
-fo.write('AVERAGE\n')
-fo.write('%8s '%' ')
-for rn in protein_cg_name_list:
-	fo.write('%8s '%rn)
-fo.write('\n')
-for j, pn in enumerate(protein_cg_name_list):
-	fo.write('%8s '%pn)
-	for k, rn in enumerate(protein_cg_name_list):
-		avg = 0
-		n_avg = 0
-		for i, pdb in enumerate(pdb_list):
-			if collision_diameter[i][j][k] != '-':
-				avg += collision_diameter[i][j][k]
-				n_avg += 1
-		if n_avg == 0:
-			avg = '-'
-		else:
-			avg = avg / n_avg
-			collision_diameter_avg[j][k] = avg
-		if avg == '-':
-			fo.write('%8s '%avg)
-		else:
-			fo.write('%8.4f '%avg)
-	fo.write('\n')
-fo.write('\n')
-
 fo.write('COLLISION DIAMETER\n')
 for j, pn in enumerate(protein_cg_name_list):
 	fo.write('%8s '%pn)
 	avg = 0
 	n_avg = 0
-	for k, rn in enumerate(protein_cg_name_list):
-		if collision_diameter_avg[j][k] != '-':
-			avg += collision_diameter_avg[j][k]
+	for i, pdb in enumerate(pdb_list):
+		if collision_diameter[i][j] != '-':
+			avg += collision_diameter[i][j]
 			n_avg += 1
 	if n_avg == 0:
 		avg = '-'
 	else:
 		avg = avg / n_avg
-		collision_diameter_avg_avg[j] = avg
-	if collision_diameter_avg_avg[j] == '-':
-		fo.write('%8s '%collision_diameter_avg_avg[j])
+		collision_diameter_avg[j] = avg
+	if avg == '-':
+		fo.write('%8s '%avg)
 	else:
-		fo.write('%8.4f '%collision_diameter_avg_avg[j])
+		fo.write('%8.4f '%avg)
 	fo.write('\n')
 fo.write('\n')
 
-protein_cg_R = []
+protein_cg_R2 = []
 for i in range(len(protein_cg_name_list)):
-	protein_cg_R.append(collision_diameter_avg_avg[i]*2**(1/6)/2)
+	protein_cg_R2.append(collision_diameter_avg[i]*2**(1/6)/2)
 
 fo.write('Rmin/2\n')
 for j, pn in enumerate(protein_cg_name_list):
 	fo.write('%8s '%pn)
-	if protein_cg_R[j] == '-':
-		fo.write('%8s '%protein_cg_R[j])
+	if protein_cg_R2[j] == '-':
+		fo.write('%8s '%protein_cg_R2[j])
 	else:
-		fo.write('%8.4f '%protein_cg_R[j])
+		fo.write('%8.4f '%protein_cg_R2[j])
 	fo.write('\n')
 fo.write('\n')
 fo.close()
+
+#protein_cg_R = protein_cg_R2
 
 ######## opt FF #########
 NC_FF = [['-' for i in range(3)] for j in protein_cg_name_list]
@@ -347,7 +316,7 @@ fo.close()
 ######## Avg opt FF #########
 fo = open('NC_results.dat', 'a')
 fo.write('AVERAGE FF\n')
-fo.write('%10s %10s %10s\n'%('P', 'R', 'BR'))
+str_list=['P', 'R', 'BR']
 for k in range(3):
 	avg = 0
 	n_avg = 0
@@ -360,10 +329,11 @@ for k in range(3):
 	else:
 		avg = avg / n_avg
 	if avg == '-':
-		fo.write('%10s '%avg)
+		fo.write('%-8s 0.0  -0.000132 %11s\n'%(str_list[k], avg))
 	else:
-		fo.write('%10.6f '%avg)
-fo.write('\n')
+		fo.write('%-8s 0.0  -0.000132 %11.6f\n'%(str_list[k], avg))
+for k in range(len(protein_cg_name_list)):
+	fo.write('%-8s 0.0  -0.000132 %11.6f\n'%(protein_cg_name_list[k], protein_cg_R[k]))
 fo.close()
 
 fo = open('L24_results.dat', 'a')
