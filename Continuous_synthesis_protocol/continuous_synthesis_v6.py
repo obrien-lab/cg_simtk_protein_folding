@@ -1566,8 +1566,17 @@ else:
 # assign GPU device index
 dev_index_list = []
 if use_gpu != 0:
-    dev_index_list = os.getenv('CUDA_VISIBLE_DEVICES').strip().split(',')
-    dev_index_list = [int(d) for d in dev_index_list]
+    if os.getenv('CUDA_VISIBLE_DEVICES') != None:
+        dev_index_list = os.getenv('CUDA_VISIBLE_DEVICES').strip().split(',')
+        dev_index_list = [int(d) for d in dev_index_list]
+    elif os.getenv('PBS_GPUFILE') != None or os.getenv('PBS_GPUFILE') != '':
+        gpu_file = open(os.getenv('PBS_GPUFILE'))
+        dev_index_list = gpu_file.readlines()
+        gpu_file.close()
+        dev_index_list = [i for i in range(len(dev_index_list))]
+    else:
+        print('Error: No CUDA environment detected!')
+        sys.exit()
     if len(dev_index_list) != int(tpn/ppn):
         print('Error: # of available GPU devices (%d) does not equal to tpn/ppn (%d)'%(len(dev_index_list), int(tpn/ppn)))
         sys.exit()
