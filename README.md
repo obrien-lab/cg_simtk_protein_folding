@@ -53,8 +53,8 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 | Scripts | Instructions |
 | ------ | ------ |
 | CG_protein_parameterization/**temperature_quenching.py** | Run temperature quenching simulation from the CG native structure of a given protein. This simulation is parallelized using multiple CPU processors. ([Learn more](../../wikis/help_wiki/temperature_quenching.py)) |
-| CG_protein_parameterization/**T_quench_nbx_3.pl** | An automated script to build CG model from a pdb file and then run temperature quenching simulations. (Learn more) | 
-| CG_protein_parameterization/**analysis_Tq.pl** | Analyze the results of temperature quenching simulations, fit a single- or double- exponential function to the survival probability of the unfolded protein and then estimate the folding rate.  (Learn more) | 
+| CG_protein_parameterization/**T_quench_nbx_3.pl** | An automated script to build CG model from a pdb file and then run temperature quenching simulations. ([Learn more](../../wikis/help_wiki/T_quench_nbx_3.pl)) | 
+| CG_protein_parameterization/**analysis_Tq.pl** | Analyze the results of temperature quenching simulations, fit a single- or double- exponential function to the survival probability of the unfolded protein and then estimate the folding rate.  ([Learn more](../../wikis/help_wiki/analysis_Tq.pl)) | 
 
 - To estimate the protein folding rate on PSU ACI cluster, you need to run `T_quench_nbx_3.pl` with optimized *n*<sub>scale</sub> values obtained from [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein) and then run `analysis_Tq.pl` to do the curve fitting.
 
