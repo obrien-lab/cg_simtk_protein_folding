@@ -32,9 +32,9 @@ traj_dir = './traj/'+str(traj_id)+'/'
 prefix = 'rnc_l'
 
 if ribo_type == 'ecoli':
-	tcl_script = os.environ['CG_MODEL_HOME']+'/Yang/Tcl/render_ecoli_RNC.tcl'
+	tcl_script = '/'.join(__file__.split('/')[:-1]) + '/render_ecoli_RNC.tcl'
 elif ribo_type == 'yeast':
-	tcl_script = os.environ['CG_MODEL_HOME']+'/Yang/Tcl/render_yeast_RNC.tcl'
+	tcl_script = '/'.join(__file__.split('/')[:-1]) + 'render_yeast_RNC.tcl'
 else:
 	print("Wrong ribosome type, could only be ecoli or yeast.")
 	sys.exit()
