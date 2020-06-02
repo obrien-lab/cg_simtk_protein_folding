@@ -80,10 +80,10 @@ To be able to create a Go-like CG C&alpha; model for a given protein, you need t
 | Scripts | Instructions |
 | ------ | ------ |
 | Continuous_synthesis_protocol/**continuous_synthesis_v6.py** | Run continuous synthesis of a CG protein on a CG ribosome. Both parallelizations on CPU and GPU are supported. ([Learn more](../../wikis/help_wiki/continuous_synthesis_v6.py)) <br>Scripts needed: `Continuous_synthesis_protocol/ribosome_traffic` and `CG_protein_parameterization/parse_cg_prm.py`. |
-| Continuous_synthesis_protocol/**ribosome_traffic** | Estimate the real codon translation time by taking into account of the ribosome traffic effects. (Learn more) | 
-| Continuous_synthesis_protocol/**visualize_cont_synth.py** | Generate movies of the continuous synthesis process. (Learn more) <br>Scripts needed: `Backmapping/backmap.py`, `Continuous_synthesis_protocol/render_ecoli_RNC.tcl` and `Continuous_synthesis_protocol/render_yeast_RNC.tcl` | 
-| Continuous_synthesis_protocol/**render_ecoli_RNC.tcl** | Render the picture of *E. coli* ribosome-nascent-chain (RNC) complex in VMD. (Learn more) | 
-| Continuous_synthesis_protocol/**render_yeast_RNC.tcl** | Render the picture of *S. cerevisiae* ribosome-nascent-chain (RNC) complex in VMD. (Learn more) |
+| Continuous_synthesis_protocol/**ribosome_traffic** | Estimate the real codon translation time by taking into account of the ribosome traffic effects. ([Learn more](../../wikis/help_wiki/ribosome_traffic)) | 
+| Continuous_synthesis_protocol/**visualize_cont_synth.py** | Generate movies of the continuous synthesis process. ([Learn more](../../wikis/help_wiki/visualize_cont_synth.py)) <br>Scripts needed: `Backmapping/backmap.py`, `Continuous_synthesis_protocol/render_ecoli_RNC.tcl` and `Continuous_synthesis_protocol/render_yeast_RNC.tcl` | 
+| Continuous_synthesis_protocol/**render_ecoli_RNC.tcl** | Render the picture of *E. coli* ribosome-nascent-chain (RNC) complex in VMD.  | 
+| Continuous_synthesis_protocol/**render_yeast_RNC.tcl** | Render the picture of *S. cerevisiae* ribosome-nascent-chain (RNC) complex in VMD.  |
 
 - To run CSP, you need to prepare the CG protein model for your nascent chain according to [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscale-for-a-given-protein) and prepare the CG ribosome model according to [Section 3](#3-create-cg-ribosome-model). All the .psf, .top, .cor and .prm files are required in initialization of CSP. In addition, users have to provide a table of intrinsic codon translation time and the mRNA sequence of the nascent chain.
 - Below is a video of the entire continuous synthesis process using `continuous_synthesis_v6.py` for synthesizing Firfly luciferase (550 residue long) on the *E.coli* ribosome and visualized using `visualize_cont_synth.py` (time is shown in the experimental timescale):
