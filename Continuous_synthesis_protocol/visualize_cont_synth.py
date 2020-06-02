@@ -34,7 +34,7 @@ prefix = 'rnc_l'
 if ribo_type == 'ecoli':
 	tcl_script = '/'.join(__file__.split('/')[:-1]) + '/render_ecoli_RNC.tcl'
 elif ribo_type == 'yeast':
-	tcl_script = '/'.join(__file__.split('/')[:-1]) + 'render_yeast_RNC.tcl'
+	tcl_script = '/'.join(__file__.split('/')[:-1]) + '/render_yeast_RNC.tcl'
 else:
 	print("Wrong ribosome type, could only be ecoli or yeast.")
 	sys.exit()
