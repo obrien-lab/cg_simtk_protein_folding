@@ -607,7 +607,7 @@ if domain_file != "None":
 # END read domain nscal values if domain is defined
 
 # initialize nonbonding potential
-root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
+root_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 if potential_name.startswith('MJ'):
     miya = root_dir+"/shared_files/mj_contact_potential.dat"
 elif potential_name.startswith('KGS'):
