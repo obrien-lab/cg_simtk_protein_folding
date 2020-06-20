@@ -474,7 +474,7 @@ try:
         if line.startswith('#'):
             # This is a comment line
             continue
-        if line.startswith('pdb'): # read in the PDB file name here.
+        if line.startswith('pdbfile'): # read in the PDB file name here.
             words = line.split('=')
             pdbfile = words[1].strip()
             continue
@@ -488,7 +488,7 @@ try:
             fnn_0 = words[1].strip()
             fnn = float(fnn_0)
             continue
-        if line.startswith('pot'): # read in the potential name
+        if line.startswith('potential_name'): # read in the potential name
             words = line.split('=')
             potential_name = words[1].strip()
             continue
