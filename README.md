@@ -96,10 +96,10 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 
 | Scripts | Instructions |
 | ------ | ------ |
-| Post_translational_folding/**post_trans_single_run_v2.py** | Run a single trajectory of post-translational folding. User can specify a walltime or a threshold to control the termination of the post-translational folding. (Learn more) |
-| Post_translational_folding/**PTP_setup_v3.pl** | Automated script to setup post-translation simulations after [CSP](#4-simulation-of-co-translational-folding). (Learn more) <br>Scripts needed: `Post-translational_folding/post_trans_single_run_v2.py` |
+| Post_translational_folding/**post_trans_single_run.py** | Run a single trajectory of post-translational folding. User can specify a walltime or a threshold to control the termination of the post-translational folding. (Learn more) |
+| Post_translational_folding/**PTP_setup.pl** | Automated script to setup post-translation simulations after [CSP](#4-simulation-of-co-translational-folding). (Learn more) <br>Scripts needed: `Post-translational_folding/post_trans_single_run_v2.py` |
 
-- To setup and run post-translation simulations on PSU ACI cluster, use `PTP_setup_v3.pl`.
+- To setup and run post-translation simulations on PSU ACI cluster, use `PTP_setup.pl`.
 
 ### 6. Backmapping from coarse-grained model to all-atom model
 - CG model has a lot of benifits on saving computational costs and improving sampling efficiency. However, it loses the atomic-level accuracy of the molecular structure. A polish backmapping strategy can rebuild the all-atom structure from the CG C&alpha; model with high accuracy. The rebuilt all-atom structure can be furthure used for visualization and simulation at all-atom level.
