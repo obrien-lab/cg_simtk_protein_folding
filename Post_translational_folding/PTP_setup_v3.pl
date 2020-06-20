@@ -22,7 +22,7 @@ GetOptions(
 );
 
 my $usage = "
-  Usage: perl PTP_setup_v2.pl 
+  Usage: perl PTP_setup.pl 
               --cspdir | -d <DIR> for continuous synthesis 
               --pdbname | -p <XXX> used in CG model creation
               --temp | -t <temperature> used for MD simulation
@@ -179,7 +179,7 @@ for(my $i = $start_traj_idx; $i <= $end_traj_idx; $i++)
 #PBS -A $allocation
 
 cd \$PBS_O_WORKDIR
-post_trans_single_run_v3.py $psf $cor $xml $temp $ppn traj_${i}_${j} $rand_num $vec $sim_step $sec_struc_def $Q_threshold $native_cor
+post_trans_single_run.py $psf $cor $xml $temp $ppn traj_${i}_${j} $rand_num $vec $sim_step $sec_struc_def $Q_threshold $native_cor
 ";
     close(JOB);
     print("submit traj ${i}_${j}\n");
