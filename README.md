@@ -22,7 +22,7 @@ This is a package of scripts that are used to create coarse-grained (CG) models 
 
 | Scripts | Instructions |
 | ------ | ------ |
-| CG_protein_parameterization/**create_cg_protein_model.py** | Create the CG model .psf .top .cor and .prm file that can be used for MD simulations. Need to get the Stride software installed prior to use. (Learn more) |
+| CG_protein_parameterization/**create_cg_protein_model.py** | Create the CG model .psf .top .cor and .prm file that can be used for MD simulations. Need to get the Stride software installed prior to use. ([Learn more](../../wikis/help_wiki/create_cg_protein_model.py)) |
 | CG_protein_parameterization/**parse_cg_prm.py** | Parse the parameters in .prm file and then create a .xml file for OpenMM use. ([Learn more](../../wikis/help_wiki/parse_cg_prm.py)) |
 | CG_protein_parameterization/**parallel_temperature_REX.py** | Run parallel temperature replica exchange molecular dynamics (pt-REMD) simulation. This simulation is parallelized using multiple CPU processors. ([Learn more](../../wikis/help_wiki/parallel_temperature_REX.py)) |
 | CG_protein_parameterization/**opt_temp.pl** | Optimize the temperature windows for pt-REMD simulation to ensure the good sampling quality around the melting temperature of the given protein. ([Learn more](../../wikis/help_wiki/opt_temp.pl)) |
@@ -107,10 +107,10 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 
 | Scripts | Instructions |
 | ------ | ------ |
-| Backmapping/**backmap.py** | Backmap the CG C&alpha; structure to its corresponding all-atom structure. ([Learn more](../../wikis/help_wiki/backmap.py)) <br>Scripts needed: `Backmapping/parse_cg_cacb_prm.py` and `CG_protein_parameterization/create_cg_protein_model_v34_0.37_nbx3.pl` |
-| Backmapping/**parse_cg_cacb_prm.py** | Parse the CG C&alpha;-side-chain model parameters and convert them into OpenMM .xml format. (Learn more) |
+| Backmapping/**backmap.py** | Backmap the CG C&alpha; structure to its corresponding all-atom structure. ([Learn more](../../wikis/help_wiki/backmap.py)) <br>Scripts needed: `Backmapping/parse_cg_cacb_prm.py` and `CG_protein_parameterization/create_cg_protein_model.py` |
+| Backmapping/**parse_cg_cacb_prm.py** | Parse the CG C&alpha;-sidechain model parameters and convert them into OpenMM .xml format. (Learn more) |
 
-- To backmap your CG C&alpha; structure, use `backmap.py`. Note that you need to install [PD2](https://github.com/jmacdona/pd2_public), [Pulchra](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html) and [Amber](http://ambermd.org/) before use this script.
+- To backmap your CG C&alpha; structure, use `backmap.py`. Note that you need to install [PD2](https://github.com/jmacdona/pd2_public), [Pulchra](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html) before use this script.
 
 ### 7. Analysis of protein folding trajectories
 - To analyze the protein folding process, we usually calculate the order parameters, such as the fraction of native contacts (Q), fraction of entangment changes (G) and fraction of chirality changes (K).
