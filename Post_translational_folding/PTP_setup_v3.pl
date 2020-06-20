@@ -4,7 +4,7 @@ use POSIX;
 use Getopt::Long;
 use Data::Dumper;
 
-my ($help, $CSP_dir, $pdb_name, $mutant_type, $ppn, $exp_time, $temp, $Q_threshold, $allocation, $rep_per_traj, $start_rep_idx);
+my ($help, $CSP_dir, $pdb_name, $mutant_type, $ppn, $exp_time, $temp, $Q_threshold, $allocation, $rep_per_traj, $start_rep_idx, $start_traj_idx, $end_traj_idx);
 GetOptions(
  'help|h!' => \$help,
  'cspdir|d=s' => \$CSP_dir,
@@ -15,6 +15,8 @@ GetOptions(
  'ppn|n=s' => \$ppn,
  'Q_th|q=s' => \$Q_threshold,
  'allocation|A=s' => \$allocation,
+ 'start_traj_idx|b=s' => \$start_traj_idx,
+ 'end_traj_idx|l=s' => \$end_traj_idx,
  'rep_per_traj|j=s' => \$rep_per_traj,
  'start_rep_idx|s=s' => \$start_rep_idx,
 );
@@ -29,6 +31,8 @@ my $usage = "
               [--type | -m <mutant type>] Default 'wild'
               [--allocation | -A <Allocation> for job to run] Default 'cyberlamp'
               [--ppn | -n <number of CPUs> for each trajectory] Default 1.
+              [--start_traj_idx | -b] <Start traj idx> Default 1.
+              [--end_traj_idx | -l] <Start traj idx> Default 1.
               [--rep_per_traj | -j <Num of replicas for each traj>] Default 1.
               [--start_rep_idx | -s <Start replica index for each traj>] Default 1.
               [--help | -h]\n\n";
@@ -53,6 +57,14 @@ if(!defined($mutant_type))
 if(!defined($allocation))
 {
   $allocation = 'cyberlamp';
+}
+if(!defined($start_traj_idx))
+{
+  $start_traj_idx = 1;
+}
+if(!defined($end_traj_idx))
+{
+  $end_traj_idx = 1;
 }
 if(!defined($rep_per_traj))
 {
@@ -113,7 +125,7 @@ else
   $job_name .= substr($mutant_type, 0, 1);
 }
 
-for(my $i = 1; $i <= $n_traj; $i++)
+for(my $i = $start_traj_idx; $i <= $end_traj_idx; $i++)
 {
   mkdir($i);
   chdir($i);
@@ -167,7 +179,7 @@ for(my $i = 1; $i <= $n_traj; $i++)
 #PBS -A $allocation
 
 cd \$PBS_O_WORKDIR
-post_trans_single_run_v2.py $psf $cor $xml $temp $ppn traj_${i}_${j} $rand_num $vec $sim_step $sec_struc_def $Q_threshold $native_cor
+post_trans_single_run_v3.py $psf $cor $xml $temp $ppn traj_${i}_${j} $rand_num $vec $sim_step $sec_struc_def $Q_threshold $native_cor
 ";
     close(JOB);
     print("submit traj ${i}_${j}\n");
