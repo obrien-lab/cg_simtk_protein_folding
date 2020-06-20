@@ -9,9 +9,10 @@ import numpy as np
 import mdtraj as mdt
 
 usage = '\nUsage: python backmap.py\n' \
-		'       --aa_pdb | -i <xxx.pdb> initial pdb file used to create the target C-alpha CG protein\n'\
-		'       --cg_pdb | -c <xxx.pdb> pdb file for the target C-alpha CG protein\n'\
-		'       [--help | -h] Print this information\n\n'
+        '       --aa_pdb | -i <xxx.pdb> initial pdb file used to create the target C-alpha CG protein\n'\
+        '       --cg_pdb | -c <xxx.pdb> pdb file for the target C-alpha CG protein\n'\
+        '       [-- nproc | -n <NUM>] number of CPU processors used to run energy minimizations\n'\
+        '       [--help | -h] Print this information\n\n'
 
 def clean_pdb(pdb, out_dir):
     AA_name_list = ['ALA', 'ARG', 'ASN', 'ASP', 'CYS', 'GLN', 'GLU', 'GLY', 'HIS', 'ILE', 
@@ -65,33 +66,21 @@ def create_psf(name):
     struct.save(name+'.psf', overwrite=True)
 
 def create_cg_model(pdb):
-    global cg_perl_script
     os.system("mkdir create_model")
     os.chdir("create_model")
 
     fo = open("go_model.cntrl", "w")
-    fo.write("pdb = ../%s\n"%pdb)
+    fo.write("pdbfile = ../%s\n"%pdb)
     fo.write("nscal = %.1f\n"%10)
-    fo.write("pot = mj\n")
-    fo.write("bondlength_go = 0\n")
-    fo.write("dihedral_go = 1\n")
-    fo.write("improperdihed_go = 1\n")
+    fo.write("potential_name = mj\n")
     fo.write("casm = 1\n")
-    fo.write("charges = 1\n")
-    fo.write("angle_dw = 0\n")
     fo.close()
   
-    os.system("%s go_model.cntrl > go_model.log 2>&1"%cg_perl_script);
+    os.system("create_cg_protein_model.py -f go_model.cntrl > go_model.log 2>&1");
     
     name = pdb.split('.pdb')[0].lower()
     prefix = name+'_ca-cb'
     prm_name = name + '_nscal10.0_fnn1_go_mj.prm'
-    
-    if os.path.exists('create_psf.inp'):
-        create_psf(prefix)
-    else:
-        print("Error: failed to create CG model from %s\n\n"%pdb)
-        sys.exit()
     
     if os.path.exists(prefix+'.psf'):
         os.system('cp *.psf ../')
@@ -124,8 +113,8 @@ def add_sc_beads(cg_pdb, cacb_struct):
     return new_cacb_struct
 
 def cacb_energy_minimization(cor, prefix, prm_file):
+    global nproc
     temp = 310
-    np = '1'
     timestep = 0.015*picoseconds
     fbsolu = 0.05/picosecond
     temp = temp*kelvin
@@ -136,6 +125,11 @@ def cacb_energy_minimization(cor, prefix, prm_file):
     os.system('parse_cg_cacb_prm.py -p '+prm_file+' -t '+prefix+'.top')
     name = prm_file.split('.prm')[0]
     forcefield = ForceField(name+'.xml')
+    
+    # re-name residues that are changed by openmm
+    for resid, res in enumerate(top.residues()):
+        if res.name != psf_pmd.residues[resid].name:
+            res.name = psf_pmd.residues[resid].name
     
     template_map = {}
     for chain in top.chains():
@@ -171,7 +165,7 @@ def cacb_energy_minimization(cor, prefix, prm_file):
     integrator.setConstraintTolerance(0.00001)
     # prepare simulation
     platform = Platform.getPlatformByName('CPU')
-    properties = {'Threads': np}
+    properties = {'Threads': nproc}
     simulation = Simulation(top, system, integrator, platform, properties)
     simulation.context.setPositions(cor)
     simulation.context.setVelocitiesToTemperature(temp)
@@ -187,58 +181,58 @@ def cacb_energy_minimization(cor, prefix, prm_file):
 
 # remove bond constraints of 0 mass atoms
 def rm_cons_0_mass(system):
-	tag = 0
-	while tag == 0 and system.getNumConstraints() != 0:
-		for i in range(system.getNumConstraints()):
-			con_i = system.getConstraintParameters(i)[0]
-			con_j = system.getConstraintParameters(i)[1]
-			mass_i = system.getParticleMass(con_i).value_in_unit(dalton)
-			mass_j = system.getParticleMass(con_j).value_in_unit(dalton)
-			if mass_i == 0 and mass_j == 0:
-				system.removeConstraint(i)
-				#print('Constraint %d is removed, range is %d'%(i, system.getNumConstraints()))
-				tag = 0
-				break
-			elif mass_i == 0 or mass_j == 0:
-				system.removeConstraint(i)
-				#print('Constraint %d is removed, range is %d'%(i, system.getNumConstraints()))
-				system.getForce(0).addBond(con_i, con_j, 3.81*angstroms, 50*kilocalories/mole/angstroms**2)
-				tag = 0
-				break
-			else:
-				tag = 1
+    tag = 0
+    while tag == 0 and system.getNumConstraints() != 0:
+        for i in range(system.getNumConstraints()):
+            con_i = system.getConstraintParameters(i)[0]
+            con_j = system.getConstraintParameters(i)[1]
+            mass_i = system.getParticleMass(con_i).value_in_unit(dalton)
+            mass_j = system.getParticleMass(con_j).value_in_unit(dalton)
+            if mass_i == 0 and mass_j == 0:
+                system.removeConstraint(i)
+                #print('Constraint %d is removed, range is %d'%(i, system.getNumConstraints()))
+                tag = 0
+                break
+            elif mass_i == 0 or mass_j == 0:
+                system.removeConstraint(i)
+                #print('Constraint %d is removed, range is %d'%(i, system.getNumConstraints()))
+                system.getForce(0).addBond(con_i, con_j, 3.81*angstroms, 50*kilocalories/mole/angstroms**2)
+                tag = 0
+                break
+            else:
+                tag = 1
 # END remove bond constraints of 0 mass atoms
 
 # energy decomposition 
 def forcegroupify(system):
-	forcegroups = {}
-	for i in range(system.getNumForces()):
-		force = system.getForce(i)
-		force.setForceGroup(i)
-		f = str(type(force))
-		s = f.split('\'')
-		f = s[1]
-		s = f.split('.')
-		f = s[-1]
-		forcegroups[i] = f
-	return forcegroups
+    forcegroups = {}
+    for i in range(system.getNumForces()):
+        force = system.getForce(i)
+        force.setForceGroup(i)
+        f = str(type(force))
+        s = f.split('\'')
+        f = s[1]
+        s = f.split('.')
+        f = s[-1]
+        forcegroups[i] = f
+    return forcegroups
 
 def getEnergyDecomposition(handle, context, system):
-	forcegroups = forcegroupify(system)
-	energies = {}
-	for i, f in forcegroups.items():
-		try:
-			states = context.getState(getEnergy=True, groups={i})
-		except ValueError as e:
-			print(str(e))
-			energies[i] = Quantity(np.nan, kilocalories/mole)
-		else:
-			energies[i] = states.getPotentialEnergy()
-	results = energies
-	handle.write('    Potential Energy:\n')
-	for idd in energies.keys():
-		handle.write('      %s: %.4f kcal/mol\n'%(forcegroups[idd], energies[idd].value_in_unit(kilocalories/mole))) 
-	return results
+    forcegroups = forcegroupify(system)
+    energies = {}
+    for i, f in forcegroups.items():
+        try:
+            states = context.getState(getEnergy=True, groups={i})
+        except ValueError as e:
+            print(str(e))
+            energies[i] = Quantity(np.nan, kilocalories/mole)
+        else:
+            energies[i] = states.getPotentialEnergy()
+    results = energies
+    handle.write('    Potential Energy:\n')
+    for idd in energies.keys():
+        handle.write('      %s: %.4f kcal/mol\n'%(forcegroups[idd], energies[idd].value_in_unit(kilocalories/mole))) 
+    return results
 
 def Call_PD2(mini_pdb):
     min_opt = 500
@@ -486,26 +480,124 @@ quit\n""")
 
     return (energy, pdb_code+'_min'+str(maxcyc)+'.pdb')
 
+def OpenMM_vacuum_minimization(input_pdb, maxcyc):
+    global nproc
+    pdb_code = input_pdb.split('.pdb')[0]
+
+    print("-> Running all-atom energy minimization for %d steps in vacuum via OpenMM"%maxcyc)
+
+    platform = Platform.getPlatformByName('CPU')
+    properties = {'Threads': nproc}
+
+    forcefield = ForceField('amber14-all.xml')
+    pdb = pdbfile.PDBFile(input_pdb)
+
+    # Check if the end residue has missing OXT atom and add if needed
+    for chain in pdb.topology.chains():
+        end_res = list(chain.residues())[-1]
+        found = False
+        for atom in end_res.atoms():
+            if atom.name == 'OXT':
+                found = True
+            elif atom.name == 'C':
+                C_atom = atom
+            elif atom.name == 'CA':
+                CA_atom = atom
+            elif atom.name == 'O':
+                O_atom = atom
+        C_position = np.array(pdb.positions[C_atom.index].value_in_unit(nanometer))
+        CA_position = np.array(pdb.positions[CA_atom.index].value_in_unit(nanometer))
+        O_position = np.array(pdb.positions[O_atom.index].value_in_unit(nanometer))
+        if not found:
+            new_atom = pdb.topology.addAtom('OXT', element.oxygen, end_res)
+            pdb.topology.addBond(C_atom, new_atom)
+            new_position = np.dot(rotation_matrix(C_position-CA_position, np.pi), O_position-C_position) + C_position
+            new_position = Quantity(value=Vec3(x=new_position[0], y=new_position[1], z=new_position[2]), unit=nanometer)
+            pdb.positions.insert(O_atom.index+1, new_position)
+
+    model = modeller.Modeller(pdb.topology, pdb.positions)
+    model.addHydrogens(forcefield=forcefield, pH=7.0, variants=None, platform=platform)
+
+    top = model.topology
+    structure = pmd.openmm.load_topology(top)
+    cor = model.positions
+    #structure.positions = cor
+    #structure.save('111.pdb', overwrite=True)
+    
+    system = forcefield.createSystem(top, nonbondedMethod=NoCutoff, constraints=None)
+    
+    # add position restraints
+    force = CustomExternalForce("k*((x-x0)^2+(y-y0)^2+(z-z0)^2)")
+    force.addPerParticleParameter("k")
+    force.addPerParticleParameter("x0")
+    force.addPerParticleParameter("y0")
+    force.addPerParticleParameter("z0")
+    system.addForce(force)
+    # END add position restraints
+    
+    # add position restraints for CA
+    force = system.getForces()[-1]
+    k = 500*kilocalorie/mole/angstrom**2
+    for atm in top.atoms():
+        if atm.name == 'CA':
+            force.addParticle(atm.index, (k, cor[atm.index][0], cor[atm.index][1], cor[atm.index][2]))
+    
+    integrator = LangevinIntegrator(300*kelvin, 1/picosecond, 0.002*picoseconds)
+    integrator.setConstraintTolerance(0.00001)
+    simulation = Simulation(top, system, integrator, platform, properties)
+    simulation.context.setPositions(cor)
+    energy = simulation.context.getState(getEnergy=True).getPotentialEnergy().value_in_unit(kilocalorie/mole)
+    getEnergyDecomposition(stdout, simulation.context, system)
+    print('   Potential energy before minimization: %.4f kcal/mol'%energy)
+    simulation.minimizeEnergy(maxIterations=maxcyc)
+    energy = simulation.context.getState(getEnergy=True).getPotentialEnergy().value_in_unit(kilocalorie/mole)
+    getEnergyDecomposition(stdout, simulation.context, system)
+    print('   Potential energy after minimization: %.4f kcal/mol'%energy)
+    current_cor = simulation.context.getState(getPositions=True).getPositions()
+    
+    structure.positions = current_cor
+    structure['!@/H'].save(pdb_code+'_OpenMM_min.pdb', overwrite=True)
+    return pdb_code+'_OpenMM_min.pdb'
+    
+def rotation_matrix(axis, theta):
+    """
+    Return the rotation matrix associated with counterclockwise rotation about
+    the given axis by theta radians.
+    """
+    axis = np.asarray(axis)
+    axis = axis / math.sqrt(np.dot(axis, axis))
+    a = math.cos(theta / 2.0)
+    b, c, d = -axis * math.sin(theta / 2.0)
+    aa, bb, cc, dd = a * a, b * b, c * c, d * d
+    bc, ad, ac, ab, bd, cd = b * c, a * d, a * c, a * b, b * d, c * d
+    return np.array([[aa + bb - cc - dd, 2 * (bc + ad), 2 * (bd - ac)],
+                     [2 * (bc - ad), aa + cc - bb - dd, 2 * (cd + ab)],
+                     [2 * (bd + ac), 2 * (cd - ab), aa + dd - bb - cc]])
+
 ##################################### MAIN #######################################
 if len(sys.argv) == 1:
-	print(usage)
-	sys.exit()
+    print(usage)
+    sys.exit()
 
+nproc = None
 try:
-	opts, args = getopt.getopt(sys.argv[1:],"h:i:c:", ["aa_pdb=", "cg_pdb="])
+    opts, args = getopt.getopt(sys.argv[1:],"h:i:c:n:", ["help", "aa_pdb=", "cg_pdb=", "nproc="])
 except getopt.GetoptError:
-	print(usage)
-	sys.exit()
+    print(usage)
+    sys.exit()
 for opt, arg in opts:
-	if opt == '-h':
-		print(usage)
-		sys.exit()
-	elif opt in ("-i", "--aa_pdb"):
-		aa_pdb = arg
-	elif opt in ("-c", "--cg_pdb"):
-		cg_pdb = arg
-
-cg_perl_script = 'create_cg_protein_model_v34_0.37_nbx3.pl'
+    if opt in ("-h", "--help"):
+        print(usage)
+        sys.exit()
+    elif opt in ("-i", "--aa_pdb"):
+        aa_pdb = arg
+    elif opt in ("-c", "--cg_pdb"):
+        cg_pdb = arg
+    elif opt in ("-n", "--nproc"):
+        nproc = arg
+        
+if nproc == None:
+    nproc = '1'
 
 print("-> Cleaning PDB file %s"%aa_pdb)
 name = cg_pdb.split('/')[-1].split('.pdb')[0]
@@ -550,10 +642,12 @@ output_from_PD2 = Call_PD2(target_name+'_mini.pdb')
 
 output_from_Pultra = Call_Pulchra(output_from_PD2)
 
-(energy, rec_pdb) = Amber_vacuum_minimization(output_from_Pultra, 50)
-if energy == "NaN":
-    os.system('cp '+output_from_Pultra+' ../'+target_name+'_rebuilt.pdb')
-else:
+try:
+    rec_pdb = OpenMM_vacuum_minimization(output_from_Pultra, 50)
     os.system('cp '+rec_pdb+' ../'+target_name+'_rebuilt.pdb')
+except Exception as e:
+    traceback.print_exc()
+    print('Failed to run OpenMM minimization. Use Pulchra result instead.')
+    os.system('cp '+output_from_Pultra+' ../'+target_name+'_rebuilt.pdb')
 
 os.chdir('../')
