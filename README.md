@@ -16,6 +16,7 @@ This is a package of scripts that are used to create coarse-grained (CG) models 
 
 
 ### 1. Create CG protein models and tune the force field parameters (*n*<sub>scale</sub>) for a given protein
+- The CG protein model used in the simulations of protein folding is a G&omacr;-like C<sub>&alpha;</sub> model. The force field can be found [here](../../wikis/help_wiki/create_cg_protein_model.py#51-force-field-of-the-c%CE%B1-model). Another CG model, C<sub>&alpha;</sub>-sidechain model is used to do backmapping.
 #### 1.1. Tune *n*<sub>scale</sub> for a small single-domain protein that has experimental folding stability reported
 - For a small single-domain protein that has experimental folding stability reported, we use an enhanced sampling protocol i.e. replica exchange simulations to extensively sample the protein folding and unfolding and identify the *n*<sub>scale</sub> value to reproduce the experimental protein folding stability.
 - Scripts to be used in this section:
