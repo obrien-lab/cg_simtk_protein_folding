@@ -89,7 +89,7 @@ This is a package of scripts that are used to create coarse-grained (CG) models 
 
 ![Example video of synthesizing Firfly luciferase on the E.coli ribosome](../../wikis/uploads/img/Luc_fast_CSP.mp4)
 
-The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in orange; The nascent chain is represented as Cartoon and colored according to the secondary structures; The flexible region of ribosomal protein L24 is shown in green. Only the last frame of the trajectory for each NC length is shown in this video. [:leftwards_arrow_with_hook:](#table-of-contents)
+The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in orange; The nascent chain is represented as Cartoon and colored according to the secondary structures; The flexible region of ribosomal protein L24 is shown in green. Only the last frame of the trajectory for each synthesis step at each NC length is shown in this video. [:leftwards_arrow_with_hook:](#table-of-contents)
 
 ### 5. Simulation of post-translational folding
 - The simulation of post-translational folding is quite simple. The nascent chain structures that are disassociated from the ribosome will be obtained from [CSP](#4-simulation-of-co-translational-folding) and run Langevin dynamics (LD) in implicit water environment at the physiological temperature.
