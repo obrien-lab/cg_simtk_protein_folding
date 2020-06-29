@@ -98,7 +98,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 | Scripts | Instructions |
 | ------ | ------ |
 | Post_translational_folding/**post_trans_single_run.py** | Run a single trajectory of post-translational folding. User can specify a walltime or a threshold to control the termination of the post-translational folding. ([Learn more](../../wikis/help_wiki/post_trans_single_run.py)) |
-| Post_translational_folding/**PTP_setup.pl** | Automated script to setup post-translation simulations after [CSP](#4-simulation-of-co-translational-folding). (Learn more) <br>Scripts needed: `Post-translational_folding/post_trans_single_run.py` |
+| Post_translational_folding/**PTP_setup.pl** | Automated script to setup post-translation simulations after [CSP](#4-simulation-of-co-translational-folding). ([Learn more](../../wikis/help_wiki/PTP_setup.pl)) <br>Scripts needed: `Post-translational_folding/post_trans_single_run.py` |
 
 - To setup and run post-translation simulations on PSU ACI cluster, use `PTP_setup.pl`. [:leftwards_arrow_with_hook:](#table-of-contents)
 
