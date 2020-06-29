@@ -208,7 +208,7 @@ def analysis(root_dir, ana_dir, traj_dir, init_idx, prefix, max_chain_length, ej
                     traj_psf_pmd.positions = traj_coor
                     new_traj_psf_pmd = traj_psf_pmd[0:max_eject_idx+1]
                     new_traj_psf_pmd.save(tmp_dir+'/traj.cor', format='charmmcrd', overwrite=True)
-                    os.system('calc_native_contact_fraction_v2.pl -i '+ref_cor+' -d '+domain_def+' -s '+secondary_structure_def+' -t '+tmp_dir+'/traj.cor > /dev/null')
+                    os.system('calc_native_contact_fraction.pl -i '+ref_cor+' -d '+domain_def+' -s '+secondary_structure_def+' -t '+tmp_dir+'/traj.cor > /dev/null')
                 else:
                     if os.path.exists(traj_name):
                         if not os.path.getsize(traj_name):
@@ -222,7 +222,7 @@ def analysis(root_dir, ana_dir, traj_dir, init_idx, prefix, max_chain_length, ej
                     traj = md.load(traj_name, top=psf_name)
                     new_traj = traj.atom_slice(select)
                     new_traj.save(tmp_dir+'/traj.dcd', force_overwrite=True)
-                    os.system('calc_native_contact_fraction_v2.pl -i '+ref_cor+' -d '+domain_def+' -s '+secondary_structure_def+' -t '+tmp_dir+'/traj.dcd > /dev/null')
+                    os.system('calc_native_contact_fraction.pl -i '+ref_cor+' -d '+domain_def+' -s '+secondary_structure_def+' -t '+tmp_dir+'/traj.dcd > /dev/null')
                 
                 fo = open(tmp_dir+'/qbb_traj.dat', 'r')
                 lines = fo.readlines()
@@ -277,12 +277,12 @@ def analysis(root_dir, ana_dir, traj_dir, init_idx, prefix, max_chain_length, ej
             traj_psf_pmd.positions = traj_coor
             new_traj_psf_pmd = traj_psf_pmd[0:max_chain_length]
             new_traj_psf_pmd.save(tmp_dir+'/traj.cor', format='charmmcrd', overwrite=True)
-            os.system('calc_native_contact_fraction_v2.pl -i '+ref_cor+' -d '+domain_def+' -s '+secondary_structure_def+' -t '+tmp_dir+'/traj.cor > /dev/null')
+            os.system('calc_native_contact_fraction.pl -i '+ref_cor+' -d '+domain_def+' -s '+secondary_structure_def+' -t '+tmp_dir+'/traj.cor > /dev/null')
         else:
             traj = md.load(traj_name, top=psf_name)
             new_traj = traj.atom_slice(select)
             new_traj.save(tmp_dir+'/traj.dcd', force_overwrite=True)
-            os.system('calc_native_contact_fraction_v2.pl -i '+ref_cor+' -d '+domain_def+' -s '+secondary_structure_def+' -t '+tmp_dir+'/traj.dcd > /dev/null')
+            os.system('calc_native_contact_fraction.pl -i '+ref_cor+' -d '+domain_def+' -s '+secondary_structure_def+' -t '+tmp_dir+'/traj.dcd > /dev/null')
         fo = open(tmp_dir+'/qbb_traj.dat', 'r')
         lines = fo.readlines()
         qbb_list = []
