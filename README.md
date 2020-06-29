@@ -111,7 +111,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 | Backmapping/**backmap.py** | Backmap the CG C&alpha; structure to its corresponding all-atom structure. ([Learn more](../../wikis/help_wiki/backmap.py)) <br>Scripts needed: `Backmapping/parse_cg_cacb_prm.py` and `CG_protein_parameterization/create_cg_protein_model.py` |
 | Backmapping/**parse_cg_cacb_prm.py** | Parse the CG C&alpha;-sidechain model parameters and convert them into OpenMM .xml format. ([Learn more](../../wikis/help_wiki/parse_cg_cacb_prm.py)) |
 
-- To backmap your CG C&alpha; structure, use `backmap.py`. Note that you need to install [PD2](https://github.com/jmacdona/pd2_public), [Pulchra](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html) before use this script. [:leftwards_arrow_with_hook:](#table-of-contents)
+- To backmap your CG C&alpha; structure, use `backmap.py`. Note that you need to install [PD2](https://github.com/jmacdona/pd2_public) and [Pulchra](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html) before use this script. [:leftwards_arrow_with_hook:](#table-of-contents)
 
 ### 7. Analysis of protein folding trajectories
 - To analyze the protein folding process, we usually calculate the order parameters, such as the fraction of native contacts (Q), fraction of entangment changes (G) and fraction of chirality changes (K).
@@ -119,11 +119,11 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 
 | Scripts | Instructions |
 | ------ | ------ |
-| Analysis_protocol/**get_Ep_from_dcd.py** | Get potential energy from a dcd trajectory using OpenMM for a CG model. (Learn more) |
-| Analysis_protocol/**calc_native_contact_fraction_v2.pl** | Calculate Q vs. time for a given trajectory. (Learn more) |
+| Analysis_protocol/**get_Ep_from_dcd.py** | Get potential energy from a dcd trajectory using OpenMM for a CG model. ([Learn more](../../wikis/help_wiki/get_Ep_from_dcd.py)) |
+| Analysis_protocol/**calc_native_contact_fraction.pl** | Calculate Q vs. time for a given trajectory. ([Learn more](../../wikis/help_wiki/calc_native_contact_fraction.pl)) |
 | Analysis_protocol/**calc_entanglement_number.pl** | Calculate G vs. time for a given trajectory. (Learn more) | 
 | Analysis_protocol/**calc_chirality_number.pl** | Calculate K vs. time for a given trajectory. (Learn more) | 
-| Analysis_protocol/**calc_cont_synth_qbb_vs_T.py** | Automated script to calculate Q vs. time for [CSP](#4-simulation-of-co-translational-folding) trajectoris. (Learn more) <br>Scripts needed: `Analysis_protocol/calc_native_contact_fraction_v2.pl` |
+| Analysis_protocol/**calc_cont_synth_qbb_vs_T.py** | Automated script to calculate Q vs. time for [CSP](#4-simulation-of-co-translational-folding) trajectoris. (Learn more) <br>Scripts needed: `Analysis_protocol/calc_native_contact_fraction.pl` |
 | Analysis_protocol/**mrna_silent_mutation.pl** | Do silent mutation for a given mRNA sequence and a mutation scheme, such as fastest translation, slowest translation and random. (Learn more) |
 
 [:leftwards_arrow_with_hook:](#table-of-contents)
