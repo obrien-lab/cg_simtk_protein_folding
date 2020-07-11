@@ -15,7 +15,7 @@ GetOptions(
 );
 
 my $usage = "
-  Usage: perl calc_native_contact_fraction.pl 
+  Usage: perl calc_entanglement_number.pl
               --input | -i <INPUT.COR> for identify native contacts
               --traj | -t <TRAJ.DCD> for simulation trajectory
               [--begin | -b] <START STEP> to split trajectory. 
