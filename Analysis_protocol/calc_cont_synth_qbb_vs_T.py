@@ -4,30 +4,26 @@ import numpy as np
 import mdtraj as md
 import parmed as pmd
 
-usage='Usage: python calc_cont_synth_qbb_vs_T.py <domain_def> <secondary_structure_def> <eject_offset> <trun_qbb> <Q_bulk_list> <num_proc> <work_folder_list> <if_normalize>'
+usage='Usage: python calc_cont_synth_qbb_vs_T.py <domain_def> <secondary_structure_def> <eject_offset> <num_proc> <work_folder_list> <if_normalize>'
 
 domain_def = None
 secondary_structure_def = None
 eject_offset = 30
 np = 20
-if len(sys.argv) == 9:
+if len(sys.argv) == 7:
     domain_def = sys.argv[1]
     secondary_structure_def = sys.argv[2]
     eject_offset = int(sys.argv[3])
-    trun_qbb_file = sys.argv[4]
-    Q_bulk_list = [float(q) for q in sys.argv[5].strip().split()]
-    np = int(sys.argv[6])
-    work_folder_list = sys.argv[7].strip().split()
-    if_normalize = int(sys.argv[8])
-elif len(sys.argv) == 8:
+    np = int(sys.argv[4])
+    work_folder_list = sys.argv[5].strip().split()
+    if_normalize = int(sys.argv[6])
+elif len(sys.argv) == 6:
     domain_def = sys.argv[1]
     secondary_structure_def = sys.argv[2]
     eject_offset = int(sys.argv[3])
-    trun_qbb_file = sys.argv[4]
-    Q_bulk_list = [float(q) for q in sys.argv[5].strip().split()]
-    np = int(sys.argv[6])
+    np = int(sys.argv[4])
     work_folder_list = ['./']
-    if_normalize = int(sys.argv[7])
+    if_normalize = int(sys.argv[5])
 else:
     print("Wrong number of argv")
     print(usage)
@@ -364,133 +360,3 @@ for work_folder in work_folder_list:
     pool.join()
 
     os.chdir(root_dir)
-
-#os.chdir(root_dir+'/'+ana_dir+'/')
-#fo = open('plot_qbb.m', 'w')
-#fo.write('''clear all
-#dt = '''+str(dt)+'''/1000;
-#nsave = '''+str(nsave)+''';
-#alpha = '''+str(alpha)+''';
-#dt = dt*nsave*alpha/1e6;
-#n_traj = '''+str(max_num_traj)+''';
-#max_length = '''+str(max_length)+''';
-#Q_bulk_list = [''');
-#for i in Q_bulk_list:
-#    fo.write(str(i)+', ')
-#fo.write('''];
-#Q_length_file = \''''+trun_qbb_file+'''\';
-#eject_offset = '''+str(eject_offset)+''';
-#domain_idx = find(Q_bulk_list ~= 1);
-#D = {};
-#D_ter = {};
-#for i=1:n_traj
-#C = importdata(['qbb_cs_' num2str(i) '.dat'], ' ', 1);
-#D{i} = C.data(:,2:end);
-#domain_str = C.colheaders;
-#C = importdata(['qbb_te_' num2str(i) '.dat'], ' ', 1);
-#D_ter{i} = C.data(:,1:end);
-#end
-#
-#if ~isequal(Q_length_file, '')
-#Q_length = importdata(Q_length_file, ' ', 1);
-#Q_length = Q_length.data;
-#if Q_length(1,1) ~= 1
-#    L = [1];
-#    for i = 2:size(Q_length,2)
-#        L(1,i) = 0;
-#    end
-#    Q_length = [L; Q_length];
-#end
-#if Q_length(end,1) ~= max_length
-#    L = [max_length];
-#    L(1,2:2:size(Q_length,2)) = Q_bulk_list;
-#    L(1,3:2:size(Q_length,2)) = Q_length(end, 3:2:size(Q_length,2));
-#    Q_length = [Q_length; L];
-#end
-#Q_avg_length = Q_length(:, 2:2:size(Q_length,2));
-#Q_std_length = Q_length(:, 3:2:size(Q_length,2));
-#Q_avg_length_fit = interp1(Q_length(:,1), Q_avg_length, (1:max_length)', 'pchip');
-#Q_ustd_length_fit = interp1(Q_length(:,1), Q_avg_length+Q_std_length, (1:max_length)', 'pchip');
-#Q_lstd_length_fit = interp1(Q_length(:,1), Q_avg_length-Q_std_length, (1:max_length)', 'pchip');
-#end
-#
-#sub_length = 20;
-#sub_height = 4;
-#f_length = sub_length;
-#f_height = sub_height*(length(domain_idx));
-#figure(1)
-#set(gcf,'Resize', 'off', 'Units','centimeters',...
-#'Position',[8 1.5 f_length f_height],'paperpositionmode','auto');
-#for j = 1:length(domain_idx)
-#subplot(length(domain_idx), 1, j)
-#hold on
-#Q = [];
-#max_frame = 0;
-#for i=1:n_traj
-#    plot(D{i}(:,domain_idx(j)), '-', 'Color', [135 206 250]/255, 'Linewidth', 1.0)
-#    plot(max_length+0.5*(1:size(D_ter{i},1)), D_ter{i}(:,domain_idx(j)), '-', 'Color', [135 206 250]/255, 'Linewidth', 1.0)
-#    if max_frame < size(D_ter{i},1)
-#        max_frame = size(D_ter{i},1);
-#    end
-#end
-#for k=1:max_length
-#    a=0;
-#    n=0;
-#    for i=1:n_traj
-#        if k <= length(D{i}(:,domain_idx(j)))
-#            a=a+D{i}(k,domain_idx(j));
-#            n=n+1;
-#        end
-#    end
-#    Q(k)=a/n;
-#end
-#plot(Q,'-b','Linewidth', 1.0)
-#if ~isequal(Q_length_file, '')
-#    plot(eject_offset+1:max_length, Q_avg_length_fit(1:max_length-eject_offset,domain_idx(j))', '-r', 'Linewidth', 1)
-#    patch([eject_offset+1:max_length max_length:-1:eject_offset+1], [Q_ustd_length_fit(1:max_length-eject_offset,domain_idx(j))' Q_lstd_length_fit(max_length-eject_offset:-1:1,domain_idx(j))'], 'r','FaceAlpha',0.2,'EdgeColor','none','LineWidth',1.0)
-#    plot([max_length max_length+0.5*max_frame], [Q_bulk_list(domain_idx(j)) Q_bulk_list(domain_idx(j))],'-r','Linewidth', 1)
-#else
-#    plot([1 max_length+0.5*max_frame], [Q_bulk_list(domain_idx(j)) Q_bulk_list(domain_idx(j))],'-r','Linewidth', 1)
-#end
-#plot([max_length max_length], [0 1],'-k','Linewidth', 1.5)
-#set(gca, 'fontsize',11,'fontweight','normal','LineWidth',1.5,'fontname','Nimbus Roman No9 L')
-#box on
-#grid on
-#xlh = xlabel(' ','fontsize',13,'color','k','Interpreter','latex');
-#ylh = ylabel('$Q_{\\rm syn}$','fontsize',13,'color','k','Interpreter','latex');
-#text('String', 'Chain length (aa)', 'Position', [0.5*(1+max_length),1.2*xlh.Position(2)],...
-#    'fontsize',13,'color','k','Interpreter','latex',...
-#    'HorizontalAlignment','center','VerticalAlignment','top')
-#text('String', 'Experimental time (ms)', 'Position', [0.5*(2*max_length+0.5*max_frame),...
-#    1.2*xlh.Position(2)],'fontsize',13,'color','k','Interpreter','latex',...
-#    'HorizontalAlignment','center','VerticalAlignment','top')
-#text('String', '$Q_{\\rm ter}$', 'Position', [-0.5*ylh.Position(1)+max_length+0.5*max_frame,0.5],...
-#    'fontsize',13,'color','k','Interpreter','latex',...
-#    'HorizontalAlignment','center','rotation',90)
-#title_str = domain_str{domain_idx(j)+1};
-#if ~isempty(strfind(title_str, 'D'))
-#    title_str = ['Domain ' title_str(3:end)];
-#elseif ~isempty(strfind(title_str, '|'))
-#    idx = strfind(title_str, '|');
-#    title_str = ['Interface ' title_str(1:idx(1)-1) '$\\mid$' title_str(idx(1)+1:end)];
-#else
-#    title_str = [upper(title_str(1)) title_str(2:end)];
-#end
-#title(title_str, 'Fontsize', 13, 'Interpreter','latex')
-#axis([1 max_length+0.5*max_frame 0 1])
-#xtick_1 = 0:20:max_length; 
-#xtick_2 = max_length+0.5*(20/dt:20/dt:max_frame);
-#xtick = [xtick_1 xtick_2];
-#xticklabel = {};
-#for i = 1:length(xtick_1)
-#    xticklabel{i} = num2str(xtick_1(i));
-#end
-#for i = 1:length(xtick_2)
-#    xticklabel{length(xtick_1)+i} = 20*i;
-#end
-#set(gca, 'XTick', [xtick_1 xtick_2], 'XTickLabel', xticklabel);
-#end
-#saveas(gcf, 'qbb_vs_length.svg')
-#quit\n''');
-#fo.close()
-#os.system('matlab -nodisplay -r plot_qbb > /dev/null')
