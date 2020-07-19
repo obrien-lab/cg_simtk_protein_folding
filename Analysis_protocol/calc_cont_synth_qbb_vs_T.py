@@ -4,7 +4,7 @@ import numpy as np
 import mdtraj as md
 import parmed as pmd
 
-usage='Usage: python calc_cont_synth_qbb.py <domain_def> <secondary_structure_def> <eject_offset> <trun_qbb> <Q_bulk_list> <num_proc> <work_folder_list> <if_normalize>'
+usage='Usage: python calc_cont_synth_qbb_vs_T.py <domain_def> <secondary_structure_def> <eject_offset> <trun_qbb> <Q_bulk_list> <num_proc> <work_folder_list> <if_normalize>'
 
 domain_def = None
 secondary_structure_def = None
