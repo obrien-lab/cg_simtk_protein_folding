@@ -45,7 +45,12 @@ def run_REX_LD(psf_file, psf, forcefield, templete_map, cor, temp, strtemp, outn
     nonbond_cutoff = 2.0*nanometer
     switch_cutoff = 1.8*nanometer
     constraint_tolerance = 0.00001
+    psf_pmd = pmd.charmm.psf.CharmmPsfFile(psf_file)
     top = psf.topology
+    # re-name residues that are changed by openmm
+    for resid, res in enumerate(top.residues()):
+        if res.name != psf_pmd.residues[resid].name:
+            res.name = psf_pmd.residues[resid].name
     platform = Platform.getPlatformByName('CPU')
     system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
         nonbondedCutoff=nonbond_cutoff, switchDistance=switch_cutoff, 
@@ -76,7 +81,6 @@ def run_REX_LD(psf_file, psf, forcefield, templete_map, cor, temp, strtemp, outn
     #pdb.save(outname, format='charmmcrd', overwrite=True)
     #os.remove(outname+'.pdb')
     current_cor = simulation.context.getState(getPositions=True).getPositions()
-    psf_pmd = pmd.charmm.psf.CharmmPsfFile(psf_file)
     psf_pmd.positions = current_cor
     psf_pmd.save(outname, format='charmmcrd', overwrite=True)
     energy = simulation.context.getState(getEnergy=True).getPotentialEnergy()
@@ -378,8 +382,13 @@ for i in range(nwin):
     nexch.append(0)
 psf_file = psf
 psf = CharmmPsfFile(psf)
+psf_pmd = pmd.charmm.psf.CharmmPsfFile(psf_file)
 forcefield = ForceField(xml_param)
 top = psf.topology
+# re-name residues that are changed by openmm
+for resid, res in enumerate(top.residues()):
+    if res.name != psf_pmd.residues[resid].name:
+        res.name = psf_pmd.residues[resid].name
 templete_map = {}
 for chain in top.chains():
     for res in chain.residues():
