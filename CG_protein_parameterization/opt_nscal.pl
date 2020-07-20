@@ -194,9 +194,14 @@ fbsolu = 0.05/picosecond
 temp = temp*kelvin
 
 psf = CharmmPsfFile(psffile)
+psf_pmd = pmd.load_file(psffile)
 cor = CharmmCrdFile(corfile)
 forcefield = ForceField(prmfile)
 top = psf.topology
+# re-name residues that are changed by openmm
+for resid, res in enumerate(top.residues()):
+    if res.name != psf_pmd.residues[resid].name:
+        res.name = psf_pmd.residues[resid].name
 templete_map = {}
 for chain in top.chains():
     for res in chain.residues():
