@@ -1,7 +1,9 @@
 ## Coarse-grained Simulation Toolkits for Protein Folding
 #### Author: [Dr. Yang Jiang](https://orcid.org/0000-0003-1100-9177)
 
-This is a package of scripts that are used to create coarse-grained (CG) models of proteins/ribosomes, optimize CG force field parameters and run MD simulations for protein co- and post-translational folding. All the scripts are ready to use when users have added the directories in `$PATH` and have granted the execution permission (`chmod +x`) for all the scripts. <br>:warning: Some of the scripts need python modules (Python 3.X) and other softerware installed prior to use. Please click `Learn more` in the following script instruction tables to find detailed instruction of usage and basic theory used in the script.
+This is a package of scripts that are used to create coarse-grained (CG) models of proteins/ribosomes, optimize CG force field parameters, run MD simulations for protein co- and post-translational folding and analyze the folding structures. All the scripts are ready to use when users have added the directories (including all the child folders) in `$PATH` (add `export PATH=${PATH}:/path/to/one/child/folder/` in your `~/.bashrc` file) and have granted the execution permission (`chmod -R +x ./cg_simtk_protain_folding/`) for all the scripts. 
+
+:warning: Some of the scripts need python modules (Python 3.X) and other softerware installed prior to use. Please click `Learn more` in the following script instruction tables to find detailed instruction of usage and basic theory used in the script.
 
 ### Table of Contents
   * [1. Create CG protein models and tune the force field parameters (*n*<sub>scal</sub>) for a given protein](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscal-for-a-given-protein)
@@ -30,9 +32,9 @@ This is a package of scripts that are used to create coarse-grained (CG) models 
 | CG_protein_parameterization/**check_sampling.pl** | Check the sampling quality for pt-REMD simulation. Insufficient sampling will cause problems and inaccuracy in estimating the protein folding stability. ([Learn more](../../wikis/help_wiki/check_sampling.pl)) | 
 | CG_protein_parameterization/**dGns.pl** | Convert folding propability *P*<sub>N</sub> to folding stability &Delta;*G*<sub>UN</sub> at a given temperature *T*: <br>$`\Delta G_{\text{UN}} (T)=-k_{\text{B}} T \cdot \mathrm{ln}[\frac{P_{\text{N}} (T)}{1-P_{\text{N}} (T)}]`$. |
 | CG_protein_parameterization/**analysis_folding_stability.pl** | Estimate the protein folding stability at a given temperature from pt-REMD data using WHAM. ([Learn more](../../wikis/help_wiki/analysis_folding_stability.pl)) |
-| CG_protein_parameterization/**scan_nscal_nbx_3_REX.pl** | An automated script to call `create_cg_protein_model_v34_0.37_nbx3.pl`, `opt_temp.pl`, `parallel_temperature_REX.py` and `analysis_folding_stability.pl` to scan the protein folding stability profile as changing *n*<sub>scal</sub> value. The protein folding stability profile will be used to find the optimized *n*<sub>scal</sub> value for CG model parameterization. ([Learn more](../../wikis/help_wiki/scan_nscal_nbx_3_REX.pl)) | 
+| CG_protein_parameterization/**scan_nscal_REX.pl** | An automated script to call `create_cg_protein_model.py`, `opt_temp.pl`, `parallel_temperature_REX.py` and `analysis_folding_stability.pl` to scan the protein folding stability profile as changing *n*<sub>scal</sub> value. The protein folding stability profile will be used to find the optimized *n*<sub>scal</sub> value for CG model parameterization. ([Learn more](../../wikis/help_wiki/scan_nscal_REX.pl)) | 
 
-- To tune *n*<sub>scal</sub> for a given protein on PSU ACI cluster, run `scan_nscal_nbx_3_REX.pl` with a series of *n*<sub>scal</sub> values. Use `scan_nscal_nbx_3_REX.pl` again to analyze the results and get the protein stability profile. The optimized *n*<sub>scal</sub> is the value that reproduces the experimental protein folding stability. [:leftwards_arrow_with_hook:](#table-of-contents)
+- To tune *n*<sub>scal</sub> for a given protein on PSU ACI cluster, run `scan_nscal_REX.pl` with a series of *n*<sub>scal</sub> values. Use `scan_nscal_REX.pl` again to analyze the results and get the protein stability profile. The optimized *n*<sub>scal</sub> is the value that reproduces the experimental protein folding stability. [:leftwards_arrow_with_hook:](#table-of-contents)
 
 #### 1.2. Tune *n*<sub>scal</sub> for a protein without experimental folding stability reported
 - For a protein without experimental folding stability reported, we use a stepwise optimization strategy to tune *n*<sub>scal</sub> according to 5 levels of *n*<sub>scal</sub>. The optimized *n*<sub>scal</sub> of an entire single-domain protein or one domain/interface of a multi-domain protein is identified as the lowest level that maintains the native structure. 
@@ -52,7 +54,7 @@ This is a package of scripts that are used to create coarse-grained (CG) models 
 | Scripts | Instructions |
 | ------ | ------ |
 | CG_protein_parameterization/**temperature_quenching.py** | Run temperature quenching simulation from the CG native structure of a given protein. This simulation is parallelized using multiple CPU processors. ([Learn more](../../wikis/help_wiki/temperature_quenching.py)) |
-| CG_protein_parameterization/**T_quench_nbx_3.pl** | An automated script to build CG model from a pdb file and then run temperature quenching simulations. ([Learn more](../../wikis/help_wiki/T_quench_nbx_3.pl)) | 
+| CG_protein_parameterization/**T_quench.pl** | An automated script to build CG model from a pdb file and then run temperature quenching simulations. ([Learn more](../../wikis/help_wiki/T_quench.pl)) | 
 | CG_protein_parameterization/**analysis_Tq.pl** | Analyze the results of temperature quenching simulations, fit a single- or double- exponential function to the survival probability of the unfolded protein and then estimate the folding rate.  ([Learn more](../../wikis/help_wiki/analysis_Tq.pl)) | 
 
 - To estimate the protein folding rate on PSU ACI cluster, you need to run `T_quench_nbx_3.pl` with optimized *n*<sub>scal</sub> values obtained from [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscal-for-a-given-protein) and then run `analysis_Tq.pl` to do the curve fitting. [:leftwards_arrow_with_hook:](#table-of-contents)
