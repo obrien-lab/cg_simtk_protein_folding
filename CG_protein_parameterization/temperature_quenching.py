@@ -28,7 +28,7 @@ usage = '\nUsage: python temperature_quenching.py\n' \
 ###### run Langevin Dynamics ######
 def run_TQ_LD(index, rand):
     global nsteps_equil, temp_equil, temp_prod, tag_restart_equil, tag_restart_prod
-    global psf, forcefield, templete_map, start_cor, properties, current_step
+    global psf, psf_pmd, forcefield, templete_map, start_cor, properties, current_step
     global nsteps_save, timestep, Q_threshold, fold_nframe, folding_array
 
     fbsolu = 0.05/picosecond
@@ -36,6 +36,10 @@ def run_TQ_LD(index, rand):
     switch_cutoff = 1.8*nanometer
     constraint_tolerance = 0.00001
     top = psf.topology
+    # re-name residues that are changed by openmm
+    for resid, res in enumerate(top.residues()):
+        if res.name != psf_pmd.residues[resid].name:
+            res.name = psf_pmd.residues[resid].name
     platform = Platform.getPlatformByName('CPU')
     system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
         nonbondedCutoff=nonbond_cutoff, switchDistance=switch_cutoff, 
@@ -373,10 +377,15 @@ elif restart == 0:
 
 ###### Temperature Quenching ######
 nprocess = int(tpn/ppn)
+psf_pmd = pmd.charmm.psf.CharmmPsfFile(psf)
 psf = CharmmPsfFile(psf)
 forcefield = ForceField(xml_param)
 top = psf.topology
 start_cor = CharmmCrdFile(starting_strucs)
+# re-name residues that are changed by openmm
+for resid, res in enumerate(top.residues()):
+    if res.name != psf_pmd.residues[resid].name:
+        res.name = psf_pmd.residues[resid].name
 templete_map = {}
 for chain in top.chains():
     for res in chain.residues():
