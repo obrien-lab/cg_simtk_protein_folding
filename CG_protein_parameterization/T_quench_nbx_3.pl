@@ -69,11 +69,11 @@ get_secondary_structure($clean_pdb);
 my ($prefix, $prm_name);
 if($is_ca eq "ca")
 {
-  ($prefix, $prm_name) = creat_CG_model($clean_pdb, 0, 0, 1, 0, 0, "bt", 1, $nscal);
+  ($prefix, $prm_name) = creat_CG_model($clean_pdb, 0, $nscal);
 }
 else
 {
-  ($prefix, $prm_name) = creat_CG_model($clean_pdb, 1, 0, 0, 1, 1, "mj", 1, $nscal);
+  ($prefix, $prm_name) = creat_CG_model($clean_pdb, 1, $nscal);
 }
 
 my $psf = "setup/$prefix.psf";
@@ -161,109 +161,32 @@ sub creat_CG_model
 {
   my $pdb = $_[0];
   my $is_ca = $_[1];
-  my $bondlength_go = $_[2];
-  my $angle_dw = $_[3];
-  my $dihedral_go = $_[4];
-  my $improper_go = $_[5];
-  my $native_energy = $_[6];
-  my $charges = $_[7];
-  my $nscal = $_[8];
-
+  my $nscal = $_[2];
+  
+  my $potential_name = '';
   if($is_ca eq 0)
   {
-  	print "-> Creating Ca model ";
+  	print "-> Creating Ca model\n";
+  	$potential_name = "bt";
   }
   else
   {
-  	print "-> Creating Ca-SCM model ";
+  	print "-> Creating Ca-SCM model\n";
+  	$potential_name = "mj";
   }
-  
-  my $combined_name = "";
-  if($bondlength_go eq 0)
-  {
-  	$combined_name .= "b_ng_";
-  }
-  else
-  {
-  	$combined_name .= "b_go_";
-  }
-
-  if($angle_dw eq 0)
-  {
-  	$combined_name .= "a_go_";
-  }
-  else
-  {
-  	$combined_name .= "a_dw_";
-  }
-
-  if($dihedral_go eq 0)
-  {
-  	$combined_name .= "d_ng_";
-  }
-  else
-  {
-  	$combined_name .= "d_go_";
-  }
-
-  if($improper_go eq 0)
-  {
-  	$combined_name .= "i_ng_";
-  }
-  else
-  {
-  	$combined_name .= "i_go_";
-  }
-
-  if($native_energy eq "mj")
-  {
-  	$combined_name .= "n_mj_";
-  }
-  elsif($native_energy eq "bt")
-  {
-  	$combined_name .= "n_bt_";
-  }
-
-  if($charges eq 0)
-  {
-  	$combined_name .= "c_0_";
-  }
-  else
-  {
-  	$combined_name .= "c_1_";
-  }
-
-  $combined_name .= "s_$nscal";
-
-  print "$combined_name\n";
   
   mkdir("create_model");
   chdir("create_model");
 
   open (IN, ">go_model.cntrl") || die("Error: cannot create Go model input file\n\n");
-  print IN "charmm = \$c35b5_dhdwp
-pdb=../$pdb
-nscal=$nscal
-pot=$native_energy
-bondlength_go = $bondlength_go
-dihedral_go = $dihedral_go
-improperdihed_go = $improper_go
-casm = $is_ca
-charges = $charges
-angle_dw = $angle_dw
+  print IN "pdbfile = ../$pdb
+nscal = $nscal
+casm = $is_ca 
+potential_name = $potential_name
 fnn = 1\n";
   close(IN);
   
-  system("create_cg_protein_model_v34_0.37_nbx3.pl go_model.cntrl > go_model.log 2>&1");
-
-  if(-e "create_psf.inp")
-  {
-  	system("\$c35b5_dhdwp < create_psf.inp > create_psf.log 2>&1");
-  }
-  else
-  {
-  	die("Error: failed to create CG model from $pdb\n\n");
-  }
+  system("create_cg_protein_model.py -f go_model.cntrl > go_model.log 2>&1");
 
   my @str = split(/\./, $pdb);
   my $pdb_code = $str[0];
@@ -278,7 +201,7 @@ fnn = 1\n";
   	$prefix .= "_ca-cb";
   }
   my $prm_name = lc $pdb_code;
-  $prm_name .= "_nscal" . $nscal . "_fnn1_go_" . $native_energy . ".prm";
+  $prm_name .= "_nscal" . $nscal . "_fnn1_go_" . $potential_name . ".prm";
 
   if(-e "$prefix.psf")
   {
