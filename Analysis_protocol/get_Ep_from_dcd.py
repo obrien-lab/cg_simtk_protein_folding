@@ -80,8 +80,15 @@ new_psf = psf[mask]
 
 new_psf.save('tmp.psf', overwrite=True)
 new_psf = CharmmPsfFile('tmp.psf')
+psf_pmd = pmd.load_file('tmp.psf')
 os.system('rm -f tmp.psf')
 top = new_psf.topology
+
+# re-name residues that are changed by openmm
+for resid, res in enumerate(top.residues()):
+    if res.name != psf_pmd.residues[resid].name:
+        res.name = psf_pmd.residues[resid].name
+
 template_map = {}
 for chain in top.chains():
     for res in chain.residues():
