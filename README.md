@@ -118,7 +118,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 
 ### 7. Analysis of protein folding trajectories
 - To analyze the protein folding process, we usually calculate the order parameters, such as the fraction of native contacts (Q), fraction of entangment changes (G) and fraction of chirality changes (K).
-- Some examples of misfolding protein structures with entanglements can be found [here](https://sites.google.com/view/vizentanglements/home).
+- Some examples of misfolding protein structures with entanglements can be found [**here**](https://sites.google.com/view/vizentanglements/home).
 - Scripts to be used in this section:
 
 | Scripts | Instructions |
