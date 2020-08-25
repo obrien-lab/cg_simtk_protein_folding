@@ -78,7 +78,7 @@ def create_cg_model(pdb):
   
     os.system("create_cg_protein_model.py -f go_model.cntrl > go_model.log 2>&1");
     
-    name = pdb.split('.pdb')[0].lower()
+    name = pdb.split('.pdb')[0]
     prefix = name+'_ca-cb'
     prm_name = name + '_nscal10.0_fnn1_go_mj.prm'
     
