@@ -106,7 +106,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 - To setup and run post-translation simulations on PSU ACI cluster, use `PTP_setup.pl`. [:leftwards_arrow_with_hook:](#table-of-contents)
 
 ### 6. Backmapping from coarse-grained model to all-atom model
-- CG model has a lot of benifits on saving computational costs and improving sampling efficiency. However, it loses the atomic-level accuracy of the molecular structure. A polish backmapping strategy can rebuild the all-atom structure from the CG C&alpha; model with high accuracy. The rebuilt all-atom structure can be furthure used for visualization (e.g., `visualize_cont_synth.py`) and simulation (e.g., [Activation Energy Estimation Workflow](https://git.psu.edu/yuj179/activation-energy-estimation-workflow)) at all-atom level.
+- CG model has a lot of benifits on saving computational costs and improving sampling efficiency. However, it loses the atomic-level accuracy of the molecular structure. A polish backmapping strategy can rebuild the all-atom structure from the CG C&alpha; model with high accuracy. The rebuilt all-atom structure can be furthure used for visualization (e.g., `visualize_cont_synth.py`) and simulation (e.g., [Activation Energy Estimation Workflow](https://git.psu.edu/obrien/yang_jiang/activation-energy-estimation-workflow)) at all-atom level.
 - Scripts to be used in this section:
 
 | Scripts | Instructions |
