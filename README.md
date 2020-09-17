@@ -1,7 +1,13 @@
 ## Coarse-grained Simulation Toolkits for Protein Folding
 #### Author: [Dr. Yang Jiang](https://orcid.org/0000-0003-1100-9177)
 
-This is a package of scripts that are used to create coarse-grained (CG) models of proteins/ribosomes, optimize CG force field parameters, run MD simulations for protein co- and post-translational folding and analyze the folding structures. All the scripts are ready to use when users have added the directories (including all the child folders) in `$PATH` (add `export PATH=${PATH}:/path/to/one/child/folder/` in your `~/.bashrc` file) and have granted the execution permission (`chmod -R +x ./cg_simtk_protain_folding/`) for all the scripts. 
+This is a package of scripts that are used to create coarse-grained (CG) models of proteins/ribosomes, optimize CG force field parameters, run MD simulations for protein co- and post-translational folding and analyze the folding structures. 
+
+<img src="../../wikis/uploads/img/DDLB_folding_example.gif" width="300">
+
+**Figure 1**. An example of the biosynthesis and the folding process of the E. coli D-Ala-D-Ala Ligase B that was simulated by this toolkit.
+
+All the scripts are ready to use when users have added the directories (including all the child folders) in `$PATH` (add `export PATH=${PATH}:/path/to/one/child/folder/` in your `~/.bashrc` file) and have granted the execution permission (`chmod -R +x ./cg_simtk_protain_folding/`) for all the scripts. 
 
 :warning: Some of the scripts need python modules (Python 3.X) and other softerware installed prior to use. Please click `Learn more` in the following script instruction tables to find detailed instruction of usage and basic theory used in the script.
 
