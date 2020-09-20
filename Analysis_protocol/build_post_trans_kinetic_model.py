@@ -25,7 +25,6 @@ lag_t = 1
 start_idx = 1
 end_idx = 10
 sample_size = 5
-nbins = [50, 50]
 native_AA_pdb = ''
 prefix_dir = ''
 visualiz_threshold = 0.02
@@ -125,11 +124,6 @@ try:
         if line.startswith('sample_size'):
             words = line.split('=')
             sample_size = int(words[1].strip())
-            continue
-        if line.startswith('nbins'):
-            words = line.split('=')
-            nbins = words[1].strip().split()
-            nbins = [int(nb) for nb in nbins]
             continue
         if line.startswith('native_AA_pdb'):
             words = line.split('=')
