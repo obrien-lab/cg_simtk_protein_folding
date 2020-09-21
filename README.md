@@ -123,7 +123,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 - To backmap your CG C&alpha; structure, use `backmap.py`. Note that you need to install [PD2](https://github.com/jmacdona/pd2_public) and [Pulchra](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html) before use this script. [:leftwards_arrow_with_hook:](#table-of-contents)
 
 ### 7. Analysis of protein folding trajectories
-- To analyze the protein folding process, we usually calculate the order parameters, such as the fraction of native contacts (Q), fraction of entangment changes (G) and fraction of chirality changes (K).
+- To analyze the protein folding process, we usually calculate the order parameters, such as the fraction of native contacts ($`Q`$), fraction of entangment changes ($`G`$) and fraction of chirality changes ($`K`$).
 - Some examples of misfolding protein structures with entanglements can be found [**here**](https://sites.google.com/view/vizentanglements/home).
 - Scripts to be used in this section:
 
