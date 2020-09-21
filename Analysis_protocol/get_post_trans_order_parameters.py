@@ -80,7 +80,7 @@ def get_Qbb_act():
         traj = traj.atom_slice(sel)
         os.system('mkdir tmp')
         traj.save('tmp/tmp.dcd', force_overwrite=True)
-        os.system("calc_native_contact_fraction_v2.pl -i "+cor_file+" -d "+dom_def+" -s '"+sec_def+"' -t tmp/tmp.dcd -m 1 -o ./tmp/ -k '"+act_mask+"' > /dev/null")
+        os.system("calc_native_contact_fraction.pl -i "+cor_file+" -d "+dom_def+" -s '"+sec_def+"' -t tmp/tmp.dcd -m 1 -o ./tmp/ -k '"+act_mask+"' > /dev/null")
         f = open('tmp/qbb_tmp.dat')
         C = f.readlines()
         f.close()
