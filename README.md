@@ -135,5 +135,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 | Analysis_protocol/**calc_chirality_number.pl** | Calculate K vs. time for a given trajectory. (Learn more) | 
 | Analysis_protocol/**calc_cont_synth_qbb_vs_T.py** | Automated script to calculate Q vs. time for [CSP](#4-simulation-of-co-translational-folding) trajectoris. ([Learn more](../../wikis/help_wiki/calc_cont_synth_qbb_vs_T.py)) <br>Scripts needed: `Analysis_protocol/calc_native_contact_fraction.pl` |
 | Analysis_protocol/**mrna_silent_mutation.pl** | Do silent mutation for a given mRNA sequence and a mutation scheme, such as fastest translation, slowest translation and random. ([Learn more](../../wikis/help_wiki/mrna_silent_mutation.pl)) |
+| Analysis_protocol/**get_post_trans_order_parameters.py** | Collect the pre-calculated order parameters $`Q_{\mathrm{act}}`$ and $`G`$ and output .npy data files. ([Learn more](../../wikis/help_wiki/get_post_trans_order_parameters.py)) |
+| Analysis_protocol/**build_post_trans_kinetic_model.py** | Assign the metastable states on the post-translational trajectories and build the Mater equation model for the state probabilities. ([Learn more](../../wikis/help_wiki/build_post_trans_kinetic_model.py)) |
 
 [:leftwards_arrow_with_hook:](#table-of-contents)
