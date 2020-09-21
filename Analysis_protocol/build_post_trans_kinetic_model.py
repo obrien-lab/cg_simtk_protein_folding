@@ -349,6 +349,7 @@ def gen_state_visualizion(state_id, psf, native_cor, state_cor, native_AA_pdb, i
             break
     
     f = open('vmd_%d.tcl'%state_id, 'w')
+    f.write('package require topotools\n')
     if if_entangled:
         f.write('''display rendermode GLSL
 axes location off
