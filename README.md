@@ -139,5 +139,6 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 | Analysis_protocol/**build_co_trans_kinetic_model.py** | Assign the metastable states on the co-translational trajectories and generate the visualization of the representative structures. ([Learn more](../../wikis/help_wiki/build_co_trans_kinetic_model.py)) <br>Scripts needed: `Backmapping/backmap.py` |
 | Analysis_protocol/**get_post_trans_order_parameters.py** | Collect the pre-calculated order parameters $`Q_{\mathrm{act}}`$ and $`G`$ and output .npy data files for the post-translation trajectories. ([Learn more](../../wikis/help_wiki/get_post_trans_order_parameters.py)) <br>Scripts needed: `Analysis_protocol/calc_native_contact_fraction.pl` and `Analysis_protocol/calc_entanglement_number.pl` |
 | Analysis_protocol/**build_post_trans_kinetic_model.py** | Assign the metastable states on the post-translational trajectories and build the Mater equation model for the state probabilities. ([Learn more](../../wikis/help_wiki/build_post_trans_kinetic_model.py)) <br>Scripts needed: `Backmapping/backmap.py` |
+| Analysis_protocol/**get_co_post_folding_pathways.py** | Combine the discrete metastable states trajectories and analyze the folding pathways. ([Learn more](../../wikis/help_wiki/get_co_post_folding_pathways.py)) |
 
 [:leftwards_arrow_with_hook:](#table-of-contents)
