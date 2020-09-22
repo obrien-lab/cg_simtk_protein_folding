@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys, getopt, math, os, multiprocessing, time, traceback
+import sys, getopt, math, os, time, traceback
 import numpy as np
 import pyemma as pem
 import parmed as pmd
