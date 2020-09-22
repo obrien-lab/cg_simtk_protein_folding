@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 import sys, getopt, math, os, time, traceback
 import numpy as np
-import parmed as pmd
-import mdtraj as mdt
 
 ################################# Arguments ###################################
 # Default parameters
