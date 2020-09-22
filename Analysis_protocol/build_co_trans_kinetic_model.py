@@ -1,15 +1,10 @@
 #!/usr/bin/env python3
 import sys, getopt, math, os, multiprocessing, time, traceback
 import numpy as np
-from scipy import interpolate
-import scipy.io
-from scipy.integrate import solve_ivp
-from scipy.optimize import curve_fit
 import pyemma as pem
 import parmed as pmd
 import mdtraj as mdt
 import msmtools
-import networkx as nx
 
 ################################# Arguments ###################################
 # Default values
