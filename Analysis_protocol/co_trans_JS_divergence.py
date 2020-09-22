@@ -8,7 +8,7 @@ from scipy.stats import entropy
 n_traj = 100
 mutant_type_list = ['fast', 'slow']
 co_msm_data_file = './msm_data.npz'
-co_TS_data_dir = '../'
+co_TS_data_dir = './'
 num_sample = 1
 state_type = 'micro' # can be 'micro' or 'meta'
 
