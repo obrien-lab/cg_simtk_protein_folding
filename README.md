@@ -145,5 +145,6 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 | Analysis_protocol/**post_trans_JS_divergence.py** | Estimate the Jensen-Shannon divergence (JSD) for the post-translational mirocstates or metastable states in the function of time. ([Learn more](../../wikis/help_wiki/post_trans_JS_divergence.py)) |
 | Analysis_protocol/**get_co_post_folding_pathways.py** | Combine the discrete metastable states trajectories and analyze the folding pathways. ([Learn more](../../wikis/help_wiki/get_co_post_folding_pathways.py)) |
 | Analysis_protocol/**get_solubility.py** | Estimate the aggregation, degradation and Hsp70 binding propensities for the post-translational metastable states and estimate the percent of soluble protein in each metastable state. ([Learn more](../../wikis/help_wiki/get_solubility.py)) <br>Scripts needed: `Backmapping/backmap.py` |
+| Analysis_protocol/**get_state_probability.py** | Builds the Mater equation model for the state probabilities and runs the bootstrapping resampling for error estimation. ([Learn more](../../wikis/help_wiki/get_state_probability.py)) |
 
 [:leftwards_arrow_with_hook:](#table-of-contents)
