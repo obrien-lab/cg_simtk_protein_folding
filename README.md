@@ -10,6 +10,12 @@ An example of the translation and folding process of the *E. coli* D-Ala-D-Ala L
 All the scripts are ready to use when users have added the directories (including all the child folders) in `$PATH` (add `export PATH=${PATH}:/path/to/one/child/folder/` in your `~/.bashrc` file) and have granted the execution permission (`chmod -R +x ./cg_simtk_protain_folding/`) for all the scripts. 
 
  :warning: Some of the scripts need python modules (Python 3.X) and other softerware installed prior to use. Please click `Learn more` in the following script instruction tables to find detailed instruction of usage and basic theory used in the script.
+ 
+In summary, to use all scripts, the following Python modules and softwares are required:
+
+| Required Module | Required Software |
+| ------ | ------ |
+| `numpy`<br>`scipy`<br>`multiprocessing`<br>`lxml`<br>[`openmm`](http://openmm.org/)<br>[`parmed`](http://parmed.github.io/ParmEd/html/index.html)<br>[`mdtraj`](http://mdtraj.org/)<br>[`pdbfixer`](https://github.com/openmm/pdbfixer)<br>[`pyemma`](http://emma-project.org/latest/)<br>[`msmtools`](https://msmtools.readthedocs.io/en/latest/) | `Perl v5+`<br>[`Stride`](http://webclu.bio.wzw.tum.de/stride/)<br>[`pywham`](http://pywham.net/)<br>[`matlab`](https://www.mathworks.com/products/matlab.html)<br>[`imagemagick`](https://imagemagick.org/index.php)<br>[`vmd`](https://www.ks.uiuc.edu/Research/vmd/)<br>[`PD2`](https://github.com/jmacdona/pd2_public)<br>[`Pulchra`](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html)<br>[`ChaperISM`](https://github.com/BioinfLab/ChaperISM) |
 
 ---
 
