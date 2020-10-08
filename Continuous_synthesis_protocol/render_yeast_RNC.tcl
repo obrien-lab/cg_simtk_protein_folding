@@ -166,4 +166,6 @@ scale by 1.2
 
 render Tachyon $outname "$env(VMDDIR)/tachyon_LINUXAMD64 -aasamples 12 %s -format TARGA -trans_max_surfaces 1 -o %s.tga"
 
+file delete -force -- $outname
+
 quit
