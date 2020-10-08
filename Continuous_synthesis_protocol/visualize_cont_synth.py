@@ -13,13 +13,13 @@ def renumber_structure(new_struct, ref_struct):
 
 ####################### MAIN #######################
 if len(sys.argv) != 5 and len(sys.argv) != 6:
-	print("Usage: visualize_cont_synth.py [aa_pdb] [ribo_type] [traj_id] [start_id] [run_type]")
+	print("Usage: visualize_cont_synth.py [aa_pdb] [render_script] [traj_id] [start_id] [run_type]")
 	sys.exit()
 
 alpha = 4331293
 
 ref_aa_pdb = sys.argv[1]
-ribo_type = sys.argv[2]
+tcl_script = sys.argv[2]
 traj_id = int(sys.argv[3])
 start_id = int(sys.argv[4])
 
@@ -31,13 +31,9 @@ else:
 traj_dir = './traj/'+str(traj_id)+'/'
 prefix = 'rnc_l'
 
-if ribo_type == 'ecoli':
-	tcl_script = '/'.join(__file__.split('/')[:-1]) + '/render_ecoli_RNC.tcl'
-elif ribo_type == 'yeast':
-	tcl_script = '/'.join(__file__.split('/')[:-1]) + '/render_yeast_RNC.tcl'
-else:
-	print("Wrong ribosome type, could only be ecoli or yeast.")
-	sys.exit()
+if not os.path.exists(tcl_script):
+    print('Error: cannot find vmd rendering script %s'%(tcl_script))
+    sys.exit()
 
 chain_length_list = []
 for file in os.listdir(traj_dir):
@@ -75,7 +71,7 @@ if run_type < 2:
 			renumber_structure(new_pdb_pmd, psf_pmd)
 			new_pdb_pmd.write_pdb('traj_'+str(cl)+'_'+str(stage)+'.pdb', charmm=True, renumber=False)
 			os.system('vmd -dispdev none -eofexit -e '+tcl_script+' -args '+str(cl)+' '+str(stage)+
-				(' ppm/traj_1_%010d.tga'%n_frame)+' >/dev/null')
+				(' ppm/traj_1_%010d'%n_frame)+' > /dev/null')
 			if stage == 1:
 				text = 'Length %d'%(cl-1)
 			else:
@@ -108,8 +104,8 @@ if run_type != 1:
 			new_pdb_pmd = pdb_1_pmd+pdb_2_pmd
 			renumber_structure(new_pdb_pmd, psf_pmd)
 			new_pdb_pmd.write_pdb('traj_'+str(max_chain_length)+'_4.pdb', charmm=True, renumber=False)
-			os.system('vmd -dispdev none -eofexit -e '+tcl_script+' -args '+str(max_chain_length)+' 4'+
-				(' ppm/traj_2_%010d.tga'%n_frame)+' >/dev/null')
+			os.system('vmd -dispdev text -eofexit -e '+tcl_script+' -args '+str(max_chain_length)+' 4'+
+				(' ppm/traj_2_%010d'%n_frame)+' >/dev/null')
 			text = traj_type.capitalize() + ' %.3f ms'%(n_frame*0.015*5000*alpha/1e9)
 			name = 'ppm/traj_2_%010d.tga'%n_frame
 			os.system('convert -fill black -pointsize 60 -font helvetica -draw \'text 10,80 "'+text+'"\' '+name+' '+name)
