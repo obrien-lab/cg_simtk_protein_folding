@@ -9,7 +9,6 @@ mol new $traj_name type pdb first 0 last -1 step 1 filebonds 1 autobonds 1 waitf
 
 display resize 1200 900
 display projection Orthographic
-display rendermode GLSL
 axes location off
 
 color Display {Background} white
@@ -78,7 +77,7 @@ mol representation QuickSurf 2.000000 1.500000 1.000000 3.000000
 mol color ColorID 12
 mol selection "segname L24"
 if { $stage_idx == 4 } { 
-  mol material BrushedMetal
+  mol material AOChalky
 } else {
   mol material YangTrans1
 }
@@ -148,7 +147,7 @@ if { $stage_idx != 4 } {
   mol representation QuickSurf 3.000000 2.000000 1.000000 3.000000
   mol color ColorID 8
   mol selection "(not segname A L24 AtR PtR) and x>=58 and not (y<20 and y>-20 and z>-15)"
-  mol material BrushedMetal
+  mol material AOChalky
   #mol material YangTrans1
   mol addrep top
 }
@@ -164,7 +163,7 @@ if { $stage_idx != 4 } {
 } else {
   mol color ColorID 8
   mol selection "not segname L24"
-  mol material BrushedMetal
+  mol material AOChalky
 }
 mol addrep top
 
@@ -174,6 +173,8 @@ translate to -1 0 0
 rotate y by -30 
 scale by 1.2
 
-render TachyonInternal $outname
+render Tachyon $outname "$env(VMDDIR)/tachyon_LINUXAMD64 -aasamples 12 %s -format TARGA -trans_max_surfaces 1 -o %s.tga"
+
+file delete -force -- $outname
 
 quit
