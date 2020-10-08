@@ -164,6 +164,6 @@ translate to -1 0 0
 rotate y by -30 
 scale by 1.2
 
-render TachyonInternal $outname
+render Tachyon $outname "$env(VMDDIR)/tachyon_LINUXAMD64 -aasamples 12 %s -format TARGA -trans_max_surfaces 1 -o %s.tga"
 
 quit
