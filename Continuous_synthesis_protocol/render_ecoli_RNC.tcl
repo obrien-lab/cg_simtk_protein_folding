@@ -1,6 +1,10 @@
 set traj_idx [lindex $argv 0]
 set stage_idx [lindex $argv 1]
 set outname [lindex $argv 2]
+set ribo_psf [lindex $argv 3]
+set ribo_cor [lindex $argv 4]
+
+set root_dir []
 
 set traj_name "traj_"
 append traj_name $traj_idx "_" $stage_idx ".pdb"
@@ -152,8 +156,8 @@ if { $stage_idx != 4 } {
   mol addrep top
 }
 
-mol new /storage/home/yuj179/mygroup/ribosome/Ecoli/add_tRNA/4v9d_cg/50S_tRNA_cg.psf type psf first 0 last -1 step 1 filebonds 1 autobonds 1 waitfor all
-mol addfile /storage/home/yuj179/mygroup/ribosome/Ecoli/add_tRNA/4v9d_cg/50S_tRNA_cg_mod_PtRR.cor type cor first 0 last -1 step 1 filebonds 1 autobonds 1 waitfor all
+mol new $ribo_psf type psf first 0 last -1 step 1 filebonds 1 autobonds 1 waitfor all
+mol addfile $ribo_cor type cor first 0 last -1 step 1 filebonds 1 autobonds 1 waitfor all
 mol delrep 0 top
 mol representation QuickSurf 3.000000 2.000000 1.000000 3.000000
 if { $stage_idx != 4 } {
