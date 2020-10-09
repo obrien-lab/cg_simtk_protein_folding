@@ -4,8 +4,6 @@ set outname [lindex $argv 2]
 set ribo_psf [lindex $argv 3]
 set ribo_cor [lindex $argv 4]
 
-set root_dir []
-
 set traj_name "traj_"
 append traj_name $traj_idx "_" $stage_idx ".pdb"
 
