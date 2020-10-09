@@ -1,6 +1,8 @@
 set traj_idx [lindex $argv 0]
 set stage_idx [lindex $argv 1]
 set outname [lindex $argv 2]
+set ribo_psf [lindex $argv 3]
+set ribo_cor [lindex $argv 4]
 
 set traj_name "traj_"
 append traj_name $traj_idx "_" $stage_idx ".pdb"
@@ -9,7 +11,6 @@ mol new $traj_name type pdb first 0 last -1 step 1 filebonds 1 autobonds 1 waitf
 
 display resize 1200 900
 display projection Orthographic
-display rendermode GLSL
 axes location off
 
 color Display {Background} white
@@ -138,13 +139,13 @@ if { $stage_idx != 4 } {
   mol representation QuickSurf 3.000000 2.000000 1.000000 3.000000
   mol color ColorID 8
   mol selection "(not segname A AtR PtR) and x>=58 and not (y<20 and y>-20 and z>-15)"
-  mol material BrushedMetal
+  mol material AOChalky
   #mol material YangTrans1
   mol addrep top
 }
 
-mol new /storage/home/yuj179/mygroup/ribosome/Yeast/add_tRNA/6q8y_cg/60S_tRNA_cg.psf type psf first 0 last -1 step 1 filebonds 1 autobonds 1 waitfor all
-mol addfile /storage/home/yuj179/mygroup/ribosome/Yeast/add_tRNA/6q8y_cg/60S_tRNA_cg.cor type cor first 0 last -1 step 1 filebonds 1 autobonds 1 waitfor all
+mol new $ribo_psf type psf first 0 last -1 step 1 filebonds 1 autobonds 1 waitfor all
+mol addfile $ribo_cor type cor first 0 last -1 step 1 filebonds 1 autobonds 1 waitfor all
 mol delrep 0 top
 mol representation QuickSurf 3.000000 2.000000 1.000000 3.000000
 if { $stage_idx != 4 } {
@@ -154,7 +155,7 @@ if { $stage_idx != 4 } {
 } else {
   mol color ColorID 8
   mol selection "all"
-  mol material BrushedMetal
+  mol material AOChalky
 }
 mol addrep top
 
