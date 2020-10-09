@@ -12,19 +12,21 @@ def renumber_structure(new_struct, ref_struct):
 		atm.number = atm.idx + 1
 
 ####################### MAIN #######################
-if len(sys.argv) != 5 and len(sys.argv) != 6:
-	print("Usage: visualize_cont_synth.py [aa_pdb] [render_script] [traj_id] [start_id] [run_type]")
+if len(sys.argv) != 7 and len(sys.argv) != 8:
+	print("Usage: visualize_cont_synth.py [aa_pdb] [ribo_psf] [ribo_cor] [render_script] [traj_id] [start_id] [run_type]")
 	sys.exit()
 
 alpha = 4331293
 
 ref_aa_pdb = sys.argv[1]
-tcl_script = sys.argv[2]
-traj_id = int(sys.argv[3])
-start_id = int(sys.argv[4])
+ribo_psf = sys.argv[2]
+ribo_cor = sys.argv[3]
+tcl_script = sys.argv[4]
+traj_id = int(sys.argv[5])
+start_id = int(sys.argv[6])
 
-if len(sys.argv) == 6:
-	run_type = int(sys.argv[5])
+if len(sys.argv) == 8:
+	run_type = int(sys.argv[7])
 else:
 	run_type = 0
 
@@ -71,7 +73,7 @@ if run_type < 2:
 			renumber_structure(new_pdb_pmd, psf_pmd)
 			new_pdb_pmd.write_pdb('traj_'+str(cl)+'_'+str(stage)+'.pdb', charmm=True, renumber=False)
 			os.system('vmd -dispdev none -eofexit -e '+tcl_script+' -args '+str(cl)+' '+str(stage)+
-				(' ppm/traj_1_%010d'%n_frame)+' > /dev/null')
+				(' ppm/traj_1_%010d'%n_frame)+(' %s %s'%(ribo_psf, ribo_cor))+' > /dev/null')
 			if stage == 1:
 				text = 'Length %d'%(cl-1)
 			else:
@@ -105,7 +107,7 @@ if run_type != 1:
 			renumber_structure(new_pdb_pmd, psf_pmd)
 			new_pdb_pmd.write_pdb('traj_'+str(max_chain_length)+'_4.pdb', charmm=True, renumber=False)
 			os.system('vmd -dispdev text -eofexit -e '+tcl_script+' -args '+str(max_chain_length)+' 4'+
-				(' ppm/traj_2_%010d'%n_frame)+' >/dev/null')
+				(' ppm/traj_2_%010d'%n_frame)+(' %s %s'%(ribo_psf, ribo_cor))+' >/dev/null')
 			text = traj_type.capitalize() + ' %.3f ms'%(n_frame*0.015*5000*alpha/1e9)
 			name = 'ppm/traj_2_%010d.tga'%n_frame
 			os.system('convert -fill black -pointsize 60 -font helvetica -draw \'text 10,80 "'+text+'"\' '+name+' '+name)
