@@ -206,7 +206,7 @@ for i in range(n_states):
     SASA_std[i+1,:] = np.std(SASA_list[i*num_samples+1:(i+1)*num_samples+1,:], axis=0)
 
 fo = open('solubility.dat','w')
-fo.write('%6s %10s %10s %10s %10s %10s %10s %10s %15s %10s %15s %10s %15s %10s %10s %15s\n'%(
+fo.write('%6s %10s %10s %10s %10s %10s %10s %12s %17s %12s %17s %12s %17s %12s %12s %17s\n'%(
                 'State', 'Agg_SA_avg', 'Agg_SA_std', 'Deg_SA_avg', 'Deg_SA_std', 'CB_SA_avg', 
                 'CB_SA_std', 'Agg_Prop', 'Agg_95CI', 'Deg_Prop', 'Deg_95CI', 'CB_Prop', 'CB_95CI', 
                 'Tot_Prop', 'Sol_Perc', 'Sol_95CI'))
@@ -222,7 +222,7 @@ cb_ub = np.nan
 tot_prop_0 = agg_prop + deg_prop - cb_prop
 sol_lb = np.nan
 sol_ub = np.nan
-fo.write('%6s %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.4f %15s %10.4f %15s %10.4f %15s %10.4f %10.4f %15s\n'%(
+fo.write('%6s %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %12.4f %17s %12.4f %17s %12.4f %17s %12.4f %12.4f %17s\n'%(
                 'ext', SASA_avg[0,0], SASA_std[0,0], SASA_avg[0,1], SASA_std[0,1], SASA_avg[0,2], SASA_std[0,2], 
                 agg_prop, '[%.4f,%.4f]'%(agg_lb, agg_ub), deg_prop, '[%.4f,%.4f]'%(deg_lb, deg_ub), 
                 cb_prop, '[%.4f,%.4f]'%(cb_lb, cb_ub), tot_prop_0, 0, '[%.4f,%.4f]'%(sol_lb, sol_ub)))
@@ -232,42 +232,38 @@ for i in range(1,n_states+1):
     data = SASA_list[(i-1)*num_samples+1:i*num_samples+1,:]
     SASA_boot.append(bootstrap(np.mean, data, n_boot))
 
+tot_prop_list = []
+for i in range(1,n_states+1):    
+    agg_prop = SASA_avg[i,0]/SASA_avg[-1,0]-1
+        
+    deg_prop = SASA_avg[i,1]/SASA_avg[-1,1]-1
+    
+    cb_prop = SASA_avg[i,2]/SASA_avg[-1,2]-1
+    
+    tot_prop = agg_prop + deg_prop - cb_prop
+    tot_prop_list.append(tot_prop)
+    
 for i in range(1,n_states+1):
     prop_boot = SASA_boot[i-1]/SASA_boot[-1]-1
-    prop_boot[prop_boot<0] = 0
-    
     agg_prop = SASA_avg[i,0]/SASA_avg[-1,0]-1
-    if agg_prop < 0:
-        print('Correct state %d aggregation propensity %.4f to be zeros'%(i, agg_prop))
-        agg_prop = 0
     agg_lb = np.percentile(prop_boot[:,0], 2.5)
     agg_ub = np.percentile(prop_boot[:,0], 97.5)
         
     deg_prop = SASA_avg[i,1]/SASA_avg[-1,1]-1
-    if deg_prop < 0:
-        print('Correct state %d degradation propensity %.4f to be zeros'%(i, deg_prop))
-        deg_prop = 0
     deg_lb = np.percentile(prop_boot[:,1], 2.5)
     deg_ub = np.percentile(prop_boot[:,1], 97.5)
     
     cb_prop = SASA_avg[i,2]/SASA_avg[-1,2]-1
-    if cb_prop < 0:
-        print('Correct state %d Hsp70 binding propensity %.4f to be zeros'%(i, cb_prop))
-        cb_prop = 0
     cb_lb = np.percentile(prop_boot[:,2], 2.5)
     cb_ub = np.percentile(prop_boot[:,2], 97.5)
     
-    tot_prop = agg_prop + deg_prop - cb_prop
-    if tot_prop < 0:
-        print('Correct state %d total propensity %.4f to be zeros'%(i, tot_prop))
-        tot_prop = 0
-        
-    sol_perc = 1 - tot_prop / tot_prop_0
-    sol_boot = 1 - (prop_boot[:,0] + prop_boot[:,1] - prop_boot[:,2]) / tot_prop_0
+    sol_perc = (tot_prop_0 - tot_prop_list[i-1]) / (tot_prop_0 - np.min(tot_prop_list))
+    tot_prop_boot = prop_boot[:,0] + prop_boot[:,1] - prop_boot[:,2]
+    sol_boot = (tot_prop_0 - tot_prop_boot) / (tot_prop_0 - np.min(tot_prop_list))
     sol_lb = np.percentile(sol_boot, 2.5)
     sol_ub = np.percentile(sol_boot, 97.5)
     
-    fo.write('%6d %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.4f %15s %10.4f %15s %10.4f %15s %10.4f %10.4f %15s\n'%(
+    fo.write('%6s %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %12.4f %17s %12.4f %17s %12.4f %17s %12.4f %12.4f %17s\n'%(
                     i, SASA_avg[i,0], SASA_std[i,0], SASA_avg[i,1], SASA_std[i,1], SASA_avg[i,2], SASA_std[i,2], 
                     agg_prop, '[%.4f,%.4f]'%(agg_lb, agg_ub), deg_prop, '[%.4f,%.4f]'%(deg_lb, deg_ub), 
                     cb_prop, '[%.4f,%.4f]'%(cb_lb, cb_ub), tot_prop, sol_perc, '[%.4f,%.4f]'%(sol_lb, sol_ub)))
