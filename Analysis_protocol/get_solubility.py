@@ -206,7 +206,7 @@ for i in range(n_states):
     SASA_std[i+1,:] = np.std(SASA_list[i*num_samples+1:(i+1)*num_samples+1,:], axis=0)
 
 fo = open('solubility.dat','w')
-fo.write('%6s %10s %10s %10s %10s %10s %10s %12s %17s %12s %17s %12s %17s %12s %12s %17s\n'%(
+fo.write('%6s %10s %10s %10s %10s %10s %10s %10s %17s %10s %17s %10s %17s %10s %10s %17s\n'%(
                 'State', 'Agg_SA_avg', 'Agg_SA_std', 'Deg_SA_avg', 'Deg_SA_std', 'CB_SA_avg', 
                 'CB_SA_std', 'Agg_Prop', 'Agg_95CI', 'Deg_Prop', 'Deg_95CI', 'CB_Prop', 'CB_95CI', 
                 'Tot_Prop', 'Sol_Perc', 'Sol_95CI'))
@@ -222,7 +222,7 @@ cb_ub = np.nan
 tot_prop_0 = agg_prop + deg_prop - cb_prop
 sol_lb = np.nan
 sol_ub = np.nan
-fo.write('%6s %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %12.4f %17s %12.4f %17s %12.4f %17s %12.4f %12.4f %17s\n'%(
+fo.write('%6s %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.4f %17s %10.4f %17s %10.4f %17s %10.4f %10.4f %17s\n'%(
                 'ext', SASA_avg[0,0], SASA_std[0,0], SASA_avg[0,1], SASA_std[0,1], SASA_avg[0,2], SASA_std[0,2], 
                 agg_prop, '[%.4f,%.4f]'%(agg_lb, agg_ub), deg_prop, '[%.4f,%.4f]'%(deg_lb, deg_ub), 
                 cb_prop, '[%.4f,%.4f]'%(cb_lb, cb_ub), tot_prop_0, 0, '[%.4f,%.4f]'%(sol_lb, sol_ub)))
@@ -263,7 +263,7 @@ for i in range(1,n_states+1):
     sol_lb = np.percentile(sol_boot, 2.5)
     sol_ub = np.percentile(sol_boot, 97.5)
     
-    fo.write('%6s %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %12.4f %17s %12.4f %17s %12.4f %17s %12.4f %12.4f %17s\n'%(
+    fo.write('%6s %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.4f %17s %10.4f %17s %10.4f %17s %10.4f %10.4f %17s\n'%(
                     i, SASA_avg[i,0], SASA_std[i,0], SASA_avg[i,1], SASA_std[i,1], SASA_avg[i,2], SASA_std[i,2], 
                     agg_prop, '[%.4f,%.4f]'%(agg_lb, agg_ub), deg_prop, '[%.4f,%.4f]'%(deg_lb, deg_ub), 
                     cb_prop, '[%.4f,%.4f]'%(cb_lb, cb_ub), tot_prop, sol_perc, '[%.4f,%.4f]'%(sol_lb, sol_ub)))
