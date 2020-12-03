@@ -12,6 +12,8 @@ usage = '\nUsage: python backmap.py\n' \
         '       --aa_pdb | -i <xxx.pdb> initial pdb file used to create the target C-alpha CG protein\n'\
         '       --cg_pdb | -c <xxx.pdb> pdb file for the target C-alpha CG protein\n'\
         '       [-- nproc | -n <NUM>] number of CPU processors used to run energy minimizations\n'\
+        '       [--pulchra_only | -p <0 or 1>] Flag 1 to use pulchra for both backbone and sidechain \n'\
+        '                                       reconstruction; 0 to use PD2 followed by pulchra. Default 0.\n'\
         '       [--help | -h] Print this information\n\n'
 
 def clean_pdb(pdb, out_dir):
@@ -265,10 +267,13 @@ def Call_PD2(mini_pdb):
 
     return output_from_PD2
 
-def Call_Pulchra(PD2_rebult_pdb):
+def Call_Pulchra(PD2_rebult_pdb, pulchra_only):
     print("-> Calling pulchra to reconstruct all-atom PDB")
-
-    os.system("pulchra -v -g -b -q "+PD2_rebult_pdb+" > pulchra.log")
+    
+    if pulchra_only == 0:
+        os.system("pulchra -v -g -b -q "+PD2_rebult_pdb+" > pulchra.log")
+    else:
+        os.system("pulchra -v -g -q "+PD2_rebult_pdb+" > pulchra.log")
 
     pdb_code = PD2_rebult_pdb.split('.pdb')[0]
     old_name = pdb_code + ".rebuilt.pdb"
@@ -580,8 +585,9 @@ if len(sys.argv) == 1:
     sys.exit()
 
 nproc = None
+pulchra_only = None
 try:
-    opts, args = getopt.getopt(sys.argv[1:],"h:i:c:n:", ["help", "aa_pdb=", "cg_pdb=", "nproc="])
+    opts, args = getopt.getopt(sys.argv[1:],"h:i:c:n:p:", ["help", "aa_pdb=", "cg_pdb=", "nproc=", "pulchra_only="])
 except getopt.GetoptError:
     print(usage)
     sys.exit()
@@ -595,9 +601,13 @@ for opt, arg in opts:
         cg_pdb = arg
     elif opt in ("-n", "--nproc"):
         nproc = arg
+    elif opt in ("-p", "--pulchra_only"):
+        pulchra_only = int(arg)
         
 if nproc == None:
     nproc = '1'
+if pulchra_only == None:
+    pulchra_only = 0
 
 print("-> Cleaning PDB file %s"%aa_pdb)
 name = cg_pdb.split('/')[-1].split('.pdb')[0]
@@ -638,9 +648,12 @@ cg_sc_struct.positions = cg_sc_min_cor
 cg_sc_struct.save(target_name+'_mini.pdb', overwrite=True)
 print('   Done')
 
-output_from_PD2 = Call_PD2(target_name+'_mini.pdb')
+if pulchra_only == 0:
+    output_from_PD2 = Call_PD2(target_name+'_mini.pdb')
+else:
+    output_from_PD2 = target_name+'_mini.pdb'
 
-output_from_Pultra = Call_Pulchra(output_from_PD2)
+output_from_Pultra = Call_Pulchra(output_from_PD2, pulchra_only)
 
 try:
     rec_pdb = OpenMM_vacuum_minimization(output_from_Pultra, 50)
