@@ -11,7 +11,7 @@ All the scripts are ready to use on a Linux machine when users have added the di
 
  :warning: Some of the scripts need python modules (Python 3.X) and other softerware installed prior to use. Please click `Learn more` in the following script instruction tables to find detailed instruction of usage and basic theory used in the script.
  
-In summary, to use all scripts, the following Python modules and softwares are required:
+In summary, to use all scripts, the following Python modules and software are required:
 
 | Required Module | Required Software |
 | ------ | ------ |
