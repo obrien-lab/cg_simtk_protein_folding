@@ -1,7 +1,7 @@
 ## Coarse-grained Simulation Toolkit for Protein Folding
 #### Author: [Dr. Yang Jiang](https://orcid.org/0000-0003-1100-9177)
 
-This is a package of scripts that are used to create coarse-grained (CG) models of proteins/ribosomes, optimize CG force field parameters, run MD simulations for protein co- and post-translational folding and analyze the folding structures. This toolkit is developed based on the original simulation protocols and scripts of [O'Brien Lab](https://obrien.vmhost.psu.edu/) that are based on Charmm. 
+This is a package of scripts that are used to create coarse-grained (CG) models of proteins/ribosomes, optimize CG force field parameters, run MD simulations for protein co- and post-translational folding and analyze the folding structures. This toolkit is developed based on the original simulation protocols and scripts of [O'Brien Lab](https://obrien.vmhost.psu.edu/), in which the simulations were performed by Charmm. 
 
 An example of the translation and folding process of the *E. coli* D-Ala-D-Ala Ligase B (DDLB, PDBid [4c5c](https://www.rcsb.org/structure/4C5C)) that was simulated by this toolkit is shown below.
 
