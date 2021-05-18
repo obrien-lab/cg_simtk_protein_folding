@@ -7,9 +7,9 @@ An example of the translation and folding process of the *E. coli* D-Ala-D-Ala L
 
 <img src="../../wikis/uploads/img/DDLB_folding_example.gif" width="300">
 
-All the scripts are ready to use on a Linux machine when users have added the directories (including all the child folders) in `$PATH` (add `export PATH=${PATH}:/path/to/one/child/folder/` in your `~/.bashrc` file) and have granted the execution permission (`chmod -R +x ./cg_simtk_protain_folding/`) for all the scripts. 
+All the scripts are ready to use on a Linux machine (have been tested on RHEL7 and Centos7) when users have added the directories (including all the child folders) in `$PATH` (add `export PATH=${PATH}:/path/to/one/child/folder/` in your `~/.bashrc` file) and have granted the execution permission (`chmod -R +x ./cg_simtk_protain_folding/`) for all the scripts. 
 
- :warning: Some of the scripts need python modules (Python 3.X) and other softerware installed prior to use. Please click `Learn more` in the following script instruction tables to find detailed instruction of usage and basic theory used in the script.
+ :warning: Some of the scripts need python modules (Python 3.X) and other softerware installed prior to use. Some of the scripts enable the use of CUDA to accelerate simulations (powered by openMM). Please click `Learn more` in the following script instruction tables to find detailed instruction of usage and basic theory used in the script.
  
 In summary, to use all scripts, the following Python modules and software are required:
 
