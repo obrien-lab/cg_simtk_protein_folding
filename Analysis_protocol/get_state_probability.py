@@ -180,7 +180,7 @@ def boot_fun(data, d0, dt, end_t, i):
     t_eval = np.linspace(0, end_t, 1000)
     P0 = np.zeros(n_states)
     for md in d0:
-        P0[d0] += 1
+        P0[md] += 1
     P0 = P0 / np.sum(P0)
     sol = Master_equation(t_span, rate_matrix, P0, t_eval)
     #print('Bootstrapping done for %d'%(i+1))

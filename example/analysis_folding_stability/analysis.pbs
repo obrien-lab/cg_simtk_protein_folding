@@ -1,0 +1,1 @@
+> analysis_folding_stability.pl -i ./info.log -m ca -t 298 -s 20001 -e "mix" > analysis.out 2>&1

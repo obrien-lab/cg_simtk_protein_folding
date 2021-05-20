@@ -1,0 +1,10 @@
+> truncate_ribosome.py -p 50S_tRNA_cg.psf -c 50S_tRNA_cg_mod_PtRR.cor -t tunnel_1.pdb
+--> Reading ribosome structure
+--> Done.
+--> Reading tunnel defination
+    Done.
+--> Truncating ribosome
+    Done.
+--> Writing outputs
+    Done.
+

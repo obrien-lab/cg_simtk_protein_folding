@@ -1,0 +1,45 @@
+Parallel Temperature Replica Exchange for CG Model using OpenMM
+Author: Yang Jiang; Ed O'Brien.
+Start at Tue May 18 17:48:29 2021
+Number of windows: 15
+Temperatures: 306.0 316.0 326.0 333.0 339.0 343.0 345.0 346.0 347.0 349.0 353.0 359.0 367.0 377.0 387.0 
+Total number of processors: 15
+Number of processors for each window: 1
+Number of exchanges in equilibrium: 2
+Number of steps in equilibrium for each exchange: 10000
+Number of exchanges in production: 10
+Number of steps in production for each exchange: 3000
+Log file name: info.log
+Eenergy file name: ene_1.log
+Acceptance file name: stats-tswap-1-1.log
+Charmm psf file: setup/3cla_m_clean_ca.psf
+Charmm top file: setup/3cla_m_clean_ca.top
+Charmm prm file: setup/3cla_m_clean_nscal1.1_fnn1_go_bt.prm
+No restart requested
+Starting structure for T1: setup/3cla_m_clean_ca.cor
+Starting structure for T2: setup/3cla_m_clean_ca.cor
+Starting structure for T3: setup/3cla_m_clean_ca.cor
+Starting structure for T4: setup/3cla_m_clean_ca.cor
+Starting structure for T5: setup/3cla_m_clean_ca.cor
+Starting structure for T6: setup/3cla_m_clean_ca.cor
+Starting structure for T7: setup/3cla_m_clean_ca.cor
+Starting structure for T8: setup/3cla_m_clean_ca.cor
+Starting structure for T9: setup/3cla_m_clean_ca.cor
+Starting structure for T10: setup/3cla_m_clean_ca.cor
+Starting structure for T11: setup/3cla_m_clean_ca.cor
+Starting structure for T12: setup/3cla_m_clean_ca.cor
+Starting structure for T13: setup/3cla_m_clean_ca.cor
+Starting structure for T14: setup/3cla_m_clean_ca.cor
+Starting structure for T15: setup/3cla_m_clean_ca.cor
+EQUIL 1: 17:48:29 17:49:54 64.46 84.70 0:01:24
+EQUIL 2: 17:49:54 17:51:20 70.39 86.48 0:00:00
+PROD 1: 1||| 2||| 3||| 4||| 5||| 6||| 7||| 8||| 9||| 10||| 11||| 12||| 13||| 14||| 15| 17:51:20 17:51:45 19.77 24.22 0:03:40
+PROD 2: 2||| 1||| 3||| 4||| 6||| 5||| 8||| 7||| 10||| 9||| 11||| 12||| 13||| 14||| 15| 17:51:45 17:52:11 20.53 25.92 0:03:29
+PROD 3: 2||| 1||| 3||| 6||| 4||| 8||| 5||| 10||| 7||| 11||| 9||| 13||| 12||| 15||| 14| 17:52:11 17:52:37 18.88 25.64 0:03:00
+PROD 4: 1||| 2||| 6||| 3||| 4||| 8||| 10||| 5||| 11||| 7||| 13||| 9||| 12||| 15||| 14| 17:52:37 17:53:01 18.19 24.28 0:02:26
+PROD 5: 1||| 2||| 6||| 4||| 3||| 10||| 8||| 11||| 5||| 7||| 13||| 9||| 12||| 14||| 15| 17:53:01 17:53:26 17.98 24.31 0:02:02
+PROD 6: 2||| 1||| 4||| 6||| 10||| 3||| 11||| 8||| 7||| 5||| 9||| 13||| 14||| 12||| 15| 17:53:26 17:53:51 18.23 25.27 0:01:41
+PROD 7: 2||| 1||| 4||| 10||| 6||| 3||| 11||| 7||| 8||| 9||| 5||| 13||| 14||| 15||| 12| 17:53:51 17:54:16 17.57 24.42 0:01:13
+PROD 8: 2||| 1||| 10||| 4||| 3||| 6||| 7||| 11||| 9||| 8||| 13||| 5||| 15||| 14||| 12| 17:54:16 17:54:39 17.59 23.17 0:00:46
+PROD 9: 2||| 1||| 10||| 4||| 3||| 7||| 6||| 9||| 11||| 8||| 13||| 5||| 15||| 12||| 14| 17:54:39 17:55:03 16.48 23.24 0:00:23
+PROD 10: 2||| 1||| 4||| 10||| 3||| 7||| 9||| 6||| 8||| 11||| 5||| 13||| 12||| 15||| 14| 17:55:03 17:55:28 19.39 25.56 0:00:00

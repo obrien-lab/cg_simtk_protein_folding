@@ -1,0 +1,22 @@
+#
+# Control file for running WHAM
+#
+output_prefix = cv/prot
+nsim_temps = 15
+tmin = 286
+tmax = 407
+initial_guess = yes
+freenrg_file = free_energy.dat
+dt = 0.1
+ppn = 15
+max_iterations = 500
+ene_files = wham_ene_files.txt
+ene_integer = no
+enetot_col = 1
+ene_nbins = 500
+dimensions = 0d
+heat_capacity = off
+kbunits = kcal
+speedup_wham = off
+log = wham_cv.log
+skip_first_nlines = 1

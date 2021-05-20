@@ -1,0 +1,5 @@
+pdbfile = 4c5c_model_clean.pdb
+potential_name = bt
+casm = 0
+domain_file = domain_def.dat
+

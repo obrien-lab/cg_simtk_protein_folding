@@ -1,0 +1,28 @@
+> fix_orein_50S_pdb.py -f 4v9d_50S_PtR_5jte_AtR.pdb 
+--> Checking nonstandard RNA linker
+    4SU-8-U in chain 6
+    U8U-34-U in chain 6
+    T6A-37-A in chain 6
+    PSU-39-U in chain 6
+    7MG-46-G in chain 6
+    3AU-47-U in chain 6
+    5MU-54-U in chain 6
+    PSU-55-U in chain 6
+    Done
+--> Missing atoms:
+    Chain 6 residue U 8: O4 
+    Chain 6 residue U 34: O2 
+    Chain 6 residue U 47: OP1 
+    Chain X residue ARG 7: CG CD NE CZ NH1 NH2 
+    Chain X residue GLU 81: CB CG CD OE1 OE2 
+--> Add missing atoms
+    Done
+--> Renumber new pdb
+    Done
+--> Translate new pdb as 23S A2602 N6 at origin
+    Done
+--> Rotate new pdb
+    rotate coor to make vector from 23S:2602@N6 to L24:51@N along x-axis
+    rotate coor to make yz-component of vector from centroid of AtR:76@ribose_ringto centroid of PtR:76@ribose_ring along y-axis
+    Done
+

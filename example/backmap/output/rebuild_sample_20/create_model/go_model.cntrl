@@ -1,0 +1,4 @@
+pdbfile = ../4c5c_model_clean_clean.pdb
+nscal = 10.0
+potential_name = mj
+casm = 1

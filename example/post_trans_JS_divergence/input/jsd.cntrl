@@ -1,0 +1,10 @@
+dt = 0.000015
+nsave = 5000
+alpha = 4331293.0
+n_window = 200
+n_traj = 50
+num_rep = 10
+mutant_type_list = fast slow
+msm_data_file = ./msm_data.npz
+state_type = micro
+

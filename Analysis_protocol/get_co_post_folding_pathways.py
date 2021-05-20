@@ -160,7 +160,7 @@ for i in range(len(co_meta_dtrajs)):
     for j in range(num_rep):
         md = np.hstack((co_meta_dtrajs[i], post_meta_dtrajs_extended[i*num_rep+j] + co_n_states))
         meta_dtrajs.append(md)
-meta_dtrajs = np.array(meta_dtrajs)
+meta_dtrajs = np.array(meta_dtrajs, dtype=object)
 
 mtype2trajid = [np.arange(n_traj*num_rep*i_ax, n_traj*num_rep*(i_ax+1)).astype(int) for i_ax, mutant_type in enumerate(mutant_type_list)]
 

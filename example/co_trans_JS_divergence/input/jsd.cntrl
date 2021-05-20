@@ -1,0 +1,7 @@
+n_traj = 50
+mutant_type_list = fast slow
+co_msm_data_file = ./msm_data.npz
+co_TS_data_dir = ./
+num_sample = 1
+state_type = micro
+

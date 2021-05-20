@@ -1,0 +1,16 @@
+> calc_native_contact_fraction.pl -i 4c5c_model_clean_ca.cor -d domain_def.dat -s secondary_struc_defs.txt -t traj_99_1.dcd -m 1 -o ./ -k '15, 18, 63, 64, 68, 94, 95, 97, 101, 112, 113, 114, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 178, 179, 180, 181, 182, 183, 184, 185, 187, 188, 189, 203, 205, 207, 208, 209, 210, 211, 212, 214, 215, 216, 255, 256, 257, 258, 259, 260, 261, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 282'
+-> Domain defination:
+   Domain 1: 1 ~ 84; Class: Alpha-Beta
+   Domain 2: 85 ~ 110; 184 ~ 306; Class: Alpha-Beta
+   Domain 3: 111 ~ 183; Class: Alpha-Beta
+-> Select 69 residues
+-> Secondary structure defination:
+   5 ~ 8; 15 ~ 33; 37 ~ 40; 57 ~ 60; 71 ~ 79; 88 ~ 95; 97 ~ 107; 114 ~ 118; 119 ~ 124; 128 ~ 137; 141 ~ 145; 163 ~ 172; 176 ~ 181; 186 ~ 193; 201 ~ 204; 212 ~ 217; 231 ~ 248; 253 ~ 260; 266 ~ 272; 282 ~ 290; 294 ~ 304; 
+-> native contacts found in 4c5c_model_clean_ca.cor:
+   Domain 1: 2
+   Domain 2: 70
+   Domain 3: 38
+   Interface 1|2: 1
+   Interface 1|3: 0
+   Interface 2|3: 1
+

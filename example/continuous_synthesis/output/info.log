@@ -1,0 +1,32 @@
+Continuous Synthesis for CG Model using OpenMM
+Author: Yang Jiang; Dan Nissley; Ed O'Brien.
+Start at Wed May 19 10:51:32 2021
+Total number of processors: 1
+Number of processors for each trajectory: 1
+Number of trajectories: 1
+Temperature of production simulation: 310.0 K
+Log file name: info.log
+Protein psf file: setup/4c5c_model_clean_ca.psf
+Protein top file: setup/4c5c_model_clean_ca.top
+Protein prm file: setup/4c5c_model_clean_nscal1_fnn1_go_bt.prm
+Ribosome psf file: setup/50S_tRNA_cg_truncated.psf
+Ribosome top file: setup/50S_tRNA_cg.top
+Ribosome prm file: setup/combine_ribo_L24_Yang.prm
+Codon traslation times will be used.
+File for mRNA sequence of nascent chain: setup/4c5c_mrna_sequence_fast.txt
+File for codon translation times: setup/Fluitt_ecoli_trans_time_310K_avg_16.5.txt
+Free part of ribosome: L24 : 42 - 59
+Experimental dwell time for peptide bond formation: 0.00034 s
+Experimental dwell time for tRNA translocation: 0.004201 s
+x threshold for ejection: 60.0 Angstrom
+Ribosome traffic effect will be considered
+Translation-initiation rate: 0.083333 s-1
+Restart requested
+Starting structure: setup/50S_tRNA_cg_truncated.cor
+File save steps: 5000
+Time step: 0.015 ps
+Scaling factor: 4331293.0
+Total nascent chain length: 10
+
+    SIM_ID  START_LEN           SIM_STATUS     CURRENT_LEN  TIME_USED    SPEED (ns/d)
+         1          1           minimizing              10    0:59:35              --

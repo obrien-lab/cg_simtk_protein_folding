@@ -1,0 +1,54 @@
+PRODART2: init: database path set: /storage/home/yuj179/software/pd2_public-master/database/
+pd2_ca2main --database /storage/home/yuj179/software/pd2_public-master/database/ --ca2main:new_fixed_ca --ca2main:bb_min_steps 500 -i sample_20_mini.pdb -o sample_20_mini_PD2_min.pdb 
+PRODART::PROTOCOLS::CA2MAIN::new_ca2main : running...
+new_ca2main: pose size: 306
+new_ca2main: number of chains: 1
+alphabet_bb_builder_manager: loading db
+alphabet_bb_builder: loaded alphabet of 528 letters of length 6
+alphabet_bb_builder_manager: WARNING: default_odd_len alphabet not set in database path
+PRODART::PROTOCOLS::CA2MAIN::new_ca2main : done.
+potentials_factory: Initialising...
+potentials_factory: loading preset weights
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_forbidden_phi_psi.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_hot_spots_default.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_hot_spots_default_as_geom_pot.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_min_default.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_min_default_as_geom_pot.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_min_default_no_pp_tether.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_min_default_no_rst.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_min_default_pp_bias_corr.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_min_no_hb.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_min_no_strand_hb.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_min_no_strand_hb_only_sp_rst.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/bb_pure_hot_spots.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_bond_bump.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_default.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_default_as_geom_pot.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_hb_rep0.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_hb_rep1.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_hb_rep2.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_hb_rep3.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_hb_rep4.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_hb_rep5.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_hb_rep6.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_hb_rep7.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_rep0.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_rep1.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_rep2.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_rep3.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_rep4.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_rep5.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_rep6.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_go_rep7.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_min_default.dat"
+potentials_factory: Opening weights:	"/storage/home/yuj179/software/pd2_public-master/database/potentials_weights/ca_seq_dep_default.dat"
+total_energy	angle_restraint	bb_14_lj_atr	bb_14_lj_rep	bb_15_lj_atr	bb_15_lj_rep	bb_angle	bb_bond	bb_bump	bb_dihedral	bb_old_hb_helix	bb_old_hb_other	bb_old_hb_strand	bb_pp_bias_corr	bb_strict_omega	bond_potential	coord_restraint	dihedral_restraint	res_contact_rst	secs_dih_ang_rst	strand_pairing_rst
+8034.11	0	-736.87	1798.2	-1481.6	2762.08	1326.2	1051.05	3604.65	64.3133	-198.098	-108.44	-85.9814	-62.0144	100.616	0	0	0	0	0	0
+min_steps_completed	293	min_steps_requested	500
+total_energy	angle_restraint	bb_14_lj_atr	bb_14_lj_rep	bb_15_lj_atr	bb_15_lj_rep	bb_angle	bb_bond	bb_bump	bb_dihedral	bb_old_hb_helix	bb_old_hb_other	bb_old_hb_strand	bb_pp_bias_corr	bb_strict_omega	bond_potential	coord_restraint	dihedral_restraint	res_contact_rst	secs_dih_ang_rst	strand_pairing_rst
+982.726	0	-714.085	1527.08	-1254.43	1052.5	709.669	123.133	0.756275	148.252	-328.697	-155.616	-120.446	-94.8102	89.4247	0	0	0	0	0	0
+Validating output PDB:
+output PDB seems OK
+
+prodart_env: elapsed time (seconds): 6.63
+

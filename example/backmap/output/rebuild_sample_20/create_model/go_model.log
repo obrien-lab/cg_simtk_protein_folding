@@ -1,0 +1,36 @@
+
+##########################################
+# Build CG Protein Model: Python version #
+#   Yang Jiang & Edward P. O'Brien Jr.   #
+#            Dept. of Chemistry          #
+#          Penn State University         #
+##########################################
+
+Configuration:
+pdbfile = ../4c5c_model_clean_clean.pdb
+casm = 1
+nscal = 10.0000
+fnn = 1.0000
+potential_name = mj
+domain_file = None
+sc_prefix = B
+ca_prefix = A
+
+The average MJ interaction energy is 12.8667
+
+Reading in PDB file ../4c5c_model_clean_clean.pdb
+Create psf
+Create cor
+Create top
+
+Determining native contacts
+Finished calculating distance matrix
+Determining side-chains - side-chains contacts
+Determining backbone - side-chains contacts
+# nat sc-sc contacts 461, # nat bb-sc contacts 695, and  # non-nat sc-sc 45595
+Determining the presence of hydrogen bonds using STRIDE
+# of unique Hbonds 197
+
+Create prm
+
+All done.

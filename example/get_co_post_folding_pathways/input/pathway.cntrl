@@ -1,0 +1,7 @@
+n_traj = 50
+num_rep = 10
+mutant_type_list = fast slow
+n_window = 200
+co_msm_data_file = co_msm_data.npz
+post_msm_data_file = post_msm_data.npz
+

@@ -1,0 +1,2 @@
+> create_cg_ribosome_model.py -f 4v9d_50S_PtR_5jte_AtR_model.pdb -s "L24" -r "B" -o 50S_tRNA_cg
+

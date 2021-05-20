@@ -1,0 +1,2 @@
+> mrna_silent_mutation.pl -s 4c5c_mrna_sequence.txt -t Fluitt_ecoli_trans_time_310K_avg_16.5.txt -y fast
+mRNA sequence has 307 codons

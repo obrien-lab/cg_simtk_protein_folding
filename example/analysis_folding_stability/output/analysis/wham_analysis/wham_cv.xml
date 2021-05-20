@@ -1,0 +1,120 @@
+<?xml version="1.0" ?>
+<WhamSpec>
+    <General>
+        <Coordinates>
+            <Coordinate name="V" />
+        </Coordinates>
+        <CoordinateFileReaders pythonModule="myreaders" returnsTime="false">
+            <Reader name="ReadLastColumn">
+                <ReturnList name="V" />
+            </Reader>
+        </CoordinateFileReaders>
+        <Binnings>
+            <Binning name="V">
+                <Interval>1</Interval>
+            </Binning>
+        </Binnings>
+        <Parameters>
+            <Parameter name ="reference_energy">83.676461</Parameter>
+            <Parameter name="kB">0.0019872041</Parameter>
+        </Parameters>
+    </General>
+    <Trajectories>
+        <Trajectory T="306.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa1/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="316.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa2/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="326.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa3/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="333.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa4/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="339.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa5/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="343.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa6/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="345.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa7/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="346.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa8/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="347.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa9/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="349.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa10/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="353.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa11/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="359.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa12/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="367.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa13/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="377.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa14/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+        <Trajectory T="387.0">
+            <EnergyFunction>V</EnergyFunction>
+            <CoordinateFiles>
+                <CoordinateFile>../../aa15/ene.dat</CoordinateFile>
+            </CoordinateFiles>
+        </Trajectory>
+    </Trajectories>
+    <Jobs>
+        <HeatCapacity outFile="cv/cv.dat">
+            <EnergyFunction>V</EnergyFunction>
+            <Temperatures>286:0.1:407</Temperatures>
+        </HeatCapacity>
+    </Jobs>
+</WhamSpec>

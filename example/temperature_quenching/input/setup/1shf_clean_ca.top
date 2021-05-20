@@ -1,0 +1,481 @@
+* This CHARMM .top file describes a Ca-Cb Go model of 1shf_clean
+*
+20 1
+! backbone masses
+MASS 1    A1       99.000000 
+MASS 2    A2       101.000000
+MASS 3    A3       113.000000
+MASS 4    A4       147.000000
+MASS 5    A5       99.000000 
+MASS 6    A6       71.000000 
+MASS 7    A7       113.000000
+MASS 8    A8       163.000000
+MASS 9    A9       114.000000
+MASS 10   A10      163.000000
+MASS 11   A11      128.000000
+MASS 12   A12      71.000000 
+MASS 13   A13      114.000000
+MASS 14   A14      101.000000
+MASS 15   A15      128.000000
+MASS 16   A16      114.000000
+MASS 17   A17      114.000000
+MASS 18   A18      113.000000
+MASS 19   A19      87.000000 
+MASS 20   A20      147.000000
+MASS 21   A21      114.000000
+MASS 22   A22      128.000000
+MASS 23   A23      57.000000 
+MASS 24   A24      128.000000
+MASS 25   A25      128.000000
+MASS 26   A26      147.000000
+MASS 27   A27      128.000000
+MASS 28   A28      113.000000
+MASS 29   A29      113.000000
+MASS 30   A30      114.000000
+MASS 31   A31      87.000000 
+MASS 32   A32      87.000000 
+MASS 33   A33      128.000000
+MASS 34   A34      57.000000 
+MASS 35   A35      114.000000
+MASS 36   A36      186.000000
+MASS 37   A37      186.000000
+MASS 38   A38      128.000000
+MASS 39   A39      71.000000 
+MASS 40   A40      114.000000
+MASS 41   A41      87.000000 
+MASS 42   A42      113.000000
+MASS 43   A43      101.000000
+MASS 44   A44      101.000000
+MASS 45   A45      57.000000 
+MASS 46   A46      128.000000
+MASS 47   A47      101.000000
+MASS 48   A48      57.000000 
+MASS 49   A49      163.000000
+MASS 50   A50      113.000000
+MASS 51   A51      114.000000
+MASS 52   A52      87.000000 
+MASS 53   A53      114.000000
+MASS 54   A54      163.000000
+MASS 55   A55      99.000000 
+MASS 56   A56      71.000000 
+MASS 57   A57      114.000000
+MASS 58   A58      99.000000 
+MASS 59   A59      114.000000
+
+DECL +A
+DECL -A
+DECL #A
+RESI G1     0.0
+GROUP
+Atom A A1     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G2     0.0
+GROUP
+Atom A A2     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G3     0.0
+GROUP
+Atom A A3     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G4     0.0
+GROUP
+Atom A A4     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G5     0.0
+GROUP
+Atom A A5     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G6     0.0
+GROUP
+Atom A A6     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G7     0.0
+GROUP
+Atom A A7     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G8     0.0
+GROUP
+Atom A A8     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G9     -1.0
+GROUP
+Atom A A9     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G10     0.0
+GROUP
+Atom A A10     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G11     -1.0
+GROUP
+Atom A A11     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G12     0.0
+GROUP
+Atom A A12     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G13     1.0
+GROUP
+Atom A A13     1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G14     0.0
+GROUP
+Atom A A14     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G15     -1.0
+GROUP
+Atom A A15     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G16     -1.0
+GROUP
+Atom A A16     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G17     -1.0
+GROUP
+Atom A A17     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G18     0.0
+GROUP
+Atom A A18     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G19     0.0
+GROUP
+Atom A A19     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G20     0.0
+GROUP
+Atom A A20     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G21     0.0
+GROUP
+Atom A A21     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G22     1.0
+GROUP
+Atom A A22     1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G23     0.0
+GROUP
+Atom A A23     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G24     -1.0
+GROUP
+Atom A A24     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G25     1.0
+GROUP
+Atom A A25     1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G26     0.0
+GROUP
+Atom A A26     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G27     0.0
+GROUP
+Atom A A27     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G28     0.0
+GROUP
+Atom A A28     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G29     0.0
+GROUP
+Atom A A29     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G30     0.0
+GROUP
+Atom A A30     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G31     0.0
+GROUP
+Atom A A31     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G32     0.0
+GROUP
+Atom A A32     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G33     -1.0
+GROUP
+Atom A A33     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G34     0.0
+GROUP
+Atom A A34     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G35     -1.0
+GROUP
+Atom A A35     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G36     0.0
+GROUP
+Atom A A36     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G37     0.0
+GROUP
+Atom A A37     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G38     -1.0
+GROUP
+Atom A A38     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G39     0.0
+GROUP
+Atom A A39     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G40     1.0
+GROUP
+Atom A A40     1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G41     0.0
+GROUP
+Atom A A41     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G42     0.0
+GROUP
+Atom A A42     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G43     0.0
+GROUP
+Atom A A43     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G44     0.0
+GROUP
+Atom A A44     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G45     0.0
+GROUP
+Atom A A45     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G46     -1.0
+GROUP
+Atom A A46     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G47     0.0
+GROUP
+Atom A A47     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G48     0.0
+GROUP
+Atom A A48     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G49     0.0
+GROUP
+Atom A A49     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G50     0.0
+GROUP
+Atom A A50     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G51     0.0
+GROUP
+Atom A A51     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G52     0.0
+GROUP
+Atom A A52     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G53     0.0
+GROUP
+Atom A A53     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G54     0.0
+GROUP
+Atom A A54     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G55     0.0
+GROUP
+Atom A A55     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G56     0.0
+GROUP
+Atom A A56     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G57     0.0
+GROUP
+Atom A A57     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G58     0.0
+GROUP
+Atom A A58     0.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+RESI G59     -1.0
+GROUP
+Atom A A59     -1.0
+Bond A +A
+Angle -A A +A
+DIHE -A A +A #A
+
+END

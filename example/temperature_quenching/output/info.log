@@ -1,0 +1,23 @@
+Temperature Quenching for CG Model using OpenMM
+Author: Yang Jiang; Ed O'Brien.
+Start at Thu May 20 15:30:25 2021
+Total number of processors: 2
+Number of processors for each trajectory: 2
+Number of trajectories: 1
+Number of steps in equilibrium for each trajectory: 4000000
+Temperature of equilibrium simulation: 1000.0 K
+Temperature of production simulation: 310.0 K
+Log file name: info.log
+Charmm psf file: setup/1shf_clean_ca.psf
+Charmm top file: setup/1shf_clean_ca.top
+Charmm prm file: setup/1shf_clean_nscal1.4962_fnn1_go_bt.prm
+Secondary structure defination file: setup/secondary_struc_defs.txt
+Q threshold: 0.75
+No restart requested
+Starting structure: setup/1shf_clean_ca.cor
+File save steps: 1000
+Time step: 0.015 ps
+Native contacts found in setup/1shf_clean_ca.cor: 50
+
+    SIM_ID           START_STEP           SIM_STATUS     Q_LAST  IF_FOLDED  TIME_USED      SPEED
+         1              equil@1          Done@251000      0.940          1    0:16:29      253.7

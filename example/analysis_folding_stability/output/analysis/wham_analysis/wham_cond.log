@@ -1,0 +1,110 @@
+nsim_temps = 15
+# of Hamiltonians = 1
+hamiltonian_file = undefined
+hamiltonian_type = undefined
+enerest_col = -1
+output_prefix = qbb/qbb
+tmin = 298
+tmax = 298
+dt = 1
+tlist = 
+freenrg_file = cv/prot_free-nrgs.dat
+initial_guess = no
+ene_integer = no
+ene_files = wham_ene_files.txt
+enetot_col = 1
+ene_nbins = 500
+obs_files = wham_props_files.txt
+obs1_col = 0
+obs1_name = qbb
+obs1_nbins = 25
+obs1_binsize = undefined
+obs1_multiby = 1
+obs2_col = 
+obs2_name = undefined
+obs2_nbins = undefined
+obs2_binsize = undefined
+obs2_multiby = 1
+obs3_col = 
+obs3_name = undefined
+obs3_nbins = undefined
+obs3_binsize = undefined
+obs3_multiby = 1
+1d_distributions = all
+2d_distributions = 
+3d_distributions = 
+dimensions = 1d
+free_energies = on
+heat_capacity = off
+kbunits = kcal
+log = wham_cond.log
+ppn = 1
+max_iterations = 500
+avg_obs1_vs_obs2 = off
+avg_obs2_vs_obs1 = off
+restraining_obs_col = -1
+orm_ene_files_1 = undefined
+orm_asp_col_1 = -1
+orm_init_conc_1 = -1
+orm_conc_min_1 = -1
+orm_conc_max_1 = -1
+orm_nconc_1 = -1
+orm_ene_files_2 = undefined
+orm_asp_col_2 = -1
+orm_init_conc_2 = -1
+orm_conc_min_2 = -1
+orm_conc_max_2 = -1
+orm_nconc_2 = -1
+tmtm_ene_files = undefined
+tmtm_ene_col = -1
+tmtm_sw = off
+tmtm_tref = -1
+cond_file = wham_props_files.txt
+cond_col = 0
+cond_type = gt
+cond_val1 = 0.73205672099206
+cond_val2 = -1
+enthalpy = off
+pH_of_sim = -1
+pH_min = -1
+pH_max = -1
+dpH = 1
+nTitratible_scs = -1
+pKa_asa_file = undefined
+obs_dist_sw = off
+obs_dist_name = undefined
+obs_dist_col1 = -1
+obs_dist_col2 = -1
+cf_min = -1
+cf_max = -1
+df = -1
+skip_nlines = 1
+variable_slnc = -1
+cf_new = -1
+pH_new = -1
+osmo_conc_new = -1
+normalize_by = z0
+breakup_traj = -1
+traj_segment = -1
+skip_first_nlines = 1
+Reading data from frames 1 to 1000000000000
+Completed initial assesment:
+emax = 247.840438, emin = -247.840438, ebinmax = 501, de = 0.991361752
+cond_min = 0.0355, cond_max = 0.9949
+obs1_max = 0.9949, obs1_min = 0.0355, obs1_binmax = 26, dobs1 = 0.038376 
+Free Energies were read in:
+306.0 1 -5.20499303104553
+316.0 1 4.25596039072428
+326.0 1 12.5178903979495
+333.0 1 17.6257375673094
+339.0 1 21.5050890861693
+343.0 1 21.7178066081946
+345.0 1 20.5587880691267
+346.0 1 19.9347715441221
+347.0 1 19.3048115898729
+349.0 1 18.0392444458973
+353.0 1 15.5001055705923
+359.0 1 11.6814694063822
+367.0 1 6.58549996229516
+377.0 1 0.232947261707682
+387.0 1 -6.07471550770471

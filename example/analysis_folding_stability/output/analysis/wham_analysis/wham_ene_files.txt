@@ -1,0 +1,15 @@
+../../aa1/ene.dat 306.0
+../../aa2/ene.dat 316.0
+../../aa3/ene.dat 326.0
+../../aa4/ene.dat 333.0
+../../aa5/ene.dat 339.0
+../../aa6/ene.dat 343.0
+../../aa7/ene.dat 345.0
+../../aa8/ene.dat 346.0
+../../aa9/ene.dat 347.0
+../../aa10/ene.dat 349.0
+../../aa11/ene.dat 353.0
+../../aa12/ene.dat 359.0
+../../aa13/ene.dat 367.0
+../../aa14/ene.dat 377.0
+../../aa15/ene.dat 387.0

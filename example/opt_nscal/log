@@ -1,0 +1,1 @@
+> opt_nscal.pl -i 4c5c_model.pdb -d setup/domain_def.dat -n 1

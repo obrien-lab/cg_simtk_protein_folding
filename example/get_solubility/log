@@ -1,0 +1,65 @@
+> get_solubility.py -f solubility.cntrl 
+Agg_sel: : 5-10, 23-27, 55-62, 78-79, 88-90, 102-102, 114-117, 135-143, 157-157, 179-180, 188-194, 238-247, 266-270, 293-303
+Deg_sel: :ILE,VAL,LEU,PHE,CYS,MET,ALA,GLY,TRP
+CB_sel: :5,6,7,8,27,28,29,48,56,57,58,59,60,61,62,63,99,100,101,102,103,104,114,116,117,119,139,140,141,142,144,165,166,167,168,169,170,171,180,181,190,191,200,201,209,211,212,213,214,215,239,240,241,242,243,244,245,266,267,268,269,296,297,298,299,300,301,302
+Frame 0 done
+Frame 1 done
+Frame 2 done
+Frame 3 done
+Frame 4 done
+Frame 5 done
+Frame 6 done
+Frame 7 done
+Frame 8 done
+Frame 9 done
+Frame 10 done
+Frame 11 done
+Frame 12 done
+Frame 13 done
+Frame 14 done
+Frame 15 done
+Frame 16 done
+Frame 17 done
+Frame 18 done
+Frame 19 done
+Frame 20 done
+Frame 21 done
+Frame 22 done
+Frame 23 done
+Frame 24 done
+Frame 25 done
+Frame 26 done
+Frame 27 done
+Frame 28 done
+Frame 29 done
+Frame 30 done
+Frame 31 done
+Frame 32 done
+Frame 33 done
+Frame 34 done
+Frame 35 done
+Frame 36 done
+Frame 37 done
+Frame 38 done
+Frame 39 done
+Frame 40 done
+Frame 41 done
+Frame 42 done
+Frame 43 done
+Frame 44 done
+Frame 45 done
+Frame 46 done
+Frame 47 done
+Frame 48 done
+Frame 49 done
+Frame 50 done
+Frame 51 done
+Frame 52 done
+Frame 53 done
+Frame 54 done
+Frame 55 done
+Frame 56 done
+Frame 57 done
+Frame 58 done
+Frame 59 done
+

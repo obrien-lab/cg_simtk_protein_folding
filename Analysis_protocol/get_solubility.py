@@ -171,11 +171,15 @@ for frame_id in range(traj.n_frames):
     state_id = int(frame_id / num_samples)
     rep_id = frame_id - state_id * num_samples
     os.system('mkdir tmp')
+    os.system('cp '+native_AA_pdb+' tmp/')
+    native_AA_name = native_AA_pdb.strip().split('/')[-1]
     os.chdir('tmp')
     traj[frame_id].save('tmp.pdb', force_overwrite=True)
-    os.system('backmap.py -i '+native_AA_pdb+' -c tmp.pdb > /dev/null 2>&1')
+    screen = os.popen('backmap.py -i '+native_AA_name+' -c tmp.pdb 2>&1').readlines()
     if not os.path.exists('tmp_rebuilt.pdb'):
         SASA_0 = [np.nan, np.nan, np.nan]
+        for s in screen:
+            print(s)
         print('Failed to backmap')
     else:
         struct = mdt.load('tmp_rebuilt.pdb')

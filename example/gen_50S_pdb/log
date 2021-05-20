@@ -1,0 +1,8 @@
+> gen_50S_pdb.py -f 4v9d_50S.cntrl 
+--> Reading cif file 4v9d.cif
+    Done
+--> Spliting cif file
+    Done
+--> Combining 50S subunits
+    Done
+

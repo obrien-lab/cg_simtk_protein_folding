@@ -1,0 +1,1 @@
+> parse_cg_cacb_prm.py -p 4c5c_model_clean_clean_nscal10.0_fnn1_go_mj.prm -t 4c5c_model_clean_clean_ca-cb.top

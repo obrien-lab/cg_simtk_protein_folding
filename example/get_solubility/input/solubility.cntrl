@@ -1,0 +1,10 @@
+traj_file = sampled_traj.dcd
+psf_file = 4c5c_model_clean_ca.psf
+native_AA_pdb = 4c5c_model_clean.pdb
+num_samples = 5
+n_boot = 10000
+fasta_seq = 4c5c_fasta.txt
+disordered_pdb = ./seq_min.pdb
+agg_prop_file = ./agg_pro.dat
+deg_sel = :ILE,VAL,LEU,PHE,CYS,MET,ALA,GLY,TRP
+

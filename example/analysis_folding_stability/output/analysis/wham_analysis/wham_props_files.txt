@@ -1,0 +1,15 @@
+../final_ts/aa1_props_vs_time.dat 306.0
+../final_ts/aa2_props_vs_time.dat 316.0
+../final_ts/aa3_props_vs_time.dat 326.0
+../final_ts/aa4_props_vs_time.dat 333.0
+../final_ts/aa5_props_vs_time.dat 339.0
+../final_ts/aa6_props_vs_time.dat 343.0
+../final_ts/aa7_props_vs_time.dat 345.0
+../final_ts/aa8_props_vs_time.dat 346.0
+../final_ts/aa9_props_vs_time.dat 347.0
+../final_ts/aa10_props_vs_time.dat 349.0
+../final_ts/aa11_props_vs_time.dat 353.0
+../final_ts/aa12_props_vs_time.dat 359.0
+../final_ts/aa13_props_vs_time.dat 367.0
+../final_ts/aa14_props_vs_time.dat 377.0
+../final_ts/aa15_props_vs_time.dat 387.0

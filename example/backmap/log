@@ -1,0 +1,53 @@
+> backmap.py -i 4c5c_model_clean.pdb -c sample_20.pdb -n 2
+-> Cleaning PDB file 4c5c_model_clean.pdb
+   Done
+-> Building ca-cb model for 4c5c_model_clean_clean.pdb
+   Done
+-> Adding side chain beads
+Could not find the head atom of the next template! Bond pattern may be wrong, which could lead to extra TER cards in a PDB file
+Could not find the head atom of the next template! Bond pattern may be wrong, which could lead to extra TER cards in a PDB file
+Could not find the head atom of the next template! Bond pattern may be wrong, which could lead to extra TER cards in a PDB file
+Could not find the head atom of the next template! Bond pattern may be wrong, which could lead to extra TER cards in a PDB file
+Could not find the head atom of the next template! Bond pattern may be wrong, which could lead to extra TER cards in a PDB file
+Could not find the head atom of the next template! Bond pattern may be wrong, which could lead to extra TER cards in a PDB file
+   Done
+-> Running energy minimization for ca-cb model
+    Potential Energy:
+      HarmonicBondForce: 915.0477 kcal/mol
+      HarmonicAngleForce: 14599.6544 kcal/mol
+      PeriodicTorsionForce: 103.2937 kcal/mol
+      CustomTorsionForce: 53225.9025 kcal/mol
+      CustomNonbondedForce: 13459899.1910 kcal/mol
+      CustomExternalForce: 0.0000 kcal/mol
+   Potential energy before minimization: 13528743.0893 kcal/mol
+    Potential Energy:
+      HarmonicBondForce: 503.2592 kcal/mol
+      HarmonicAngleForce: 2158.6712 kcal/mol
+      PeriodicTorsionForce: 102.9899 kcal/mol
+      CustomTorsionForce: 3010.3273 kcal/mol
+      CustomNonbondedForce: -1988.7400 kcal/mol
+      CustomExternalForce: 900.5977 kcal/mol
+   Potential energy after minimization: 4687.1053 kcal/mol
+   Done
+-> Calling PD2 to reconstruct backbone
+   Backbone reconstruction completed.
+-> Calling pulchra to reconstruct all-atom PDB
+   Reconstructed all-atom PDB sample_20_mini_PD2_min_pulchra.pdb
+-> Running all-atom energy minimization for 50 steps in vacuum via OpenMM
+    Potential Energy:
+      HarmonicBondForce: 11746.8113 kcal/mol
+      HarmonicAngleForce: 15572.8743 kcal/mol
+      PeriodicTorsionForce: 5140.9683 kcal/mol
+      NonbondedForce: 13224030.6482 kcal/mol
+      CMMotionRemover: 0.0000 kcal/mol
+      CustomExternalForce: 0.0000 kcal/mol
+   Potential energy before minimization: 13256491.3021 kcal/mol
+    Potential Energy:
+      HarmonicBondForce: 250.1683 kcal/mol
+      HarmonicAngleForce: 1471.5064 kcal/mol
+      PeriodicTorsionForce: 4219.7465 kcal/mol
+      NonbondedForce: -6109.7096 kcal/mol
+      CMMotionRemover: 0.0000 kcal/mol
+      CustomExternalForce: 144.5867 kcal/mol
+   Potential energy after minimization: -23.7017 kcal/mol
+

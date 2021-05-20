@@ -1,0 +1,13 @@
+tpn = 2
+ppn = 2
+num_traj = 1
+psf = setup/1shf_clean_ca.psf
+top = setup/1shf_clean_ca.top
+param = setup/1shf_clean_nscal1.4962_fnn1_go_bt.prm
+starting_strucs = setup/1shf_clean_ca.cor
+temp_equil = 1000
+temp_prod = 310
+Q_threshold = 0.75
+secondary_structure_def = setup/secondary_struc_defs.txt
+log_file = info.log
+restart = 0

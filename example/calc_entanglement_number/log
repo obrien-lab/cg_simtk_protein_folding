@@ -1,0 +1,2 @@
+> calc_entanglement_number.pl -i 4c5c_model_clean_ca.cor -t traj_99_1.dcd 
+-> Select all residues

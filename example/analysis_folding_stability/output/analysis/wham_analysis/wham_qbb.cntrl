@@ -1,0 +1,32 @@
+#
+# Control file for running WHAM
+#
+output_prefix = qbb/qbb
+nsim_temps = 15
+freenrg_file = cv/prot_free-nrgs.dat
+initial_guess = no
+tmin = 298
+tmax = 298
+dt = 1
+ppn = 1
+max_iterations = 500
+ene_files = wham_ene_files.txt
+ene_integer = no
+enetot_col = 1
+ene_nbins = 500
+dimensions = 1d
+obs_files = wham_props_files.txt
+obs1_col = 0
+obs1_name = qbb
+obs1_nbins = 25
+1d_distributions = all
+free_energies = on
+heat_capacity = off
+kbunits = kcal
+speedup_wham = off
+log = wham_cond.log
+cond_file = wham_props_files.txt
+cond_col = 0
+cond_type = gt
+cond_val1 = 0.73205672099206
+skip_first_nlines = 1
