@@ -176,10 +176,10 @@ graph TD
     H --> |get_post_trans_order_parameters.py| L
     L --> |build_post_trans_kinetic_model.py| M(Post-translation metastable states)
     J & M --> |get_co_post_folding_pathways.py| O(Folding pathways)
-    M --> |post_trans_JS_divergence.py| N(Post-translation JSD)
-    M --> |get_state_probability.py| P(State probability vs. post-translation time)
-    M --> |get_solubility.py| Q(Percent soluble protein in each state)
-    M --> |backmap & QM/MM simulations| R(Enzymatic reaction barrier for each state)
+    M ---> |post_trans_JS_divergence.py| N(Post-translation JSD)
+    M ----> |get_state_probability.py| P(State probability vs. post-translation time)
+    M ----> |get_solubility.py| Q(Percent soluble protein in each state)
+    M ----> |backmap & QM/MM simulations| R(Enzymatic reaction barrier for each state)
     P & Q & R --> |calc_specific_activity.py| S(Specific activity)
 
 ```
