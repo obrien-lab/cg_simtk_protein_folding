@@ -6,4 +6,4 @@
 | input/ | All required input files for this demo, excpet for the scripts. |
 | output/ | All output files/data by runing this script |
 
-#### A log file is presented in each folder, containing the command used to run this demo (followed by `>`) and the terminal outputs.
+##### A log file is presented in each folder, containing the command used to run this demo (followed by `>`) and the terminal outputs.
