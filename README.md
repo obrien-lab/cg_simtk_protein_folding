@@ -29,6 +29,7 @@ In summary, to use all scripts, the following Python modules and software are re
   * [5. Simulation of post-translational folding](#5-simulation-of-post-translational-folding)
   * [6. Backmapping from coarse-grained model to all-atom model](#6-backmapping-from-coarse-grained-model-to-all-atom-model)
   * [7. Analysis of protein folding trajectories](#7-analysis-of-protein-folding-trajectories)
+  * [8. General workflow](#8-general-workflow)
 
 
 ### 1. Create CG protein models and tune the force field parameters (*n*<sub>scal</sub>) for a given protein
@@ -154,3 +155,5 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 | Analysis_protocol/**calc_specific_activity.py** | Estimates the specific activities, as well as the errors and p-value, by using the $`\Delta G^{\ddagger}`$ obtained from [Activation Energy Estimation Workflow](https://git.psu.edu/obrien/yang_jiang/activation-energy-estimation-workflow) and the state probabilities obtained from `get_state_probability.py`. ([Learn more](../../wikis/help_wiki/calc_specific_activity.py)) |
 
 [:leftwards_arrow_with_hook:](#table-of-contents)
+
+### 8. General workflow
