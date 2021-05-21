@@ -160,7 +160,8 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 ### 8. General workflow
 
 ```mermaid
-A[Protein] -->|opt_nscal.pl| B(CG protein model)
+graph TD
+    A[Protein] -->|opt_nscal.pl| B(CG protein model)
     B --> |continuous_synthesis_v6.py| C(Protein synthesis trajectories)
     C --> |post_trans_single_run.py| D(Post-translational folding trajectories)
     C --> |calc_cont_synth_qbb_vs_T.py| E(Co-translation Q vs. time)
@@ -180,6 +181,7 @@ A[Protein] -->|opt_nscal.pl| B(CG protein model)
     M --> |get_solubility.py| Q(Percent soluble protein in each state)
     M --> |backmap & QM/MM simulations| R(Enzymatic reaction barrier for each state)
     P & Q & R --> |calc_specific_activity.py| S(Specific activity)
+
 ```
 
 [:leftwards_arrow_with_hook:](#table-of-contents)
