@@ -210,8 +210,7 @@ def calc_G_list(coor, sel, cutoff, terminal_cutoff):
             G_list.append([np.nan, np.nan])
     return (M, G_list)
     
-def gen_state_visualizion(state_id, native_psf, native_cor, state_psf, state_cor, native_AA_pdb, nc_length, if_entangled):
-    global ribo_psf_file, ribo_cor_file
+def gen_state_visualizion(state_id, native_psf, native_cor, state_psf, state_cor, native_struct, nc_length, if_entangled):
     AA_name_list = ['ALA', 'ARG', 'ASN', 'ASP', 'CYS', 'GLN', 'GLU', 'GLY', 'HIS', 'ILE', 
                     'LEU', 'LYS', 'MET', 'PHE', 'PRO', 'SER', 'THR', 'TRP', 'TYR', 'VAL',
                     'HIE', 'HID', 'HIP']
@@ -236,11 +235,9 @@ def gen_state_visualizion(state_id, native_psf, native_cor, state_psf, state_cor
     rnc_struct = pmd.load_file(state_psf)
     rnc_struct.coordinates = state_cor.xyz[0, :, :]*10
     L24_struct = rnc_struct['@B']
-    ribo_struct = pmd.load_file(ribo_psf_file)
-    ribo_cor = pmd.load_file(ribo_cor_file)
-    ribo_struct.coordinates = ribo_cor.coordinates
-    ribo_struct = ribo_struct['!@B']
-    ribo_struct = L24_struct + ribo_struct
+    
+    ribo_struct_0 = ribo_struct['!@B']
+    ribo_struct_0 = L24_struct + ribo_struct_0
 
     native_contact = []
     for i in range(0, len(struct.atoms)-min_interval):
@@ -294,7 +291,6 @@ def gen_state_visualizion(state_id, native_psf, native_cor, state_psf, state_cor
             idx_thread_max = [i+1, j]
     
     # backmap
-    native_struct = pmd.load_file(native_AA_pdb)
     native_struct[':1-%d'%nc_length].save('target.pdb')
     os.system('backmap.py -i target.pdb -c tmp.pdb')
     os.system('mv tmp_rebuilt.pdb state_%d.pdb'%state_id)
@@ -304,7 +300,7 @@ def gen_state_visualizion(state_id, native_psf, native_cor, state_psf, state_cor
     
     # combine backmapped NC and ribosome
     nc_struct = pmd.load_file('state_%d.pdb'%state_id)
-    rnc_struct = nc_struct + ribo_struct
+    rnc_struct = nc_struct + ribo_struct_0
     for i in range(nc_length):
         rnc_struct.residues[i].segid = 'A'
     rnc_struct.save('state_%d.pdb'%state_id, charmm=True, overwrite=True)
@@ -412,6 +408,12 @@ def get_co_po_dir(prefix_dir, mutant_type):
 ################################## MAIN #######################################
 if not if_cluster:
     npzfile = np.load('msm_data.npz', allow_pickle=True)
+
+ribo_struct = pmd.load_file(ribo_psf_file)
+ribo_cor = pmd.load_file(ribo_cor_file)
+ribo_struct.coordinates = ribo_cor.coordinates
+
+native_struct = pmd.load_file(native_AA_pdb)
 
 G_list_0_list = []
 NCL_list = []
@@ -674,4 +676,4 @@ if if_visualize:
         else:
             traj_cor = mdt.load(traj_file, top=psf_file)[frame_idx]
                 
-        gen_state_visualizion(state_id, native_psf_file, cor_file, psf_file, traj_cor, native_AA_pdb, ncl, if_entangled)
+        gen_state_visualizion(state_id, native_psf_file, cor_file, psf_file, traj_cor, native_struct, ncl, if_entangled)
