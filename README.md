@@ -161,7 +161,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 
 ```mermaid
 graph TD
-    A[Protein] -->|opt_nscal.pl| B(CG protein model)
+    A[Protein] -->|opt_nscal.pl or scan_nscal_REX.pl| B(CG protein model)
     B --> |continuous_synthesis_v6.py| C(Protein synthesis trajectories)
     C ---> |post_trans_single_run.py| D(Post-translational folding trajectories)
     C --> |calc_cont_synth_qbb_vs_T.py| E(Co-translation Q vs. time)
