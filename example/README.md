@@ -1,4 +1,5 @@
-### This directory contains demos for some of the key scripts in this repository. The folder name is the same as the script name.
+### This directory contains demos for some of the key scripts in this repository. The folder name is the same as the script name. 
+##### Other scripts do not have demo provided because (1) it needs to run on a super computer or (2) it requires to read a large amount of data produced by previous simulations. For these scripts, please contact us if you want to check your outputs or you need our original data to test.
 ### Each folder contains the following subdirectories:
 
 | Directory | Contents |
