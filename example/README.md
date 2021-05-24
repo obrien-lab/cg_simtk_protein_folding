@@ -7,8 +7,8 @@ Other scripts do not have demo provided because (1) it needs to run on a super c
 | input/ | All required input files for this demo, excpet for the scripts. |
 | output/ | All output files/data by runing this script. |
 
-A log file is presented in each folder, containing the command used to run this demo (followed by `>`) and the terminal outputs.
-
-The run time for these demos, except for `opt_nscal`, should be within one day on a normal desktop. `opt_nscal` will take about 11 days.
+-- A log file is presented in each folder, containing the command used to run this demo (followed by `>`) and the terminal outputs.
+-- A README file is presented in each folder, containing the link to the source code.
+-- The run time for these demos, except for `opt_nscal`, should be within one day on a normal desktop. `opt_nscal` will take about 11 days.
 
 - #### `input_data.tar.bz2` is the compressed file of all the input data that were used to performed the simulations in our paper *How synonymous mutations alter enzyme structure and function over long time scales*. Check the README files inside to learn more details.
