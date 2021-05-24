@@ -7,6 +7,8 @@ import getopt, os, time, random, math, traceback, io, sys, string
 import parmed as pmd
 import numpy as np
 
+sys.setrecursionlimit(10000)
+
 usage = '\nUsage: create_cg_protein_model.py\n' \
         '       --ctrlfile | -f <model.ctrl> Control file for creating cg protein model\n'\
         '       [--help | -h] Print this information\n\n'\
