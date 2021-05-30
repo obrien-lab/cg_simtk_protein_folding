@@ -292,7 +292,7 @@ sub parse_domain
   {
     chomp($line);
     $line =~ s/^\s+|\s+$//g;
-    if($line !~ /^#/)
+    if($line !~ /^#/ && $line ne '')
     {
       my @str = split(/\s*#/, $line);
       my @data = split(/\s+/, $str[0]);
