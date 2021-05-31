@@ -357,8 +357,7 @@ print('Done!')\n";
   my @threads = ();
   for(my $i = 1; $i <= $num_traj; $i++)
   {
-    print "calc_native_contact_fraction.pl -i $strt -d ../$dom_def -s ../setup/secondary_struc_defs.txt -t traj_$i.dcd\n";
-    my $t = threads->create('run_exe', "calc_native_contact_fraction_v2.pl -i $strt -d ../$dom_def -s ../setup/secondary_struc_defs.txt -t traj_$i.dcd");
+    my $t = threads->create('run_exe', "calc_native_contact_fraction.pl -i $strt -d ../$dom_def -s ../setup/secondary_struc_defs.txt -t traj_$i.dcd");
     push@threads, $t;
     $t->detach();
   }
