@@ -45,7 +45,7 @@ if(!defined($restart))
   $restart = 0;
 }
 
-my $is_ca = "ca";
+my $is_ca = 0; # C-alpha model
 
 my %nscal_set = ("a" => [1.1954, 1.4704, 1.7453, 2.0322, 2.5044],
                  "b" => [1.4732, 1.8120, 2.1508, 2.5044, 2.5044],
@@ -61,12 +61,13 @@ mkdir("setup");
 my @domain = parse_domain($dom_def);
 my @nscal_index = ();
 my $start_n = 1;
+my $n_calc_Q = 0;
+for(my $i = 0; $i < @domain; $i++)
+{
+  $nscal_index[$i] = 0;
+}
 if($restart eq 0)
 {
-  for(my $i = 0; $i < @domain; $i++)
-  {
-    $nscal_index[$i] = 0;
-  }
   open(INFO, ">opt_nscal.log")||die("Error: cannot create opt_nscal.log\n\n");
   print INFO "## Start at ".localtime()."\n";
 }
@@ -113,19 +114,42 @@ else
       }
       @nscal_index = @nscal_index_1;
     }
+    elsif($line =~ /^\-\> Probability of domain stability:/)
+    {
+      $n_calc_Q = $n_calc_Q + 1;
+    }
   }
   close(INFO);
   open(INFO, "<opt_nscal.log")||die("Error: cannot find opt_nscal.log\n\n");
   open(INFO_2, ">opt_nscal_new.log")||die("Error: cannot create opt_nscal_new.log\n\n");
+  my $tag = 0;
   while(my $line = <INFO>)
   {
-    if($line =~ /^## Round \E$start_n\Q/)
+    if($n_calc_Q < $start_n)
     {
-      last;
+      if($line =~ /^## Round \E$start_n\Q/)
+      {
+        last;
+      }
+      else
+      {
+        print INFO_2 $line;
+      }
     }
     else
     {
-      print INFO_2 $line;
+      if($line =~ /^## Round \E$start_n\Q/)
+      {
+        $tag = 1;
+      }
+      if($tag eq 1 && $line =~ /^\-\> Probability of domain stability:/)
+      {
+        last;
+      }
+      else
+      {
+        print INFO_2 $line;
+      }
     }
   }
   close(INFO);
@@ -142,36 +166,39 @@ for(my $interation = $start_n; $interation <= @{$nscal_set{"a"}}; $interation++)
 {
   mkdir("round_$interation");
   chdir("round_$interation");
-  mkdir("setup");
-  
-  print INFO "## Round $interation:\n";
-  print INFO "-> Set nscal as:\n";
-
-  for(my $i = 0; $i < @domain; $i++)
+  my $strt = "";
+  if($n_calc_Q < $start_n || $interation ne $start_n)
   {
-    my $dom = $domain[$i];
-    $dom->{"nscal"} = $nscal_set{$dom->{"class"}}->[$nscal_index[$i]];
-    if($dom->{"class"} eq "i")
+    mkdir("setup");
+  
+    print INFO "## Round $interation:\n";
+    print INFO "-> Set nscal as:\n";
+
+    for(my $i = 0; $i < @domain; $i++)
     {
-      print INFO "   Interface ".$dom->{"range"}->[0]."|".$dom->{"range"}->[1].": nscal = ".$dom->{"nscal"}."\n";
+      my $dom = $domain[$i];
+      $dom->{"nscal"} = $nscal_set{$dom->{"class"}}->[$nscal_index[$i]];
+      if($dom->{"class"} eq "i")
+      {
+        print INFO "   Interface ".$dom->{"range"}->[0]."|".$dom->{"range"}->[1].": nscal = ".$dom->{"nscal"}."\n";
+      }
+      else
+      {
+        print INFO "   Domain ".($i+1).": nscal = ".$dom->{"nscal"}."\n";
+      }
     }
-    else
-    {
-      print INFO "   Domain ".($i+1).": nscal = ".$dom->{"nscal"}."\n";
-    }
-  }
 
-  my ($prefix, $prm_name) = creat_CG_model("../$clean_pdb", 0, \@domain);
+    my ($prefix, $prm_name) = creat_CG_model("../$clean_pdb", $is_ca, \@domain);
 
-  my $psf = "setup/$prefix.psf";
-  my $strt = "setup/$prefix.cor";
-  my $top = "setup/$prefix.top";
-  my $prm = "setup/$prm_name";
-  my @str = split(/\.prm/, $prm_name);
-  my $xml = $str[0].".xml";
+    my $psf = "setup/$prefix.psf";
+    $strt = "setup/$prefix.cor";
+    my $top = "setup/$prefix.top";
+    my $prm = "setup/$prm_name";
+    my @str = split(/\.prm/, $prm_name);
+    my $xml = $str[0].".xml";
 
-  open(IN, ">setup/run_MD.py");
-  print IN "#!/usr/bin/env python3
+    open(IN, ">setup/run_MD.py");
+    print IN "#!/usr/bin/env python3
 from simtk.openmm.app import *
 from simtk.openmm import *
 from simtk.unit import *
@@ -238,65 +265,83 @@ end_time = time.time()
 speed = simulation_steps/(end_time-start_time)
 print('Speed: %d steps/second'%(int(speed)))
 print('Done!')\n";
-  close(IN);
+    close(IN);
   
-  system("parse_cg_prm.py -t $top -p $prm");
+    system("parse_cg_prm.py -t $top -p $prm");
 
-  my @threads = ();
-  for(my $i = 1; $i <= $num_traj; $i++)
-  {
-    my $rand_num = int(rand()*10000000);
-    my $t = threads->create('run_exe', "python setup/run_MD.py traj_$i $rand_num > $i.out 2>&1");
-    push@threads, $t;
-    $t->detach();
-  }
-
-  print INFO "-> Running simulations...\n";
-
-  my $start_time = time();
-  while()
-  {
-    sleep(30);
-    my $tag = 0;
-    foreach my $t (@threads)
-    {
-      if($t->is_running())
-      {
-        $tag = 1;
-        last;
-      }
-    }
-    if($tag eq 0)
-    {
-      last;
-    }
-
-    open(LOG, ">simutaion.log") || die("Error: Cannot create simulation.log\n\n");
-    printf LOG ("%-20s %-20s %-20s %-20s %-20s\n", "#Num", "Step", "Speed(Step/s)", "Used_Time", "Rest_Time");
-    my $used_time = time() - $start_time;
+    my @threads = ();
     for(my $i = 1; $i <= $num_traj; $i++)
     {
-      my $info = `tail -n 1 $i.out`;
-      if($info =~ /^Done/ || $info =~ /^Speed/)
-      {
-        printf LOG ("%-20s %-20s %-20s %-20s %-20s\n", $i, "Done", "--", "--", "--");
-        next;
-      }
-      chomp($info);
-      my @str = split(/\s+/, $info);
-      my $step = $str[1];
-
-      if($step eq 0 || $step eq "")
-      {
-        printf LOG ("%-20s %-20s %-20s %-20s %-20s\n", $i, "NaN", "NaN", convert_time($used_time), "NaN");
-        next;
-      }
-
-      my $speed = $step / $used_time;
-      my $rest_time = ($sim_step - $step) / $speed;
-      printf LOG ("%-20s %-20s %-20s %-20s %-20s\n", $i, $step, int($speed), convert_time($used_time), convert_time($rest_time));
+      my $rand_num = int(rand()*10000000);
+      my $t = threads->create('run_exe', "python setup/run_MD.py traj_$i $rand_num > $i.out 2>&1");
+      push@threads, $t;
+      $t->detach();
     }
-    close(LOG);
+
+    print INFO "-> Running simulations...\n";
+
+    my $start_time = time();
+    while()
+    {
+      sleep(30);
+      my $tag = 0;
+      foreach my $t (@threads)
+      {
+        if($t->is_running())
+        {
+          $tag = 1;
+          last;
+        }
+      }
+      if($tag eq 0)
+      {
+        last;
+      }
+
+      open(LOG, ">simutaion.log") || die("Error: Cannot create simulation.log\n\n");
+      printf LOG ("%-20s %-20s %-20s %-20s %-20s\n", "#Num", "Step", "Speed(Step/s)", "Used_Time", "Rest_Time");
+      my $used_time = time() - $start_time;
+      for(my $i = 1; $i <= $num_traj; $i++)
+      {
+        my $info = `tail -n 1 $i.out`;
+        if($info =~ /^Done/ || $info =~ /^Speed/)
+        {
+          printf LOG ("%-20s %-20s %-20s %-20s %-20s\n", $i, "Done", "--", "--", "--");
+          next;
+        }
+        chomp($info);
+        my @str = split(/\s+/, $info);
+        my $step = $str[1];
+
+        if($step eq 0 || $step eq "")
+        {
+          printf LOG ("%-20s %-20s %-20s %-20s %-20s\n", $i, "NaN", "NaN", convert_time($used_time), "NaN");
+          next;
+        }
+
+        my $speed = $step / $used_time;
+        my $rest_time = ($sim_step - $step) / $speed;
+        printf LOG ("%-20s %-20s %-20s %-20s %-20s\n", $i, $step, int($speed), convert_time($used_time), convert_time($rest_time));
+      }
+      close(LOG);
+    }
+  }
+  else
+  {
+    my @str = split(/\.pdb/, "../$clean_pdb");
+    my $pdb_code = $str[0];
+    @str = split(/\//, $pdb_code);
+    $pdb_code = $str[$#str];
+    my $prefix = lc $pdb_code;
+    if($is_ca eq 0)
+    {
+      $prefix .= "_ca";
+    }
+    else
+    {
+      $prefix .= "_ca-cb";
+    }
+    $strt = "setup/$prefix.cor";
   }
   
   print INFO "-> Probability of domain stability:\n";
@@ -312,7 +357,8 @@ print('Done!')\n";
   my @threads = ();
   for(my $i = 1; $i <= $num_traj; $i++)
   {
-    my $t = threads->create('run_exe', "calc_native_contact_fraction.pl -i $strt -d ../$dom_def -s ../setup/secondary_struc_defs.txt -t traj_$i.dcd");
+    print "calc_native_contact_fraction.pl -i $strt -d ../$dom_def -s ../setup/secondary_struc_defs.txt -t traj_$i.dcd\n";
+    my $t = threads->create('run_exe', "calc_native_contact_fraction_v2.pl -i $strt -d ../$dom_def -s ../setup/secondary_struc_defs.txt -t traj_$i.dcd");
     push@threads, $t;
     $t->detach();
   }
@@ -643,7 +689,7 @@ domain_file = domain_def.dat\n";
     `cp $prefix.cor ../setup/$prefix.cor`;
     `cp $prm_name ../setup/$prm_name`;
     chdir("../");
-    `rm -rf create_model`;
+    #`rm -rf create_model`;
     print "   CG model created\n";
   }
   else
