@@ -203,8 +203,10 @@ from simtk.openmm.app import *
 from simtk.openmm import *
 from simtk.unit import *
 from sys import stdout, exit, stderr
-import os, time
+import os, time, sys
 import parmed as pmd
+
+sys.setrecursionlimit(int(1e6))
 
 psffile = '$psf'
 corfile = '$strt'
