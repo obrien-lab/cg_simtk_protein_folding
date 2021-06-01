@@ -9,6 +9,8 @@
 
     - A log file is presented in each folder, containing the command used to run this demo (followed by `>`) and the terminal outputs.
 
+    - All Demos should be run in the input/ folder.
+
     - A README file is presented in each folder, containing the link to the source code.
 
     - The run time for these demos, except for `opt_nscal`, should be within one day on a normal desktop. `opt_nscal` will take about 11 days.
