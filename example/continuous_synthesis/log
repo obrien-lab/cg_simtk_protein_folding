@@ -1,7 +1,7 @@
 > continuous_synthesis_v6.py -f cont_synth_ecoli.cntrl 
-/storage/home/yuj179/software/miniconda3/lib/python3.7/site-packages/parmed/openmm/parameters.py:559: UserWarning: Residue <ResidueTemplate CGG: 4 atoms; 0 bonds; head=None; tail=None> will be considered by OpenMM to be identical to <ResidueTemplate CGA: 4 atoms; 0 bonds; head=None; tail=None>.
+/storage/home/yuj179/software/miniconda3/lib/python3.7/site-packages/parmed/openmm/parameters.py:656: UserWarning: Residue <ResidueTemplate CGG: 4 atoms; 0 bonds; head=None; tail=None> will be considered by OpenMM to be identical to <ResidueTemplate CGA: 4 atoms; 0 bonds; head=None; tail=None>.
   warnings.warn('Residue {} will be considered by OpenMM to be identical to {}.'.format(residue, residue_collision))
-/storage/home/yuj179/software/miniconda3/lib/python3.7/site-packages/parmed/openmm/parameters.py:559: UserWarning: Residue <ResidueTemplate CGC: 3 atoms; 0 bonds; head=None; tail=None> will be considered by OpenMM to be identical to <ResidueTemplate CGU: 3 atoms; 0 bonds; head=None; tail=None>.
+/storage/home/yuj179/software/miniconda3/lib/python3.7/site-packages/parmed/openmm/parameters.py:656: UserWarning: Residue <ResidueTemplate CGC: 3 atoms; 0 bonds; head=None; tail=None> will be considered by OpenMM to be identical to <ResidueTemplate CGU: 3 atoms; 0 bonds; head=None; tail=None>.
   warnings.warn('Residue {} will be considered by OpenMM to be identical to {}.'.format(residue, residue_collision))
 AA insertion time (s) considering ribosome traffic:
     0.127046
@@ -313,4 +313,3 @@ AA insertion time (s) considering ribosome traffic:
     0.028401
 Setup process pool containing 1 processors
 All Done.
-

@@ -1,6 +1,6 @@
 Continuous Synthesis for CG Model using OpenMM
 Author: Yang Jiang; Dan Nissley; Ed O'Brien.
-Start at Wed May 19 10:51:32 2021
+Start at Tue Jun  1 15:00:21 2021
 Total number of processors: 1
 Number of processors for each trajectory: 1
 Number of trajectories: 1
@@ -29,4 +29,4 @@ Scaling factor: 4331293.0
 Total nascent chain length: 10
 
     SIM_ID  START_LEN           SIM_STATUS     CURRENT_LEN  TIME_USED    SPEED (ns/d)
-         1          1           minimizing              10    0:59:35              --
+         1          1           minimizing              10    1:12:27              --
