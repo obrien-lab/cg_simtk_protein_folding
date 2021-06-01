@@ -9,7 +9,7 @@
 
     - A log file is presented in each folder, containing the command used to run this demo (followed by `>`) and the terminal outputs.
 
-    - All Demos should be run in the input/ folder.
+    - All Demos should be run in the `input/` folder.
 
     - A README file is presented in each folder, containing the link to the source code.
 
