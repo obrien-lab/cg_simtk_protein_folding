@@ -252,6 +252,7 @@ def A_site_tRNA_binding(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd,
     rm_cons_0_mass(system)
     # END fix everything other than the C-terminal 15 residues of the nascent chain
     
+    forcegroups = forcegroupify(system)
     # minimize steric clashes of the newly inserted residue
     integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
     integrator.setRandomNumberSeed(rand)
@@ -265,14 +266,14 @@ def A_site_tRNA_binding(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd,
     fo = open(out_file, 'a')
     fo.write('    Potential energy before minimization: %.4f kcal/mol\n'%(energy))
     fo.close()
-    #getEnergyDecomposition(fo, simulation.context, system)
+    #getEnergyDecomposition(fo, simulation.context, forcegroups)
     try:
         simulation.minimizeEnergy(tolerance=1*kilojoule/mole)
     except Exception as e:
         fo = open(out_file, 'a')
         fo.write("Error: crashed at min1\n")
         fo.write(str(e)+'\n')
-        getEnergyDecomposition(fo, simulation.context, system)
+        getEnergyDecomposition(fo, simulation.context, forcegroups)
         current_rnc_cor = simulation.context.getState(getPositions=True).getPositions()
         rnc_psf_pmd.positions = current_rnc_cor
         rnc_psf_pmd.save('rnc_l'+str(nascent_chain_length)+'_crashed_min1.cor', format='charmmcrd', overwrite=True)
@@ -281,7 +282,7 @@ def A_site_tRNA_binding(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd,
     energy = simulation.context.getState(getEnergy=True).getPotentialEnergy().value_in_unit(kilocalorie/mole)
     fo = open(out_file, 'a')
     fo.write('    Potential energy after minimization: %.4f kcal/mol\n'%(energy))
-    getEnergyDecomposition(fo, simulation.context, system)
+    getEnergyDecomposition(fo, simulation.context, forcegroups)
     fo.close()
     current_rnc_cor = simulation.context.getState(getPositions=True).getPositions()
     rnc_psf_pmd.positions = current_rnc_cor
@@ -314,6 +315,7 @@ def peptide_bond_formation(top, current_rnc_cor, nascent_chain_length, rnc_psf_p
     # minimize steric clashes of the newly inserted residue
     integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
     integrator.setRandomNumberSeed(rand)
+    forcegroups = forcegroupify(system)
     simulation = Simulation(top, system, integrator, platform, properties)
     simulation.context.setPositions(current_rnc_cor)
 
@@ -321,14 +323,14 @@ def peptide_bond_formation(top, current_rnc_cor, nascent_chain_length, rnc_psf_p
     fo = open(out_file, 'a')
     fo.write('    Potential energy before minimization: %.4f kcal/mol\n'%(energy))
     fo.close()
-    #getEnergyDecomposition(fo, simulation.context, system)
+    #getEnergyDecomposition(fo, simulation.context, forcegroups)
     try:
         simulation.minimizeEnergy(tolerance=1*kilojoule/mole)
     except Exception as e:
         fo = open(out_file, 'a')
         fo.write("Error: crashed at min2\n")
         fo.write(str(e)+'\n')
-        getEnergyDecomposition(fo, simulation.context, system)
+        getEnergyDecomposition(fo, simulation.context, forcegroups)
         current_rnc_cor = simulation.context.getState(getPositions=True).getPositions()
         rnc_psf_pmd.positions = current_rnc_cor
         rnc_psf_pmd.save('rnc_l'+str(nascent_chain_length)+'_crashed_min2.cor', format='charmmcrd', overwrite=True)
@@ -337,7 +339,7 @@ def peptide_bond_formation(top, current_rnc_cor, nascent_chain_length, rnc_psf_p
     energy = simulation.context.getState(getEnergy=True).getPotentialEnergy().value_in_unit(kilocalorie/mole)
     fo = open(out_file, 'a')
     fo.write('    Potential energy after minimization: %.4f kcal/mol\n'%(energy))
-    getEnergyDecomposition(fo, simulation.context, system)
+    getEnergyDecomposition(fo, simulation.context, forcegroups)
     fo.close()
     current_rnc_cor = simulation.context.getState(getPositions=True).getPositions()
     rnc_psf_pmd.positions = current_rnc_cor
@@ -370,6 +372,7 @@ def translocation_AtR(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd,
     # minimize steric clashes of the newly inserted residue
     integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
     integrator.setRandomNumberSeed(rand)
+    forcegroups = forcegroupify(system)
     simulation = Simulation(top, system, integrator, platform, properties)
     simulation.context.setPositions(current_rnc_cor)
 
@@ -377,14 +380,14 @@ def translocation_AtR(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd,
     fo = open(out_file, 'a')
     fo.write('    Potential energy before minimization: %.4f kcal/mol\n'%(energy))
     fo.close()
-    #getEnergyDecomposition(fo, simulation.context, system)
+    #getEnergyDecomposition(fo, simulation.context, forcegroups)
     try:
         simulation.minimizeEnergy(tolerance=1*kilojoule/mole)
     except Exception as e:
         fo = open(out_file, 'a')
         fo.write("Error: crashed at min3\n")
         fo.write(str(e)+'\n')
-        getEnergyDecomposition(fo, simulation.context, system)
+        getEnergyDecomposition(fo, simulation.context, forcegroups)
         current_rnc_cor = simulation.context.getState(getPositions=True).getPositions()
         rnc_psf_pmd.positions = current_rnc_cor
         rnc_psf_pmd.save('rnc_l'+str(nascent_chain_length)+'_crashed_min3.cor', format='charmmcrd', overwrite=True)
@@ -393,7 +396,7 @@ def translocation_AtR(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd,
     energy = simulation.context.getState(getEnergy=True).getPotentialEnergy().value_in_unit(kilocalorie/mole)
     fo = open(out_file, 'a')
     fo.write('    Potential energy after minimization: %.4f kcal/mol\n'%(energy))
-    getEnergyDecomposition(fo, simulation.context, system)
+    getEnergyDecomposition(fo, simulation.context, forcegroups)
     fo.close()
     current_rnc_cor = simulation.context.getState(getPositions=True).getPositions()
     rnc_psf_pmd.positions = current_rnc_cor
@@ -465,6 +468,7 @@ def equilibration(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd, out_f
     integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
     integrator.setConstraintTolerance(constraint_tolerance)
     integrator.setRandomNumberSeed(rand)
+    forcegroups = forcegroupify(system)
     simulation = Simulation(top, system, integrator, platform, properties)
     simulation.context.setPositions(current_rnc_cor)
     if stage == 4 or stage == 5:
@@ -542,7 +546,7 @@ def equilibration(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd, out_f
                 '_stage_'+str(stage)+'.xml')
             fo.write("Error: crashed at step %d:\n"%(step))
             fo.write(str(e)+'\n')
-            getEnergyDecomposition(fo, simulation.context, system)
+            getEnergyDecomposition(fo, simulation.context, forcegroups)
             getMaxForce(fo, simulation.context, system)
             ke = simulation.context.getState(getEnergy=True).getKineticEnergy()
             fo.write("    Kinetic energy is %.4f kcal/mol\n"%(ke.value_in_unit(kilocalories_per_mole)))
@@ -854,8 +858,7 @@ def forcegroupify(system):
         forcegroups[i] = f
     return forcegroups
 
-def getEnergyDecomposition(handle, context, system):
-    forcegroups = forcegroupify(system)
+def getEnergyDecomposition(handle, context, forcegroups):
     energies = {}
     for i, f in forcegroups.items():
         try:
