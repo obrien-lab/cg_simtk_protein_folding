@@ -624,7 +624,9 @@ def create_elongation_system(forcefield, top, template_map, stage, nascent_chain
     # turn off interactions among ribosome atoms, interactions among L24 not within resid 42 to 59, 
     # and interactions between ribosome and L24 not within resid 42 to 59
     custom_nb_force.addInteractionGroup(ribo_fix_atom_index, ribo_free_idx+nc_atom_index)
-    custom_nb_force.addInteractionGroup(ribo_free_idx+nc_atom_index, ribo_free_idx+nc_atom_index)
+    combine_index = ribo_free_idx+nc_atom_index
+    for i in range(len(combine_index)-1):
+        custom_nb_force.addInteractionGroup([combine_index[i]], combine_index[i+1:])
     if stage == 1 or stage == 2:
         custom_nb_force.addInteractionGroup(nc_atom_index, AtR_atom_index)
 
