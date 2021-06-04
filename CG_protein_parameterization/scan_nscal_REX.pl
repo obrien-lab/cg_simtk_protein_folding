@@ -317,7 +317,7 @@ elsif($if_analyze eq 0)
     if($opt_temp eq 1)
     {
       print "-> Going to optmize temperature distribution for nscal=$nscal\n";
-      `cp \$CG_MODEL_HOME/perl/Yang/opt_temp.pl ./`;
+      #`cp \$CG_MODEL_HOME/perl/Yang/opt_temp.pl ./`;
       system("qsub -N o_${pdb_name}_$nscal -l nodes=1:ppn=17 -l mem=8gb -l walltime=$walltime -f opt_temp.pl -A $allocation");
     }
     else
