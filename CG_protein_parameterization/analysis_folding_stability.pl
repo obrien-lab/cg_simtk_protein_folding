@@ -265,55 +265,6 @@ sub merge_restart
 }
 
 #####################################################################
-sub Calc_rmsd
-{
-  my $prefix = $_[0];
-  my $param_file = $_[1];
-  my $tot_prod = $_[2];
-  
-  open(TEMP, "<../setup/rmsd_vs_time_template.inp") || die("Error: Cannot find setup/rmsd_vs_time_template.inp\n\n");
-  open(INP, ">rmsd_vs_time.inp") || die("Error: Cannot create analysis/rmsd_vs_time.inp\n\n");
-  while(my $line = <TEMP>)
-  {
-    if($line =~ /^set rtf /)
-    {
-      print INP "set rtf ../$prefix.top\n";
-    }
-    elsif($line =~ /^set para /)
-    {
-      print INP "set para ../$param_file\n";
-    }
-    elsif($line =~ /^set psf /)
-    {
-      print INP "set psf ../$prefix.psf\n";
-    }
-    elsif($line =~ /^set nframes /)
-    {
-      print INP "set nframes $tot_prod\n";
-    }
-    elsif($line =~ /^set refcrd /)
-    {
-      print INP "set refcrd ../$prefix.cor\n";
-    }
-    else
-    {
-      print INP $line;
-    }
-  }
-  close(TEMP);
-  close(INP);
-
-  system("rmsd_vs_time.pl list_dcd_subset.txt 0 > swarm_rmsd.txt");
-
-  open(CMD, "<swarm_rmsd.txt") || die("Error: Cannot find swarm_rmsd.txt\n\n");
-  while(my $line = <CMD>)
-  {
-    chomp($line);
-    system($line . " >> ../analysis.log 2>&1");
-  }
-  close(CMD)
-}
-#####################################################################
 sub Get_Ep
 {
   my $prefix = $_[0];
@@ -388,7 +339,7 @@ sub Calc_props
   my @threads = ();
   for(my $i = 1; $i <= $nwindows; $i++)
   {
-    my $t = threads->create('run_exe', "calc_native_contact_fraction_v2.pl -i ../$prefix.cor -d domain_def.dat -s ../setup/secondary_struc_defs.txt -t ../aa${i}/mc1.dcd -b $start >> ../analysis.log 2>&1");
+    my $t = threads->create('run_exe', "calc_native_contact_fraction.pl -i ../$prefix.cor -d domain_def.dat -s ../setup/secondary_struc_defs.txt -t ../aa${i}/mc1.dcd -b $start >> ../analysis.log 2>&1");
     push@threads, $t;
     $t->detach();
   }
@@ -896,58 +847,6 @@ sub Find_probability
     }
     close(DAT);
   }
-
-  return $probability;
-}
-
-#####################################################################
-sub Call_wham_rmsd
-{
-  my @temps = @{$_[0]};
-  my $target_temp = $_[1];
-
-  my $nsim_temps = @temps;
-
-  open(TEMP, "<../../setup/wham_rmsd_template.cntrl") || die("Error: Cannot find setup/wham_rmsd_template.cntrl\n\n");
-  open(CNTRL, ">wham_rmsd.cntrl") || die("Error: Cannot create analysis/wham_analysis/wham_rmsd.cntrl\n\n");
-  while(my $line = <TEMP>)
-  {
-  	if($line =~ /^nsim_temps /)
-  	{
-  	  print CNTRL "nsim_temps = $nsim_temps\n";
-  	}
-  	elsif($line =~ /^tmin /)
-  	{
-  	  print CNTRL "tmin = $target_temp\n";
-  	}
-  	elsif($line =~ /^tmax /)
-  	{
-  	  print CNTRL "tmax = $target_temp\n";
-  	}
-  	else
-  	{
-  	  print CNTRL $line;
-  	}
-  }
-  close(TEMP);
-  close(CNTRL);
-
-  system("wham_general_v1.29.pl wham_rmsd.cntrl >> ../../analysis.log 2>&1");
-
-  open(DAT, "<rmsd/protein_conditional_probability_vs_temp.dat") || die("Error: Cannot find analysis/wham_analysis/rmsd/protein_conditional_probability_vs_temp.dat\n\n");
-  my $probability = 0;
-  while(my $line = <DAT>)
-  {
-  	chomp($line);
-  	my @str = split(/\s+/, $line);
-  	my $t = $str[0];
-  	my $p = $str[1];
-  	if($t eq $target_temp)
-  	{
-  	  $probability = $p;
-  	}
-  }
-  close(DAT);
 
   return $probability;
 }
