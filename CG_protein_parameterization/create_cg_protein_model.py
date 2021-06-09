@@ -236,7 +236,10 @@ rvdw = {"ALA": 2.51958406732374,
 def create_psf(struct, ca_list, name):
     # creat backbone bonds
     for i in range(len(ca_list)-1):
-        struct.bonds.append(pmd.topologyobjects.Bond(ca_list[i], ca_list[i+1]))
+        segid_list = [ca_list[i+j].residue.segid for j in range(2)]
+        segid_list = list(set(segid_list))
+        if len(segid_list) == 1:
+            struct.bonds.append(pmd.topologyobjects.Bond(ca_list[i], ca_list[i+1]))
     # creat backbone-sidechain bonds if exist
     for ca_atom in ca_list:
         if len(ca_atom.residue.atoms) > 1:
@@ -251,10 +254,15 @@ def create_psf(struct, ca_list, name):
                     struct.angles.append(pmd.topologyobjects.Angle(bond_list[i], atm, bond_list[j]))
     # create Dihedrals
     for i in range(len(ca_list)-3):
-        struct.dihedrals.append(pmd.topologyobjects.Dihedral(ca_list[i], ca_list[i+1], ca_list[i+2], ca_list[i+3]))
+        segid_list = [ca_list[i+j].residue.segid for j in range(4)]
+        segid_list = list(set(segid_list))
+        if len(segid_list) == 1:
+            struct.dihedrals.append(pmd.topologyobjects.Dihedral(ca_list[i], ca_list[i+1], ca_list[i+2], ca_list[i+3]))
     # create Impropers
     for i in range(1, len(ca_list)-1):
-        if len(ca_list[i].residue.atoms) > 1:
+        segid_list = [ca_list[i+j-1].residue.segid for j in range(3)]
+        segid_list = list(set(segid_list))
+        if len(segid_list) == 1 and len(ca_list[i].residue.atoms) > 1:
             b_bead = ca_list[i].residue.atoms[1]
             struct.impropers.append(pmd.topologyobjects.Improper(ca_list[i], ca_list[i-1], ca_list[i+1], b_bead))
     struct.save(name+'.psf', overwrite=True, vmd=False)
