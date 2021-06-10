@@ -404,6 +404,10 @@ print('Done!')\n";
         {
           $n_domain[$j]++;
         }
+        elsif($qbb[$j] == -1)
+        {
+          $n_domain[$j]++;
+        }
       }
     }
     close(DAT);
