@@ -1069,7 +1069,7 @@ def combine_ribo_prot_param(ribo_param_file, prot_param_file):
     f_p.close()
     
     prefix = '/'.join(ribo_param_file.strip().split('/')[:-1])
-    f = open(prefix+'/rnc.prm', 'w')
+    f = open(prefix+'./rnc.prm', 'w')
     f.write('* This CHARMM .prm file describes a Go model of nascent chain and ribosome structure\n*\n\n')
     for i in range(len(param_str_list)):
         f.write(param_str_list[i]+'\n')
@@ -1547,10 +1547,10 @@ if uniform_ta == 0:
 
     if ribosome_traffic == 1:
         mrna_seq_prefix = '/'.join(mrna_seq_file.strip().split('/')[:-1])
-        fo = open(mrna_seq_prefix+'/mrna.dat', 'w')
+        fo = open(mrna_seq_prefix+'./mrna.dat', 'w')
         fo.write(mrna_seq+'\n')
         fo.close()
-        shell_out = os.popen('ribosome_traffic '+mrna_seq_prefix+'/mrna.dat '+trans_times+' '+str(initiation_rate)).readlines()
+        shell_out = os.popen('ribosome_traffic '+mrna_seq_prefix+'./mrna.dat '+trans_times+' '+str(initiation_rate)).readlines()
         # populate map_resid_to_codon with codon positon : codon type pairs
         print('AA insertion time (s) considering ribosome traffic:')
         for i in range(int(len(mrna_seq)/3)):
