@@ -153,7 +153,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 | Analysis_protocol/**get_co_post_folding_pathways.py** | Combine the discrete metastable states trajectories and analyze the folding pathways. ([Learn more](../../wikis/help_wiki/get_co_post_folding_pathways.py)) |
 | Analysis_protocol/**get_solubility.py** | Estimate the aggregation, degradation and Hsp70 binding propensities for the post-translational metastable states and estimate the percent of soluble protein in each metastable state. ([Learn more](../../wikis/help_wiki/get_solubility.py)) <br>Scripts needed: `Backmapping/backmap.py` |
 | Analysis_protocol/**get_state_probability.py** | Builds the Mater equation model for the state probabilities and runs the bootstrapping resampling for error estimation. ([Learn more](../../wikis/help_wiki/get_state_probability.py)) |
-| Analysis_protocol/**calc_specific_activity.py** | Estimates the specific activities, as well as the errors and p-value, by using the $`\Delta G^{\ddagger}`$ obtained from [Activation Energy Estimation Workflow](https://git.psu.edu/obrien/yang_jiang/activation-energy-estimation-workflow) and the state probabilities obtained from `get_state_probability.py`. ([Learn more](../../wikis/help_wiki/calc_specific_activity.py)) |
+| Analysis_protocol/**calc_specific_activity.py** | Estimates the specific activities, as well as the errors and p-value, by using the $`\Delta G^{\ddagger}`$ obtained from [Activation Energy Estimation Workflow](../../../../activation-energy-estimation-workflow) and the state probabilities obtained from `get_state_probability.py`. ([Learn more](../../wikis/help_wiki/calc_specific_activity.py)) |
 
 [:leftwards_arrow_with_hook:](#table-of-contents)
 
