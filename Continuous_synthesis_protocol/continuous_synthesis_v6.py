@@ -1076,7 +1076,7 @@ def combine_ribo_prot_param(ribo_param_file, prot_param_file):
     f.write('END\n')
     f.close()
     
-    return (prefix+'/rnc.prm')
+    return (prefix+'./rnc.prm')
 # END Auto-combine ribosome and protein parameter files
 
 # parse mask
