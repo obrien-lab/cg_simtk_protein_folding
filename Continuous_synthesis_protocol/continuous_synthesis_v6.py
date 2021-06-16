@@ -1537,7 +1537,8 @@ if uniform_ta == 0:
     f = open(trans_times, 'r')
     for line in f:
         temp = line.strip().split()
-        map_codon_to_mfpt[temp[0]] = float(temp[1])
+        if len(temp) == 2:
+            map_codon_to_mfpt[temp[0]] = float(temp[1])
     f.close()
 
     codon_list = []
