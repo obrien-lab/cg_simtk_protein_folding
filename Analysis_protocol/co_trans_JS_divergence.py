@@ -15,6 +15,11 @@ state_type = 'micro' # can be 'micro' or 'meta'
 # read control file
 ctrlfile = ''
 
+usage = '''co_trans_JS_divergence.py
+  --ctrlfile | -f <jsd.ctrl> Control file for JSD estimation.
+  [--help | -h] Print help information
+'''
+
 if len(sys.argv) == 1:
     print(usage)
     sys.exit()
