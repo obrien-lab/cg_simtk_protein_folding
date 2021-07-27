@@ -270,7 +270,7 @@ for i in range(1,n_states+1):
     fo.write('%6s %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f %10.4f %17s %10.4f %17s %10.4f %17s %10.4f %10.4f %17s\n'%(
                     i, SASA_avg[i,0], SASA_std[i,0], SASA_avg[i,1], SASA_std[i,1], SASA_avg[i,2], SASA_std[i,2], 
                     agg_prop, '[%.4f,%.4f]'%(agg_lb, agg_ub), deg_prop, '[%.4f,%.4f]'%(deg_lb, deg_ub), 
-                    cb_prop, '[%.4f,%.4f]'%(cb_lb, cb_ub), tot_prop, sol_perc, '[%.4f,%.4f]'%(sol_lb, sol_ub)))
+                    cb_prop, '[%.4f,%.4f]'%(cb_lb, cb_ub), tot_prop_list[i-1], sol_perc, '[%.4f,%.4f]'%(sol_lb, sol_ub)))
 fo.close()
     
 
