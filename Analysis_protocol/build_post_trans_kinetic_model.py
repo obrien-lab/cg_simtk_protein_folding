@@ -2,7 +2,6 @@
 import sys, getopt, math, os, time, traceback
 import numpy as np
 from scipy.integrate import solve_ivp
-from scipy.optimize import curve_fit
 import pyemma as pem
 import parmed as pmd
 import mdtraj as mdt
