@@ -608,12 +608,16 @@ if domain_file != "None":
                 print("ERROR: When defining the domains in the interface file, index %d is Greater than %d!"%(words[0], words[1]))
                 sys.exit()
     print('%d domain(s) defined in the Domain file %s'%(ndomain, domain_file))
+    if ndomain == 0:
+        print("ERROR: No domain definitions were read. Check the domain definition file!")
+        sys.exit()
     print("Domain information:")
     for i, d in enumerate(dom):
         print("Domain %d: %d to %d"%(i+1, d[0], d[1]))
     print("")
     if len(dom_nscal) != (1+ndomain)*ndomain/2:
         print("ERROR: Incorrect number of interfaces assigned. (%d, should be %d)"%(len(dom_nscal)-ndomain, (ndomain-1)*ndomain/2))
+        sys.exit()
 # END read domain nscal values if domain is defined
 
 # initialize nonbonding potential
