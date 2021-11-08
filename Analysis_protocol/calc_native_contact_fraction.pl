@@ -3,7 +3,7 @@
 use Getopt::Long;
 use Data::Dumper;
 
-my ($help, $input_cor, $sec_def, $dom_def, $traj, $start, $end, $if_meaningful, $mask, $output_dir);
+my ($help, $input_cor, $sec_def, $dom_def, $traj, $start, $end, $if_meaningful, $mask, $output_dir, $restart);
 GetOptions(
  'help|h!' => \$help,
  'input|i=s' => \$input_cor,
@@ -15,6 +15,7 @@ GetOptions(
  'meaningful|m=s' => \$if_meaningful,
  'mask|k=s' => \$mask,
  'outdir|o=s' => \$output_dir,
+ 'restart|r=s' => \$restart,
 );
 
 my $usage = "
@@ -45,6 +46,8 @@ my $usage = "
                                    and from 5 to 9.
               [--outdir | -o] <DIRECTORY> for the outputs. Default is the directory
                                           of your trajectories
+              [--restart | -r] <0 or 1> 0: Do not restart calculation; 1: Restart 
+                                        calculation. Default is 0.
               [--help | -h]\n
   Example for DOMAIN.DAT:
   1:96 302:350 a #Domain 1 is from resid 1 to 96 and 302 to 350, and in
@@ -102,6 +105,15 @@ if(@str eq 1)
 if(!defined($output_dir))
 {
   $output_dir = $dir;
+}
+
+if(!defined($restart))
+{
+  $restart = 0;
+}
+elsif($restart != 0)
+{
+  $restart = 1;
 }
 
 my $cutoff = 8;
@@ -216,20 +228,46 @@ if($natom ne $native_natom)
   print("Warning: atom numbers mismatch in $input_cor ($native_natom) and $traj ($natom)\n")
 }
 
-open(DAT, ">${output_dir}/qbb_${name}.dat")||die("Error: cannot create ${output_dir}/qbb_${name}.dat\n\n");
-foreach my $i (@meaningful_domain_idx)
+if($restart)
 {
-  my $dom = $domain[$i-1];
-  if($dom->{"class"} eq "i")
+  open(DAT, "<${output_dir}/qbb_${name}.dat")||die("Error: cannot find ${output_dir}/qbb_${name}.dat\n\n");
+  open(DAT_COPY, ">${output_dir}/qbb_${name}_copy.dat")||die("Error: cannot create ${output_dir}/qbb_${name}_copy.dat\n\n");
+  my $num_lines = 0;
+  while(my $line = <DAT>)
   {
-    printf DAT ("%10s ", $dom->{"range"}->[0]."|".$dom->{"range"}->[1]);
+    if($line =~ /\n$/)
+    {
+      $num_lines++;
+      print DAT_COPY "$line";
+    }
   }
-  else
-  {
-    printf DAT ("%10s ", "D_$i");
-  }
+  close(DAT);
+  close(DATA_COPY);
+  `rm -f ${output_dir}/qbb_${name}.dat`;
+  `mv ${output_dir}/qbb_${name}_copy.dat ${output_dir}/qbb_${name}.dat`;
+  
+  $num_lines--;
+  
+  $start += $num_lines;
+  open(DAT, ">>${output_dir}/qbb_${name}.dat")||die("Error: cannot find ${output_dir}/qbb_${name}.dat\n\n");
 }
-printf DAT ("%10s\n", "total");
+else
+{
+  open(DAT, ">${output_dir}/qbb_${name}.dat")||die("Error: cannot create ${output_dir}/qbb_${name}.dat\n\n");
+  foreach my $i (@meaningful_domain_idx)
+  {
+    my $dom = $domain[$i-1];
+    if($dom->{"class"} eq "i")
+    {
+      printf DAT ("%10s ", $dom->{"range"}->[0]."|".$dom->{"range"}->[1]);
+    }
+    else
+    {
+      printf DAT ("%10s ", "D_$i");
+    }
+  }
+  printf DAT ("%10s\n", "total");
+}
 
 my $deltat = $delta * $tstep;
 my $firstframe = $first / $delta;
