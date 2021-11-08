@@ -3,7 +3,7 @@
 use Getopt::Long;
 use Data::Dumper;
 
-my ($help, $input_cor, $traj, $start, $end, $mask, $output_dir);
+my ($help, $input_cor, $traj, $start, $end, $mask, $output_dir, $restart);
 GetOptions(
  'help|h!' => \$help,
  'input|i=s' => \$input_cor,
@@ -12,6 +12,7 @@ GetOptions(
  'end|e=s' => \$end,
  'mask|k=s' => \$mask,
  'outdir|o=s' => \$output_dir,
+ 'restart|r=s' => \$restart,
 );
 
 my $usage = "
@@ -31,6 +32,8 @@ my $usage = "
                                    and from 5 to 9.
               [--outdir | -o] <DIRECTORY> for the outputs. Default is the directory
                                           of your trajectories
+              [--restart | -r] <0 or 1> 0: Do not restart calculation; 1: Restart 
+                                        calculation. Default is 0.
               [--help | -h]\n\n";
 
 if($help)
@@ -75,6 +78,15 @@ if(@str eq 1)
 if(!defined($output_dir))
 {
   $output_dir = $dir;
+}
+
+if(!defined($restart))
+{
+  $restart = 0;
+}
+elsif($restart != 0)
+{
+  $restart = 1;
 }
 
 my $cutoff = 8;
@@ -194,16 +206,42 @@ if($natom ne $native_natom)
   print("Warning: atom numbers mismatch in $input_cor ($native_natom) and $traj ($natom)\n")
 }
 
-open(DAT, ">${output_dir}/G_${name}.dat")||die("Error: cannot create ${output_dir}/G_${name}.dat\n\n");
-printf DAT ("# G1: Gain entanglement and not switch chirality (e.g. 0 to 1)\n");
-printf DAT ("# G2: Gain entanglement and switch chirality (e.g. -1 to 2)\n");
-printf DAT ("# G3: Lose entanglement and not switch chirality (e.g. -2 to -1)\n");
-printf DAT ("# G4: Lose entanglement and switch chirality (e.g. -2 to 1)\n");
-printf DAT ("# G5: Only switch chirality (e.g. -1 to 1)\n");
-printf DAT ("# fGtot: Total number of change of entanglement / Total number of native contacts in this structure\n");
-printf DAT ("# Total native contact: %d\n", $#native_contact_list+1);
-printf DAT ("%6s %6s %6s %6s %6s %6s %6s\n", "max_g", "G1", "G2", "G3", "G4", "G5", "fGtot");
-close(DAT);
+if($restart)
+{
+  open(DAT, "<${output_dir}/G_${name}.dat")||die("Error: cannot create ${output_dir}/G_${name}.dat\n\n");
+  open(DAT_COPY, ">${output_dir}/G_${name}_copy.dat")||die("Error: cannot create ${output_dir}/G_${name}_copy.dat\n\n");
+  my $num_lines = 0;
+  while(my $line = <DAT>)
+  {
+    if($line =~ /\n$/)
+    {
+      $num_lines++;
+      print DAT_COPY "$line";
+    }
+  }
+  close(DAT);
+  close(DATA_COPY);
+  `rm -f ${output_dir}/G_${name}.dat`;
+  `mv ${output_dir}/G_${name}_copy.dat ${output_dir}/G_${name}.dat`;
+  
+  $num_lines -= 8;
+  
+  $start += $num_lines;
+  open(DAT, ">>${output_dir}/G_${name}.dat")||die("Error: cannot find ${output_dir}/G_${name}.dat\n\n");
+}
+else
+{
+  open(DAT, ">${output_dir}/G_${name}.dat")||die("Error: cannot create ${output_dir}/G_${name}.dat\n\n");
+  printf DAT ("# G1: Gain entanglement and not switch chirality (e.g. 0 to 1)\n");
+  printf DAT ("# G2: Gain entanglement and switch chirality (e.g. -1 to 2)\n");
+  printf DAT ("# G3: Lose entanglement and not switch chirality (e.g. -2 to -1)\n");
+  printf DAT ("# G4: Lose entanglement and switch chirality (e.g. -2 to 1)\n");
+  printf DAT ("# G5: Only switch chirality (e.g. -1 to 1)\n");
+  printf DAT ("# fGtot: Total number of change of entanglement / Total number of native contacts in this structure\n");
+  printf DAT ("# Total native contact: %d\n", $#native_contact_list+1);
+  printf DAT ("%6s %6s %6s %6s %6s %6s %6s\n", "max_g", "G1", "G2", "G3", "G4", "G5", "fGtot");
+  close(DAT);
+}
 
 my $deltat = $delta * $tstep;
 my $firstframe = $first / $delta;
