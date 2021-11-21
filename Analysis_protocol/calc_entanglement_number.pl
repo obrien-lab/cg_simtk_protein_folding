@@ -206,14 +206,24 @@ if($natom ne $native_natom)
   print("Warning: atom numbers mismatch in $input_cor ($native_natom) and $traj ($natom)\n")
 }
 
-if($restart)
+if($restart && -s "${output_dir}/G_${name}.dat")
 {
   open(DAT, "<${output_dir}/G_${name}.dat")||die("Error: cannot create ${output_dir}/G_${name}.dat\n\n");
   open(DAT_COPY, ">${output_dir}/G_${name}_copy.dat")||die("Error: cannot create ${output_dir}/G_${name}_copy.dat\n\n");
+  
+  printf DAT_COPY ("# G1: Gain entanglement and not switch chirality (e.g. 0 to 1)\n");
+  printf DAT_COPY ("# G2: Gain entanglement and switch chirality (e.g. -1 to 2)\n");
+  printf DAT_COPY ("# G3: Lose entanglement and not switch chirality (e.g. -2 to -1)\n");
+  printf DAT_COPY ("# G4: Lose entanglement and switch chirality (e.g. -2 to 1)\n");
+  printf DAT_COPY ("# G5: Only switch chirality (e.g. -1 to 1)\n");
+  printf DAT_COPY ("# fGtot: Total number of change of entanglement / Total number of native contacts in this structure\n");
+  printf DAT_COPY ("# Total native contact: %d\n", $#native_contact_list+1);
+  printf DAT_COPY ("%6s %6s %6s %6s %6s %6s %6s\n", "max_g", "G1", "G2", "G3", "G4", "G5", "fGtot");
+  
   my $num_lines = 0;
   while(my $line = <DAT>)
   {
-    if($line =~ /\n$/)
+    if($line =~ /^\s*\-?[0-9].+\n$/)
     {
       $num_lines++;
       print DAT_COPY "$line";
@@ -223,8 +233,6 @@ if($restart)
   close(DATA_COPY);
   `rm -f ${output_dir}/G_${name}.dat`;
   `mv ${output_dir}/G_${name}_copy.dat ${output_dir}/G_${name}.dat`;
-  
-  $num_lines -= 8;
   
   $start += $num_lines;
   open(DAT, ">>${output_dir}/G_${name}.dat")||die("Error: cannot find ${output_dir}/G_${name}.dat\n\n");
