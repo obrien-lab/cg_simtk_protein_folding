@@ -228,14 +228,29 @@ if($natom ne $native_natom)
   print("Warning: atom numbers mismatch in $input_cor ($native_natom) and $traj ($natom)\n")
 }
 
-if($restart)
+if($restart && -s "${output_dir}/qbb_${name}.dat")
 {
   open(DAT, "<${output_dir}/qbb_${name}.dat")||die("Error: cannot find ${output_dir}/qbb_${name}.dat\n\n");
   open(DAT_COPY, ">${output_dir}/qbb_${name}_copy.dat")||die("Error: cannot create ${output_dir}/qbb_${name}_copy.dat\n\n");
+  
+  foreach my $i (@meaningful_domain_idx)
+  {
+    my $dom = $domain[$i-1];
+    if($dom->{"class"} eq "i")
+    {
+      printf DAT_COPY ("%10s ", $dom->{"range"}->[0]."|".$dom->{"range"}->[1]);
+    }
+    else
+    {
+      printf DAT_COPY ("%10s ", "D_$i");
+    }
+  }
+  printf DAT_COPY ("%10s\n", "total");
+  
   my $num_lines = 0;
   while(my $line = <DAT>)
   {
-    if($line =~ /\n$/)
+    if($line =~ /^\s*\-?[0-9].+\n$/)
     {
       $num_lines++;
       print DAT_COPY "$line";
@@ -245,8 +260,6 @@ if($restart)
   close(DATA_COPY);
   `rm -f ${output_dir}/qbb_${name}.dat`;
   `mv ${output_dir}/qbb_${name}_copy.dat ${output_dir}/qbb_${name}.dat`;
-  
-  $num_lines--;
   
   $start += $num_lines;
   open(DAT, ">>${output_dir}/qbb_${name}.dat")||die("Error: cannot find ${output_dir}/qbb_${name}.dat\n\n");
