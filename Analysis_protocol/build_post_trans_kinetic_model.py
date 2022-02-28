@@ -397,7 +397,7 @@ mol addrep top
 def get_co_po_dir(prefix_dir, mutant_type):
     global n_traj
     co_dir = prefix_dir+'/continuous_synthesis/'+mutant_type+('/1-%d/'%n_traj)
-    po_dir = prefix_dir+'/post_translation/extend/'+mutant_type+('/1-%d/'%n_traj)
+    po_dir = prefix_dir+'/post_translation/'+mutant_type+('/1-%d/'%n_traj)
     psf_file = os.popen('ls %s/setup/*_ca.psf'%po_dir).readlines()[0].strip()
     cor_file = os.popen('ls %s/setup/*_ca.cor'%po_dir).readlines()[0].strip()
     return (co_dir, po_dir, psf_file, cor_file)
