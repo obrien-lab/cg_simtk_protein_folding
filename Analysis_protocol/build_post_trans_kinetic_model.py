@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys, getopt, math, os, time, traceback
 import numpy as np
-from scipy.integrate import solve_ivp
 import pyemma as pem
 import parmed as pmd
 import mdtraj as mdt
@@ -13,7 +12,6 @@ end_t = 60 # in seconds
 dt = 0.015/1000
 nsave = 5000
 alpha = 4331293.0
-n_window = 200
 n_traj = 100
 mutant_type_list = ['fast', 'slow']
 n_cluster = 400
@@ -79,10 +77,6 @@ try:
         if line.startswith('alpha'):
             words = line.split('=')
             alpha = float(words[1].strip())
-            continue
-        if line.startswith('n_window'):
-            words = line.split('=')
-            n_window = int(words[1].strip())
             continue
         if line.startswith('n_traj'):
             words = line.split('=')
@@ -187,46 +181,6 @@ def unstandardize(data, data_mean, data_std):
     result = data * data_std + data_mean
     return result
 
-# Building Master Equations
-def dP(t, P, M):
-    return np.dot(M,P)
-
-def Master_equation(t_span, K, P0, t_eval):
-    sol = solve_ivp(dP, t_span, P0, t_eval=t_eval, args=(K,))
-    return sol
-    
-def estimate_rate_matrix(mutant_type, dtrajs, n_state, dt):    
-    ksum_matrix = np.zeros((n_state, n_state))
-    P_matrix = np.zeros((n_state, n_state))
-    C_matrix = msmtools.estimation.count_matrix(dtrajs, 1)
-    C_matrix = C_matrix.toarray()
-    if len(C_matrix) != n_state:
-        for i in range(len(C_matrix), n_state):
-            C_matrix.append(np.zeros((1,C_matrix.shape[1])), axis=0)
-            C_matrix.append(np.zeros((C_matrix.shape[0],1)), axis=1)
-    for i in range(n_state):
-        if C_matrix[i,i] != 0:
-            ksum_matrix[i,i] = -math.log(C_matrix[i,i]/np.sum(C_matrix[i,:]))/dt
-        else:
-            ksum_matrix[i,i] = 2/dt # assume the mean dwell time of this state is dt/2
-        for j in range(n_state):
-            if i != j:
-                P_matrix[j,i] = C_matrix[i,j]
-        if np.sum(P_matrix[:,i]) != 0:
-            P_matrix[:,i] /= np.sum(P_matrix[:,i])
-    
-    rate_matrix = np.dot(P_matrix, ksum_matrix)
-    # enforce native state to be a sink
-    # for i in range(n_state):
-    #     rate_matrix[i,-1] = 0
-    for i in range(n_state):
-        rate_matrix[i,i] = -np.sum(rate_matrix[:,i])
-        
-    return rate_matrix
-
-def exp_fun(x, k):
-    return np.exp(-k*x)
-
 def calc_G_list(coor, sel, cutoff, terminal_cutoff):
     n_atom = coor.shape[0]
     # Generate contact matrix
@@ -315,7 +269,14 @@ def gen_state_visualizion(state_id, psf, native_cor, state_cor, native_AA_pdb, i
             min_dist = nc[1] - nc[0]
             i_max = i
     
-    if abs(G_list[i_max][0]) > abs(G_list[i_max][1]):
+    if abs(round(G_list[i_max][0])) > abs(round(G_native_list[i_max][0])) and abs(round(G_list[i_max][1])) > abs(round(G_native_list[i_max][1])):
+        if abs(G_list[i_max][0]) > abs(G_list[i_max][1]):
+            idx_thread = [terminal_cutoff+1, native_contact[i_max][0]-4+1]
+            G_list_max = G_list[i_max][0]
+        else:
+            idx_thread = [native_contact[i_max][1]+4+1, len(struct.atoms)-terminal_cutoff]
+            G_list_max = G_list[i_max][1]
+    elif abs(round(G_list[i_max][0])) > abs(round(G_native_list[i_max][0])):
         idx_thread = [terminal_cutoff+1, native_contact[i_max][0]-4+1]
         G_list_max = G_list[i_max][0]
     else:
@@ -436,7 +397,7 @@ mol addrep top
 def get_co_po_dir(prefix_dir, mutant_type):
     global n_traj
     co_dir = prefix_dir+'/continuous_synthesis/'+mutant_type+('/1-%d/'%n_traj)
-    po_dir = prefix_dir+'/post_translation/'+mutant_type+('/1-%d/'%n_traj)
+    po_dir = prefix_dir+'/post_translation/extend/'+mutant_type+('/1-%d/'%n_traj)
     psf_file = os.popen('ls %s/setup/*_ca.psf'%po_dir).readlines()[0].strip()
     cor_file = os.popen('ls %s/setup/*_ca.cor'%po_dir).readlines()[0].strip()
     return (co_dir, po_dir, psf_file, cor_file)
@@ -493,22 +454,20 @@ for i_ax, mutant_type in enumerate(mutant_type_list):
     #G_list = [g[:,-1] for g in G_list_0]
     G_list = [g.reshape(g.shape[0],1) for g in G_list]
     
+    end_frame = int(np.ceil(end_t/dt))
+    
     for i in range(n_traj):
         for j in range(start_idx-1,end_idx):
-            out_file = po_dir+str(i+1)+'/traj_'+str(i+1)+'_'+str(j+1)+'.out'
-            ff = open(out_file)
-            lines = ff.readlines()
-            ff.close()
-            if lines[-1].startswith('Done'):
-                end_frame = int(int(lines[-2].strip().split()[1])/nsave)
-            else:
-                end_frame = int(int(lines[-1].strip().split()[1])/nsave)
-            if len(qbb_list[(end_idx-start_idx+1)*i+j]) > end_frame:
+            if len(qbb_list[(end_idx-start_idx+1)*i+j]) >= end_frame:
                 qbb_list[(end_idx-start_idx+1)*i+j] = qbb_list[(end_idx-start_idx+1)*i+j][:end_frame]
                 qbb_list[(end_idx-start_idx+1)*i+j].reshape(qbb_list[(end_idx-start_idx+1)*i+j].shape[0],1)
-            if len(G_list[(end_idx-start_idx+1)*i+j]) > end_frame:
+            else:
+                print("Warning: Q_act Traj #%d Rep #%d stopped early."%(i+1, j+1))
+            if len(G_list[(end_idx-start_idx+1)*i+j]) >= end_frame:
                 G_list[(end_idx-start_idx+1)*i+j] = G_list[(end_idx-start_idx+1)*i+j][:end_frame]
                 G_list[(end_idx-start_idx+1)*i+j].reshape(G_list[(end_idx-start_idx+1)*i+j].shape[0],1)
+            else:
+                print("Warning: G Traj #%d Rep #%d stopped early."%(i+1, j+1))
     
     for i in range(len(qbb_list)):
         if len(qbb_list[i]) != len(G_list[i]):
@@ -619,6 +578,14 @@ meta_set = np.array(meta_set)
 
 coarse_state_centers = center[meta_dist.argmax(1)]
 cg_center_order_idx = np.argsort(coarse_state_centers[:,0])
+if coarse_state_centers[cg_center_order_idx[-1],1] >= visualiz_threshold:
+    for i in range(2, len(cg_center_order_idx)+1):
+        if coarse_state_centers[cg_center_order_idx[-i],1] < visualiz_threshold and coarse_state_centers[cg_center_order_idx[-i],0] > 0.6:
+            a = cg_center_order_idx[-i]
+            cg_center_order_idx[-i] = cg_center_order_idx[-1]
+            cg_center_order_idx[-1] = a
+            break
+coarse_state_centers = coarse_state_centers[cg_center_order_idx,:]
 micro_to_meta = np.zeros(n_cluster)
 meta_set = meta_set[cg_center_order_idx]
 meta_dist = meta_dist[cg_center_order_idx, :]
@@ -702,67 +669,15 @@ for i_ax, mutant_type in enumerate(mutant_type_list):
         if g_list[0]+g_list[1] > 50 and G_avg > visualiz_threshold:
             if_entangled_list[state_id-1] = True
     
-    max_T_len = 0
-    for i in mtype2trajid[i_ax]:
-        if meta_dtrajs[i].shape[0] > max_T_len:
-            max_T_len = meta_dtrajs[i].shape[0]
-    
-    PPT = np.zeros((max_T_len, n_states))
-    meta_dtrajs_extended = []
-    for i in mtype2trajid[i_ax]:
-        (N, be) = np.histogram(meta_dtrajs[i][-n_window:], bins=np.arange(-0.5, n_states, 1))
-        meta_dtraj_last = np.argwhere(N == np.max(N))[0][0]
-        for j in range(max_T_len):
-            if j >= len(meta_dtrajs[i]): 
-                state_0 = meta_dtraj_last
-            else:
-                state_0 = meta_dtrajs[i][j]
-            PPT[j,state_0] += 1
-        mde = []
-        for j in range(max_T_len):
-            if j >= len(meta_dtrajs[i]): 
-                state_0 = meta_dtraj_last
-            else:
-                state_0 = meta_dtrajs[i][j]
-            mde.append(state_0)
-        meta_dtrajs_extended.append(mde)
-        
-    rate_matrix = estimate_rate_matrix(mutant_type, meta_dtrajs_extended, n_states, dt)
-    rate_matrix_list.append(rate_matrix)
-    
-    fff = open('%s_MSTS.dat'%mutant_type, 'w')
-    for i in range(PPT.shape[0]):
-        PPT[i,:] = PPT[i,:] / np.sum(PPT[i,:])
-        fff.write('%8.4f '%((i+1)*dt))
-        for j in range(n_states):
-            fff.write('%6.4f '%PPT[i,j])
-        fff.write('\n')
-    fff.close()
-    
-    # build master equation
-    t_span = [0, end_t]
-    t_eval = np.linspace(0, end_t, 1000)
-    P0 = PPT[0,:]
-    sol = Master_equation(t_span, rate_matrix, P0, t_eval)
-    t_span = sol.t
-    PP = sol.y
-    
-    fff = open('%s_METS.dat'%mutant_type, 'w')
-    for i in range(t_span.shape[0]):
-        fff.write('%8.4f '%(t_span[i]))
-        for j in range(n_states):
-            fff.write('%6.4f '%abs(PP[j,i]))
-        fff.write('\n')
-    fff.close()
-    
 np.savez('msm_data.npz', 
          dtrajs = dtrajs,
          center = center,
          eigenvalues_list = eigenvalues_list,
          meta_dtrajs = meta_dtrajs,
+         coarse_state_centers = coarse_state_centers,
+         meta_dist = meta_dist,
          meta_set = meta_set,
-         meta_samples = meta_samples,
-         rate_matrix_list = rate_matrix_list)
+         meta_samples = meta_samples)
     
 # Visualize
 if if_visualize:
