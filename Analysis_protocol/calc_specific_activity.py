@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import sys, math, getopt, os, time, traceback, multiprocessing
 import numpy as np
-from scipy.integrate import solve_ivp
 
 ########## Functions ############
 def argmedian(data):
@@ -142,14 +141,14 @@ nsave = 5000
 alpha = 4331293.0
 nproc = 20
 mutant_type_list = ['fast', 'slow']
+num_traj = 1000
 num_rep = 5
 n_perm = int(1e6)
 perm_type = 0 #0: simple permutation; 1: permutate trajs
 T = 310
 n_boot = 10000
 QMMM_sample_dir = ''
-msm_data_file = ''
-mets_data_file = ''
+msts_data_file = ''
 sol_weight = []
 
 # read control file
@@ -209,6 +208,10 @@ try:
             words = line.split('=')
             mutant_type_list = words[1].strip().split()
             continue
+        if line.startswith('num_traj'):
+            words = line.split('=')
+            num_traj = int(words[1].strip())
+            continue
         if line.startswith('num_rep'):
             words = line.split('=')
             num_rep = int(words[1].strip())
@@ -233,13 +236,9 @@ try:
             words = line.split('=')
             QMMM_sample_dir = words[1].strip()
             continue
-        if line.startswith('msm_data_file'):
+        if line.startswith('msts_data_file'):
             words = line.split('=')
-            msm_data_file = words[1].strip()
-            continue
-        if line.startswith('mets_data_file'):
-            words = line.split('=')
-            mets_data_file = words[1].strip()
+            msts_data_file = words[1].strip()
             continue
         if line.startswith('sol_weight'):
             words = line.split('=')
@@ -252,21 +251,15 @@ finally:
 dt = dt*nsave*alpha/1e9 # in seconds
 R = 8.3145*1e-3/4.184 # kcal/mol/K
 RT = R*T
-plot_num = 1000
 
-mets_data = np.load(mets_data_file, allow_pickle=True)
-n_states = mets_data['METS_list'][0].y.shape[0]
+msts_data = np.load(msts_data_file, allow_pickle=True)
+n_states = msts_data['MSTS_list'][0].shape[1]
 
 if len(sol_weight) == 0:
     sol_weight = np.ones(n_states)
 elif len(sol_weight) != n_states:
     print('Error: the length of sol_weight (%d) does not equal to the number of metastable states (%d).'%(len(sol_weight), n_states))
     sys.exit()
-    
-if perm_type == 0:
-    print('Use a simple permutation test for the last SA values.\nThis will only involve the final distribution of SA in the hypothesis test and error estimation.')
-else:
-    print('Use a permutation test of shuffling the transition count matrices.\nThis will involve the transition kinetics in the hypothesis test and error estimation.')
 
 #######################################
 work_dir = os.popen('pwd').readline().strip()
@@ -318,15 +311,15 @@ ts_list = []
 sa_list = []
 sa_boot_list = []
 for idx, mutant_type in enumerate(mutant_type_list):
-    w = mets_data['METS_list'][idx].y.T
-    ts = mets_data['METS_list'][idx].t
+    w = msts_data['MSTS_list'][idx]
+    ts = msts_data['t_span']
     w = w * sol_weight
     w = w / (np.sum(w, axis=1).reshape(len(w),1))
     ts_list.append(ts)
     
     sa_list.append(np.dot(w, k_median))
     perm_data = []
-    n_traj = len(mets_data['C_matrix_list'][idx])
+    n_traj = num_traj
     n_w = w[-1]*n_traj
     n_w = [round(nw) for nw in n_w]
     n_w[0] = n_traj - sum(n_w[1:])
@@ -335,10 +328,10 @@ for idx, mutant_type in enumerate(mutant_type_list):
             perm_data.append(k_median[iidx])
     perm_data_list.append(perm_data)
     
-    METS_boot_data = mets_data['METS_boot_list'][idx]
-    sa_boot = np.zeros((w.shape[0], len(METS_boot_data)))
-    for i in range(len(METS_boot_data)):
-        w = METS_boot_data[i].y.T * sol_weight
+    MSTS_boot_data = msts_data['boot_stat_list'][idx]
+    sa_boot = np.zeros((w.shape[0], len(MSTS_boot_data)))
+    for i in range(len(MSTS_boot_data)):
+        w = MSTS_boot_data[i] * sol_weight
         w = w / (np.sum(w, axis=1).reshape(len(w),1))
         sa_boot[:,i] = np.dot(w, k_median)
     sa_boot_list.append(sa_boot)    
@@ -358,31 +351,12 @@ n_boot = sa_boot_list[0].shape[1]
 norm_sa_boot_list = [sa/sa_boot_list[idx_0][-1,:] for sa in sa_boot_list]
 
 # permutation test for significant difference between un-normalized fast SA and slow SA at the end of time
-if perm_type == 0:
-    p = permutation_test(np.mean, perm_data_list[idx_0], perm_data_list[idx_1], n_perm, perm_fun)
-else:
-    C_list = mets_data['C_matrix_list']
-    n_traj = len(C_list[0])
-    msm_data = np.load(msm_data_file, allow_pickle=True)
-    d0_list = []
-    d0_list.append([md[0] for md in msm_data['meta_dtrajs'][:n_traj]])
-    d0_list.append([md[0] for md in msm_data['meta_dtrajs'][n_traj:]])
-    d_1 = [[d0_list[idx_0][i], C_list[idx_0][i]] for i in range(len(d0_list[idx_0]))]
-    d_2 = [[d0_list[idx_1][i], C_list[idx_1][i]] for i in range(len(d0_list[idx_1]))]
-    p = permutation_test(perm_stat_fun, d_1, d_2, n_perm, perm_fun)
+p = permutation_test(np.mean, perm_data_list[idx_0], perm_data_list[idx_1], n_perm, perm_fun)
     
 print('Done permutation test')
 
-x = []
-y = [np.zeros(plot_num) for mutant_type in mutant_type_list]
-y_lb = [np.zeros(plot_num) for mutant_type in mutant_type_list]
-y_ub = [np.zeros(plot_num) for mutant_type in mutant_type_list]
-for idx, mutant_type in enumerate(mutant_type_list):
-    ts_idx = np.linspace(0, len(ts_list[idx])-1, plot_num)
-    ts_idx = ts_idx.astype(int)
-    
+for idx, mutant_type in enumerate(mutant_type_list):    
     fo = open('%s_SA.dat'%mutant_type, 'w')
-    iidx = 0
     for i, t in enumerate(ts_list[idx]):
         sa_mean = sa_list[idx][i]
         sa_boot = sa_boot_list[idx][i,:]
@@ -394,14 +368,7 @@ for idx, mutant_type in enumerate(mutant_type_list):
         norm_sa_ub = np.percentile(norm_sa_boot, 97.5)
         fo.write('%8.4f %.4e [%.4e, %.4e] %.4f [%.4f, %.4f]\n'%(t, sa_mean, 
                  sa_lb, sa_ub, norm_sa_mean, norm_sa_lb, norm_sa_ub))
-        if i in ts_idx:
-            y[idx][iidx] = norm_sa_mean
-            y_lb[idx][iidx] = norm_sa_lb
-            y_ub[idx][iidx] = norm_sa_ub
-            iidx += 1
     fo.close()
-
-    x.append(ts_list[idx][ts_idx])
     print('Done writing %s SA.'%mutant_type)
 
 # estimate error bar
