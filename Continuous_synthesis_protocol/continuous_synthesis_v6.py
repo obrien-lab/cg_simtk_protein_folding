@@ -256,10 +256,18 @@ def A_site_tRNA_binding(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd,
     # minimize steric clashes of the newly inserted residue
     integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
     integrator.setRandomNumberSeed(rand)
-    try:
-        simulation = Simulation(top, system, integrator, platform, properties)
-    except Exception as e:
-        traceback.print_exc()
+    # Attempt of creating the simulation object (sometimes fail due to CUDA environment)
+    i_attempt = 0
+    while True:
+        try:
+            simulation = Simulation(top, system, integrator, platform, properties)
+        except Exception as e:
+            print('Error occurred at attempt %d...'%(i_attempt+1))
+            traceback.print_exc()
+            i_attempt += 1
+            continue
+        else:
+            break
     simulation.context.setPositions(current_rnc_cor)
 
     energy = simulation.context.getState(getEnergy=True).getPotentialEnergy().value_in_unit(kilocalorie/mole)
@@ -316,7 +324,16 @@ def peptide_bond_formation(top, current_rnc_cor, nascent_chain_length, rnc_psf_p
     integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
     integrator.setRandomNumberSeed(rand)
     forcegroups = forcegroupify(system)
-    simulation = Simulation(top, system, integrator, platform, properties)
+    while True:
+        try:
+            simulation = Simulation(top, system, integrator, platform, properties)
+        except Exception as e:
+            print('Error occurred at attempt %d...'%(i_attempt+1))
+            traceback.print_exc()
+            i_attempt += 1
+            continue
+        else:
+            break
     simulation.context.setPositions(current_rnc_cor)
 
     energy = simulation.context.getState(getEnergy=True).getPotentialEnergy().value_in_unit(kilocalorie/mole)
@@ -373,7 +390,16 @@ def translocation_AtR(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd,
     integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
     integrator.setRandomNumberSeed(rand)
     forcegroups = forcegroupify(system)
-    simulation = Simulation(top, system, integrator, platform, properties)
+    while True:
+        try:
+            simulation = Simulation(top, system, integrator, platform, properties)
+        except Exception as e:
+            print('Error occurred at attempt %d...'%(i_attempt+1))
+            traceback.print_exc()
+            i_attempt += 1
+            continue
+        else:
+            break
     simulation.context.setPositions(current_rnc_cor)
 
     energy = simulation.context.getState(getEnergy=True).getPotentialEnergy().value_in_unit(kilocalorie/mole)
@@ -469,7 +495,16 @@ def equilibration(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd, out_f
     integrator.setConstraintTolerance(constraint_tolerance)
     integrator.setRandomNumberSeed(rand)
     forcegroups = forcegroupify(system)
-    simulation = Simulation(top, system, integrator, platform, properties)
+    while True:
+        try:
+            simulation = Simulation(top, system, integrator, platform, properties)
+        except Exception as e:
+            print('Error occurred at attempt %d...'%(i_attempt+1))
+            traceback.print_exc()
+            i_attempt += 1
+            continue
+        else:
+            break
     simulation.context.setPositions(current_rnc_cor)
     if stage == 4 or stage == 5:
         simulation.context.setVelocities(current_rnc_velocities)
