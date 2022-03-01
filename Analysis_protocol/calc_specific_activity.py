@@ -105,34 +105,6 @@ def perm_stat_fun(data):
     w = w / np.sum(w)
     P = np.sum(w*k_median)
     return P
-    
-def dP(t, P, M):
-    return np.dot(M,P)
-
-def Master_equation(t_span, K, P0, t_eval):
-    sol = solve_ivp(dP, t_span, P0, t_eval=t_eval, args=(K,))
-    return sol
-    
-def estimate_rate_matrix_2(C_matrix, dt):
-    n_state = len(C_matrix)
-    ksum_matrix = np.zeros((n_state, n_state))
-    P_matrix = np.zeros((n_state, n_state))
-    for i in range(n_state):
-        if C_matrix[i,i] != 0:
-            ksum_matrix[i,i] = -math.log(C_matrix[i,i]/np.sum(C_matrix[i,:]))/dt
-        else:
-            ksum_matrix[i,i] = 2/dt # assume the mean dwell time of this state is dt/2
-        for j in range(n_state):
-            if i != j:
-                P_matrix[j,i] = C_matrix[i,j]
-        if np.sum(P_matrix[:,i]) != 0:
-            P_matrix[:,i] /= np.sum(P_matrix[:,i])
-    
-    rate_matrix = np.dot(P_matrix, ksum_matrix)
-    for i in range(n_state):
-        rate_matrix[i,i] = -np.sum(rate_matrix[:,i])
-        
-    return rate_matrix
 
 #################################
 end_t = 60 # in seconds
