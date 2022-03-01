@@ -15,4 +15,4 @@
 
     - The run time for these demos, except for `opt_nscal`, should be within one day on a normal desktop. `opt_nscal` will take about 11 days.
 
-- #### `input_data.tar.bz2` is the compressed file of all the input data that were used to perform the simulations in our paper *How synonymous mutations alter enzyme structure and function over long time scales*. Check the README files inside to learn more details.
+- #### `input_data.tar.xz` is the compressed file of all the input data that were used to perform the simulations in our paper *How synonymous mutations alter enzyme structure and function over long time scales*. Check the README files inside to learn more details. To uncompress, first run `xz -d input_data.tar.xz` to get the uncompressed tar file and then run `tar -xvf input_data.tar` to extract input data.
