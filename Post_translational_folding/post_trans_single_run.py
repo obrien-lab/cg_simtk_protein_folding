@@ -3,7 +3,7 @@ from simtk.openmm.app import *
 from simtk.openmm import *
 from simtk.unit import *
 from sys import stdout, exit, stderr
-import os, time
+import os, time, traceback
 import parmed as pmd
 import numpy as np
 import mdtraj as mdt
@@ -189,7 +189,18 @@ else:
     properties["DeviceIndex"] = "%d"%(dev_index);
     platform = Platform.getPlatformByName('CUDA')
 
-simulation = Simulation(top, system, integrator, platform, properties)
+# Attempt of creating the simulation object (sometimes fail due to CUDA environment)
+i_attempt = 0
+while True:
+    try:
+        simulation = Simulation(top, system, integrator, platform, properties)
+    except Exception as e:
+        print('Error occurred at attempt %d...'%(i_attempt+1))
+        traceback.print_exc()
+        i_attempt += 1
+        continue
+    else:
+        break
 
 if if_restart != 0:
     try:
