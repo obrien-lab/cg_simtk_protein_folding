@@ -5,7 +5,7 @@ This is a package of scripts that are used to create coarse-grained (CG) models 
 
 An example of the translation and folding process of the *E. coli* D-Ala-D-Ala Ligase B (DDLB, PDBid [4c5c](https://www.rcsb.org/structure/4C5C)) that was simulated by this toolkit is shown below.
 
-<img src="../../wikis/uploads/img/DDLB_folding_example.gif" width="300">
+<img src="../../wiki/uploads/img/DDLB_folding_example.gif" width="300">
 
 All the scripts are ready to use on a Linux machine (have been tested on RHEL7 and Centos7) when users have added the directories (including all the child folders) in `$PATH` (add `export PATH=${PATH}:/path/to/one/child/folder/` in your `~/.bashrc` file) and have granted the execution permission (`chmod -R +x ./cg_simtk_protain_folding/`) for all the scripts. 
 
@@ -33,15 +33,15 @@ In summary, to use all scripts, the following Python modules and software are re
 
 
 ### 1. Create CG protein models and tune the force field parameters (*n*<sub>scal</sub>) for a given protein
-- The CG protein model used in the simulations of protein folding is a G&omacr;-like C<sub>&alpha;</sub> model. The force field can be found [here](../../wikis/help_wiki/create_cg_protein_model.py#51-force-field-of-the-c%CE%B1-model). Another CG model ([C<sub>&alpha;</sub>-sidechain model](../../wikis/help_wiki/create_cg_protein_model.py#52-force-field-of-the-c%CE%B1-sidechain-model)) is used to do [backmapping](#6-backmapping-from-coarse-grained-model-to-all-atom-model).
+- The CG protein model used in the simulations of protein folding is a G&omacr;-like C<sub>&alpha;</sub> model. The force field can be found [here](../../wiki/create_cg_protein_model.py#51-force-field-of-the-c%CE%B1-model). Another CG model ([C<sub>&alpha;</sub>-sidechain model](../../wiki/create_cg_protein_model.py#52-force-field-of-the-c%CE%B1-sidechain-model)) is used to do [backmapping](#6-backmapping-from-coarse-grained-model-to-all-atom-model).
 #### 1.1. Tune *n*<sub>scal</sub> for a small single-domain protein that has experimental folding stability reported
 - For a small single-domain protein that has experimental folding stability reported, we use an enhanced sampling protocol i.e. replica exchange simulations to extensively sample the protein folding and unfolding and identify the *n*<sub>scal</sub> value to reproduce the experimental protein folding stability.
 - Scripts to be used in this section:
 
 | Scripts | Instructions |
 | ------ | ------ |
-| CG_protein_parameterization/**create_cg_protein_model.py** | Create the CG model .psf .top .cor and .prm file that can be used for MD simulations. Need to get the Stride software installed prior to use. ([Learn more](../../wikis/help_wiki/create_cg_protein_model.py)) |
-| CG_protein_parameterization/**parse_cg_prm.py** | Parse the parameters in .prm file and then create a .xml file for OpenMM use. ([Learn more](../../wikis/help_wiki/parse_cg_prm.py)) |
+| CG_protein_parameterization/**create_cg_protein_model.py** | Create the CG model .psf .top .cor and .prm file that can be used for MD simulations. Need to get the Stride software installed prior to use. ([Learn more](../../wiki/create_cg_protein_model.py)) |
+| CG_protein_parameterization/**parse_cg_prm.py** | Parse the parameters in .prm file and then create a .xml file for OpenMM use. ([Learn more](../../wiki/parse_cg_prm.py)) |
 | CG_protein_parameterization/**parallel_temperature_REX.py** | Run parallel temperature replica exchange molecular dynamics (pt-REMD) simulation. This simulation is parallelized using multiple CPU processors. ([Learn more](../../wikis/help_wiki/parallel_temperature_REX.py)) |
 | CG_protein_parameterization/**opt_temp.pl** | Optimize the temperature windows for pt-REMD simulation to ensure the good sampling quality around the melting temperature of the given protein. ([Learn more](../../wikis/help_wiki/opt_temp.pl)) |
 | CG_protein_parameterization/**check_sampling.pl** | Check the sampling quality for pt-REMD simulation. Insufficient sampling will cause problems and inaccuracy in estimating the protein folding stability. ([Learn more](../../wikis/help_wiki/check_sampling.pl)) | 
