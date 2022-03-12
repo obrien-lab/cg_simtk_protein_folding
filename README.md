@@ -105,7 +105,7 @@ In summary, to use all scripts, the following Python modules and software are re
 - To run CSP, you need to prepare the CG protein model for your nascent chain according to [Section 1](#1-create-cg-protein-models-and-tune-the-force-field-parameters-nscal-for-a-given-protein) and prepare the CG ribosome model according to [Section 3](#3-create-cg-ribosome-model). All the .psf, .top, .cor and .prm files are required in initialization of CSP. In addition, users have to provide a table of intrinsic codon translation time and the mRNA sequence of the nascent chain.
 - Below is a video of the entire continuous synthesis process using `continuous_synthesis_v6.py` for synthesizing Firfly luciferase (550 residue long) on the *E.coli* ribosome and visualized using `visualize_cont_synth.py` (time is shown in the experimental timescale):
 
-![Example video of synthesizing Firfly luciferase on the E.coli ribosome](../../wiki/uploads/img/LUC_CSP.mp4)
+![Example video of synthesizing Firfly luciferase on the E.coli ribosome](https://youtu.be/VNpB48ahgSU)
 
 The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in orange; The nascent chain is represented as Cartoon and colored according to the secondary structures; The flexible region of ribosomal protein L24 is shown in green. Only the last frame of the trajectory for each synthesis step at each NC length is shown in this video. [:leftwards_arrow_with_hook:](#table-of-contents)
 
