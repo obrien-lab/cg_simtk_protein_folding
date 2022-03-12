@@ -121,7 +121,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 - To setup and run post-translation simulations on PSU ACI cluster, use `PTP_setup.pl`. [:leftwards_arrow_with_hook:](#table-of-contents)
 
 ### 6. Backmapping from coarse-grained model to all-atom model
-- CG model has a lot of benifits on saving computational costs and improving sampling efficiency. However, it loses the atomic-level accuracy of the molecular structure. A backmapping strategy presented here can rebuild the all-atom structure from the CG C&alpha; model with high accuracy. The rebuilt all-atom structure can be furthure used for visualization (e.g., `visualize_cont_synth.py`) and simulation (e.g., [Activation Energy Estimation Workflow](../../../Activation-Eenergy-Estimation-Workflow)) at all-atom level.
+- CG model has a lot of benifits on saving computational costs and improving sampling efficiency. However, it loses the atomic-level accuracy of the molecular structure. A backmapping strategy presented here can rebuild the all-atom structure from the CG C&alpha; model with high accuracy. The rebuilt all-atom structure can be furthure used for visualization (e.g., `visualize_cont_synth.py`) and simulation (e.g., [Activation Energy Estimation Workflow](../../../Activation-Energy-Estimation-Workflow)) at all-atom level.
 - Scripts to be used in this section:
 
 | Scripts | Instructions |
@@ -153,7 +153,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 | Analysis_protocol/**get_co_post_folding_pathways.py** | Combine the discrete metastable states trajectories and analyze the folding pathways. ([Learn more](../../wiki/get_co_post_folding_pathways.py)) |
 | Analysis_protocol/**get_solubility.py** | Estimate the aggregation, degradation and Hsp70 binding propensities for the post-translational metastable states and estimate the percent of soluble protein in each metastable state. ([Learn more](../../wiki/get_solubility.py)) <br>Scripts needed: `Backmapping/backmap.py` |
 | Analysis_protocol/**get_state_probability.py** | Get the metastable state probabilities vs. post-translational time and run the bootstrapping resampling for error estimation. ([Learn more](../../wiki/get_state_probability.py)) |
-| Analysis_protocol/**calc_specific_activity.py** | Estimates the specific activities, as well as the errors and p-value, by using the $`\Delta G^{\ddagger}`$ obtained from [Activation Energy Estimation Workflow](../../../Activation-Eenergy-Estimation-Workflow) and the state probabilities obtained from `get_state_probability.py`. ([Learn more](../../wiki/calc_specific_activity.py)) |
+| Analysis_protocol/**calc_specific_activity.py** | Estimates the specific activities, as well as the errors and p-value, by using the $`\Delta G^{\ddagger}`$ obtained from [Activation Energy Estimation Workflow](../../../Activation-Energy-Estimation-Workflow) and the state probabilities obtained from `get_state_probability.py`. ([Learn more](../../wiki/calc_specific_activity.py)) |
 
 [:leftwards_arrow_with_hook:](#table-of-contents)
 
