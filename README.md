@@ -133,7 +133,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 
 ### 7. Analysis of protein folding trajectories
 - To analyze the protein folding process, we usually calculate the order parameters, such as the fraction of native contacts (![equation](https://latex.codecogs.com/svg.image?\inline&space;Q)) and the fraction of entangment changes (![equation](https://latex.codecogs.com/svg.image?\inline&space;G)).
-- Some examples of misfolding protein structures with entanglements can be found [**here**](https://yuj179.github.io/topo_entanglements/).
+- Some examples of misfolding protein structures with entanglements can be found [**here**](https://obrien-lab.github.io/visualize_entanglements/).
 - Scripts to be used in this section:
 
 | Scripts | Instructions |
