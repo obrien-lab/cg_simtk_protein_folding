@@ -1,1 +1,1 @@
-**Source code can be found [here](CG_protein_parameterization/parse_cg_prm.py).**
+**Source code can be found [here](../../CG_protein_parameterization/parse_cg_prm.py).**
