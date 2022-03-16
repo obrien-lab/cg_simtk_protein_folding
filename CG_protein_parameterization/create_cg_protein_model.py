@@ -734,10 +734,10 @@ for idx, res in enumerate(heavy_protein.residues):
         elif atm.name != 'OXT':
             num_sidechain += 1
     if num_backbone != 4:
-        print("ERROR: In pdb %s (# %d) the number of backbone atoms in residue %d is incorrect: %d != 4"%(p, np+1, idx+1, num_backbone))
+        print("ERROR: In pdb the number of backbone atoms in residue %d is incorrect: %d != 4"%(idx+1, num_backbone))
         sys.exit()
     if num_sidechain != refNscat[res.name]:
-        print("ERROR: In pdb %s (# %d) the number of sidechain atoms in residue %d is incorrect: %d != %d"%(p, np+1, idx+1, num_sidechain, refNscat[res.name]))
+        print("ERROR: In pdb the number of sidechain atoms in residue %d is incorrect: %d != %d"%(idx+1, num_sidechain, refNscat[res.name]))
         sys.exit()
 
 idx_atm = 0
