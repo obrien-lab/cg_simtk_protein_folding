@@ -682,6 +682,7 @@ sub calc_traj_contact_number
   my @sec_struc = @{$_[2]};
   my @c_map = @{$_[3]};
   my @d_map = @{$_[4]};
+  my @sel_idx = @{$_[5]};
   my $sdist = 1.2;
   
   my @result = ();
