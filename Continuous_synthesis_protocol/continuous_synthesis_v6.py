@@ -1144,7 +1144,7 @@ def parse_mask(struct, mask):
                 segid_list == [] and atm.name in atmnm_list) or (atm.residue.segid in segid_list and atmnm_list == []):
                 resid = atm.residue.number
                 if resid_list == []:
-                    mask_idx.append[atm.idx]
+                    mask_idx.append(atm.idx)
                     continue
                 for r in resid_list:
                     if len(r) == 1 and resid == int(r[0]):
