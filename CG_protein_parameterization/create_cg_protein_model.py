@@ -913,7 +913,11 @@ for line in screen_out:
         resid_1 = int(line[16:20])+1
         resid_2 = int(line[36:40])+1
         chainid_1 = line[8:10].strip()
+        if chainid_1 == '-':
+            chainid_1 = ''
         chainid_2 = line[28:30].strip()
+        if chainid_2 == '-':
+            chainid_2 = ''
         found = [0, 0]
         for idx, res in enumerate(cg_structure.residues):
             if res.number == resid_1 and res.chain == chainid_1:
