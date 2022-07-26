@@ -39,17 +39,18 @@ for tf in top_file_list:
 command += 'prmfile)'
 
 param=eval(command)
-openmm_param=pmd.openmm.parameters.OpenMMParameterSet.from_parameterset(param)
-openmm_param.write('tmp.xml', skip_duplicates=False)
-#openmm_param.write('tmp.xml')
-dom = MD.parse('tmp.xml')
-root = dom.documentElement
-atom_type = root.getElementsByTagName('AtomTypes')
-residue = root.getElementsByTagName('Residues')
-os.remove('tmp.xml')
 
 name = prmfile.split('.prm')
 file_name = name[0]
+
+openmm_param=pmd.openmm.parameters.OpenMMParameterSet.from_parameterset(param)
+openmm_param.write(file_name+'_tmp.xml', skip_duplicates=False)
+dom = MD.parse(file_name+'_tmp.xml')
+root = dom.documentElement
+atom_type = root.getElementsByTagName('AtomTypes')
+residue = root.getElementsByTagName('Residues')
+os.remove(file_name+'_tmp.xml')
+
 root = ET.Element("ForceField")
 
 pf = open(prmfile, 'r')
@@ -287,4 +288,3 @@ if len(residue) > 0:
 xf = open(file_name+'.xml', 'w')
 #dom.writexml(xf, indent='', addindent=' ', newl='\n')
 dom.writexml(xf, indent='')
-
