@@ -334,7 +334,8 @@ print('Done!')\n";
     my $pdb_code = $str[0];
     @str = split(/\//, $pdb_code);
     $pdb_code = $str[$#str];
-    my $prefix = lc $pdb_code;
+    # my $prefix = lc $pdb_code;
+    my $prefix = $pdb_code;
     if($is_ca eq 0)
     {
       $prefix .= "_ca";
@@ -674,7 +675,8 @@ domain_file = domain_def.dat\n";
   my $pdb_code = $str[0];
   @str = split(/\//, $pdb_code);
   $pdb_code = $str[$#str];
-  my $prefix = lc $pdb_code;
+  # my $prefix = lc $pdb_code;
+  my $prefix = $pdb_code;
 
   if($is_ca eq 0)
   {
@@ -684,7 +686,8 @@ domain_file = domain_def.dat\n";
   {
     $prefix .= "_ca-cb";
   }
-  my $prm_name = lc $pdb_code;
+  # my $prm_name = lc $pdb_code;
+  my $prm_name = $pdb_code;
   $prm_name .= "_nscal" . $nscal . "_fnn1_go_" . $potential_name . ".prm";
 
   if(-e "$prefix.psf")
