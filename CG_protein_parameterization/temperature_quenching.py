@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-from simtk.openmm.app import *
-from simtk.openmm import *
-from simtk.unit import *
+try:
+    from openmm.app import *
+    from openmm import *
+    from openmm.unit import *
+except:
+    from simtk.openmm.app import *
+    from simtk.openmm import *
+    from simtk.unit import *
 from sys import stdout, exit, stderr
 import getopt, os, time, multiprocessing, random, math
 import parmed as pmd
@@ -42,9 +47,13 @@ def run_TQ_LD(index, rand):
             res.name = psf_pmd.residues[resid].name
     platform = Platform.getPlatformByName('CPU')
     system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
-        nonbondedCutoff=nonbond_cutoff, switchDistance=switch_cutoff, 
+        nonbondedCutoff=nonbond_cutoff, 
         constraints=AllBonds, removeCMMotion=False, ignoreExternalBonds=True,
         residueTemplates=templete_map)
+    
+    custom_nb_force = system.getForce(4)
+    custom_nb_force.setUseSwitchingFunction(True)
+    custom_nb_force.setSwitchingDistance(switch_cutoff)
     
     if tag_restart_prod[index-1] == 1:
         integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
