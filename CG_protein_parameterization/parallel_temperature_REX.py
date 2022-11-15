@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-from simtk.openmm.app import *
-from simtk.openmm import *
-from simtk.unit import *
+try:
+    from openmm.app import *
+    from openmm import *
+    from openmm.unit import *
+except:
+    from simtk.openmm.app import *
+    from simtk.openmm import *
+    from simtk.unit import *
 from sys import stdout, exit, stderr
 import getopt, os, time, multiprocessing, random, math
 import parmed as pmd
@@ -53,7 +58,7 @@ def run_REX_LD(psf_file, psf, forcefield, templete_map, cor, temp, strtemp, outn
             res.name = psf_pmd.residues[resid].name
     platform = Platform.getPlatformByName('CPU')
     system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
-        nonbondedCutoff=nonbond_cutoff, switchDistance=switch_cutoff, 
+        nonbondedCutoff=nonbond_cutoff, 
         constraints=AllBonds, removeCMMotion=True, ignoreExternalBonds=True,
         residueTemplates=templete_map)
     # must set to use switching function explicitly for CG Custom Nonbond Force #
