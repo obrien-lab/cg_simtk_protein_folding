@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-from simtk.openmm.app import *
-from simtk.openmm import *
-from simtk.unit import *
+try:
+    from openmm.app import *
+    from openmm import *
+    from openmm.unit import *
+except:
+    from simtk.openmm.app import *
+    from simtk.openmm import *
+    from simtk.unit import *
 from sys import stdout, exit, stderr
 import os, time, traceback
 import parmed as pmd
@@ -168,7 +173,7 @@ for chain in top.chains():
     for res in chain.residues():
         templete_map[res] = res.name
 system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
-        nonbondedCutoff=2.0*nanometer, switchDistance=1.8*nanometer, 
+        nonbondedCutoff=2.0*nanometer, 
         constraints=AllBonds, removeCMMotion=False, ignoreExternalBonds=True, 
         residueTemplates=templete_map)
 custom_nb_force = system.getForce(4)
