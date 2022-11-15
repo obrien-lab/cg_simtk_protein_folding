@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-from simtk.openmm.app import *
-from simtk.openmm import *
-from simtk.unit import *
+try:
+    from openmm.app import *
+    from openmm import *
+    from openmm.unit import *
+except:
+    from simtk.openmm.app import *
+    from simtk.openmm import *
+    from simtk.unit import *
 from sys import stdout, exit, stderr
 import getopt, os, time, multiprocessing, random, math, traceback, io
 import parmed as pmd
@@ -635,7 +640,7 @@ def create_elongation_system(forcefield, top, template_map, stage, nascent_chain
     global nonbond_cutoff, switch_cutoff, x_eject
     try:
         system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
-            nonbondedCutoff=nonbond_cutoff, switchDistance=switch_cutoff, 
+            nonbondedCutoff=nonbond_cutoff, 
             constraints=AllBonds, removeCMMotion=False, ignoreExternalBonds=True,
             residueTemplates=template_map)
     except Exception as e:
