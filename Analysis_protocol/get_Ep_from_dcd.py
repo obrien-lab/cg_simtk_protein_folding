@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-from simtk.openmm.app import *
-from simtk.openmm import *
-from simtk.unit import *
+try:
+    from openmm.app import *
+    from openmm import *
+    from openmm.unit import *
+except:
+    from simtk.openmm.app import *
+    from simtk.openmm import *
+    from simtk.unit import *
 from sys import stdout, exit, stderr
 import getopt, os, time, multiprocessing, random, math
 import parmed as pmd
@@ -94,7 +99,7 @@ for chain in top.chains():
     for res in chain.residues():
         template_map[res] = res.name
 system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
-	nonbondedCutoff=nonbond_cutoff, switchDistance=switch_cutoff, 
+	nonbondedCutoff=nonbond_cutoff,
 	constraints=AllBonds, removeCMMotion=True, ignoreExternalBonds=True,
 	residueTemplates=template_map)
 
