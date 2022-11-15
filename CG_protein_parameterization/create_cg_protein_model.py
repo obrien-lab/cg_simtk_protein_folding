@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-from simtk.openmm.app import *
-from simtk.openmm import *
-from simtk.unit import *
+try:
+    from openmm.app import *
+    from openmm import *
+    from openmm.unit import *
+except:
+    from simtk.openmm.app import *
+    from simtk.openmm import *
+    from simtk.unit import *
 from sys import stdout, exit, stderr
 import getopt, os, time, random, math, traceback, io, sys, string
 import parmed as pmd
@@ -334,7 +339,7 @@ def cg_energy_minimization(cor, prefix, prm_file):
             template_map[res] = res.name
                 
     
-    system = forcefield.createSystem(top, nonbondedCutoff=2.0*nanometer, switchDistance=1.8*nanometer, 
+    system = forcefield.createSystem(top, nonbondedCutoff=2.0*nanometer, 
                                      constraints=None, removeCMMotion=False, ignoreExternalBonds=True,
                                      residueTemplates=template_map)
     custom_nb_force = system.getForce(4)
