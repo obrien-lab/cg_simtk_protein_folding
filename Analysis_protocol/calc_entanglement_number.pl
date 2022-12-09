@@ -169,13 +169,13 @@ if($traj =~ /\.cor$/)
       }
     }
     
-    if($max_g < $G_traj_list[$j])
+    if($max_g < $G_traj_list[$i])
     {
-      $max_g = $G_traj_list[$j];
+      $max_g = $G_traj_list[$i];
     }
-    if($min_g > $G_traj_list[$j])
+    if($min_g > $G_traj_list[$i])
     {
-      $min_g = $G_traj_list[$j];
+      $min_g = $G_traj_list[$i];
     }
   }
   my $fGtot = 0;
