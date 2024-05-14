@@ -427,9 +427,9 @@ if restart == 0:
         for code_idx, ent_code in enumerate(sorted(list(chg_ent_code_dict.keys()), reverse=True)):
             ent_type = chg_ent_code_dict[ent_code]
             if ent_code == 'L#C#':
-                f.write('# G%d: %s, loop formed & %s\n'%(code_idx, ent_code, ent_type))
+                f.write('# G%d: %s, loop formed & %s\n'%(code_idx+1, ent_code, ent_type))
             else:
-                f.write('# G%d: %s, %s\n'%(code_idx, ent_code, ent_type))
+                f.write('# G%d: %s, %s\n'%(code_idx+1, ent_code, ent_type))
         f.write('# G: Number of change of entanglement (G1+...+G%d) / (2 x Number of native contacts in reference structure)\n'%code_idx)
         f.write('# Number of native contact in the reference structure: %d\n'%(ref_nnc))
         f.write('%-12s'%'Frame')
