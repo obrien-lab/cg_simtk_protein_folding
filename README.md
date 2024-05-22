@@ -15,7 +15,18 @@ In summary, to use all scripts, the following Python modules and software are re
 
 | Required Module | Required Software |
 | ------ | ------ |
-| `numpy`<br>`scipy`<br>`multiprocessing`<br>`lxml`<br>[`openmm`](http://openmm.org/)<br>[`parmed`](http://parmed.github.io/ParmEd/html/index.html)<br>[`mdtraj`](http://mdtraj.org/)<br>[`pdbfixer`](https://github.com/openmm/pdbfixer)<br>[`pyemma`](http://emma-project.org/latest/)<br>[`msmtools`](https://msmtools.readthedocs.io/en/latest/) | `Python 3.X`<br>`Perl v5+`<br>[`Stride`](http://webclu.bio.wzw.tum.de/stride/)<br>[`pywham`](http://pywham.net/)<br>[`matlab`](https://www.mathworks.com/products/matlab.html)<br>[`imagemagick`](https://imagemagick.org/index.php)<br>[`vmd`](https://www.ks.uiuc.edu/Research/vmd/)<br>[`PD2`](https://github.com/jmacdona/pd2_public)<br>[`Pulchra`](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html)<br>[`ChaperISM`](https://github.com/BioinfLab/ChaperISM) |
+| `numpy`<br>`scipy`<br>`multiprocessing`<br>`lxml`<br>[`openmm`](http://openmm.org/)<br>[`parmed`](http://parmed.github.io/ParmEd/html/index.html)<br>[`mdtraj`](http://mdtraj.org/)<br>[`pdbfixer`](https://github.com/openmm/pdbfixer)<br>[`pyemma`](http://emma-project.org/latest/)<br>[`msmtools`](https://msmtools.readthedocs.io/en/latest/)<br>[`topoly`](https://topoly.cent.uw.edu.pl/) | `Python 3.X`<br>`Perl v5+`<br>[`Stride`](http://webclu.bio.wzw.tum.de/stride/)<br>[`pywham`](http://pywham.net/)<br>[`matlab`](https://www.mathworks.com/products/matlab.html)<br>[`imagemagick`](https://imagemagick.org/index.php)<br>[`vmd`](https://www.ks.uiuc.edu/Research/vmd/)<br>[`PD2`](https://github.com/jmacdona/pd2_public)<br>[`Pulchra`](http://cssb.biology.gatech.edu/skolnick/files/PULCHRA/index.html)<br>[`ChaperISM`](https://github.com/BioinfLab/ChaperISM) |
+
+The scripts in this toolkit have been applied in the studies reported in the following papers:
+
+1. Nissley, D.A., Jiang, Y., Trovato, F. et al. Universal protein misfolding intermediates can bypass the proteostasis network and remain soluble and less functional. Nature Communications 13, 3081 (2022). https://doi.org/10.1038/s41467-022-30548-5
+2. Jiang, Y., Neti, S.S., Sitarik, I. et al. How synonymous mutations alter enzyme structure and function over long timescales. Nature Chemistry 15, 308–318 (2023). https://doi.org/10.1038/s41557-022-01091-z
+3. Quyen V. Vu, Daniel A. Nissley, Jiang, Y. et al. Is Posttranslational Folding More Efficient Than Refolding from a Denatured State: A Computational Study. The Journal of Physical Chemistry B 127, 4761-4774 (2023). https://doi.org/10.1021/acs.jpcb.3c01694
+4. Jiang, Y., Deane, C.M., Morris, G.M., O’Brien, E.P. It is theoretically possible to avoid misfolding into non-covalent lasso entanglements using small molecule drugs. PLoS Computational Biology 20, e1011901 (2024). https://doi.org/10.1371/journal.pcbi.1011901
+
+**If you use these scripts in your study, please cite our work:**
+
+1. Jiang, Y., Neti, S.S., Sitarik, I. et al. How synonymous mutations alter enzyme structure and function over long timescales. Nature Chemistry 15, 308–318 (2023). https://doi.org/10.1038/s41557-022-01091-z
 
 ---
 
@@ -143,7 +154,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 | Analysis_protocol/**calc_entanglement_number.pl** | Calculate ![equation](https://latex.codecogs.com/svg.image?\inline&space;G) vs. time for a given trajectory. ([Learn more](../../wiki/calc_entanglement_number.pl)) | 
 | Analysis_protocol/**calc_chirality_number.pl** | Calculate ![equation](https://latex.codecogs.com/svg.image?\inline&space;K) vs. time for a given trajectory. ([Learn more](../../wiki/calc_chirality_number.pl)) | 
 | Analysis_protocol/**find_chg_ent.py** | Find changes in entanglements using a more time-consuming protocol including [Topoly](https://topoly.cent.uw.edu.pl/). ([Learn more](../../wiki/find_chg_ent.py)) |
-| Analysis_protocol/**find_representative_chg_ent.py** | Find representative changes in entanglements for a set of simulation structures. ([Learn more](../../wiki/find_representative_chg_ent.py)) |
+| Analysis_protocol/**find_representative_chg_ent.py** | Find representative changes in entanglements for a set of simulation structures. ([Learn more](../../wiki/find_representative_chg_ent.py)) <br>Scripts needed: `Backmapping/backmap.py` |
 | Analysis_protocol/**calc_cont_synth_qbb_vs_T.py** | Automated script to calculate ![equation](https://latex.codecogs.com/svg.image?\inline&space;Q) vs. time for [CSP](#4-simulation-of-co-translational-folding) trajectoris. ([Learn more](../../wiki/calc_cont_synth_qbb_vs_T.py)) <br>Scripts needed: `Analysis_protocol/calc_native_contact_fraction.pl` |
 | Analysis_protocol/**calc_cont_synth_G_vs_T.py** | Automated script to calculate ![equation](https://latex.codecogs.com/svg.image?\inline&space;G) vs. time for [CSP](#4-simulation-of-co-translational-folding) trajectoris. ([Learn more](../../wiki/calc_cont_synth_G_vs_T.py)) <br>Scripts needed: `Analysis_protocol/calc_entanglement_number.pl` |
 | Analysis_protocol/**mrna_silent_mutation.pl** | Do silent mutation for a given mRNA sequence and a mutation scheme, such as fastest translation, slowest translation and random. ([Learn more](../../wiki/mrna_silent_mutation.pl)) |
