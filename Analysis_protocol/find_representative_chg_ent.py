@@ -11,7 +11,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-matplotlib.rcParams['mathtext.fontset'] = 'stix'
+# matplotlib.rcParams['mathtext.fontset'] = 'stix'
 # matplotlib.rcParams['font.sans-serif'] = ['Arial']
 matplotlib.rcParams['axes.labelsize'] = 'small'
 matplotlib.rcParams['axes.linewidth'] = 1
