@@ -99,12 +99,15 @@ for chain in top.chains():
     for res in chain.residues():
         template_map[res] = res.name
 system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
-	nonbondedCutoff=nonbond_cutoff,
-	constraints=AllBonds, removeCMMotion=True, ignoreExternalBonds=True,
-	residueTemplates=template_map)
+                                 nonbondedCutoff=nonbond_cutoff, constraints=AllBonds, 
+                                 removeCMMotion=True, ignoreExternalBonds=True,
+                                 residueTemplates=template_map)
 
 # must set to use switching function explicitly for CG Custom Nonbond Force #
-custom_nb_force = system.getForce(4)
+for force in system.getForces():
+    if force.getName() == 'CustomNonbondedForce':
+        custom_nb_force = force
+        break
 custom_nb_force.setUseSwitchingFunction(True)
 custom_nb_force.setSwitchingDistance(switch_cutoff)
 # End set to use switching function explicitly for CG Custom Nonbond Force #

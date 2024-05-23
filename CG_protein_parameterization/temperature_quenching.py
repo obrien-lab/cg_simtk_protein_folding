@@ -8,8 +8,9 @@ except:
     from simtk.openmm import *
     from simtk.unit import *
 from sys import stdout, exit, stderr
-import getopt, os, time, multiprocessing, random, math
+import getopt, os, time, multiprocessing, random, math, traceback
 import parmed as pmd
+import mdtraj as mdt
 
 usage = '\nUsage: python temperature_quenching.py\n' \
         '       --ctrlfile | -f <TQ.ctrl> Control file for temperature quenching\n'\
@@ -32,36 +33,74 @@ usage = '\nUsage: python temperature_quenching.py\n' \
 
 ###### run Langevin Dynamics ######
 def run_TQ_LD(index, rand):
-    global nsteps_equil, temp_equil, temp_prod, tag_restart_equil, tag_restart_prod
-    global psf, psf_pmd, forcefield, templete_map, start_cor, properties, current_step
+    global nsteps_equil, nsteps_prod, temp_equil, temp_prod, tag_restart_equil, tag_restart_prod
+    global psf, forcefield, template_map, start_cor, use_gpu, current_step, ppn
     global nsteps_save, timestep, Q_threshold, fold_nframe, folding_array
-
+    
+    if use_gpu == 0:
+        properties = {'Threads': str(ppn)}
+        platform = Platform.getPlatformByName('CPU')
+    else:
+        dev_index = int(multiprocessing.current_process().name.split('-')[-1])-1
+        properties = {'CudaPrecision': 'mixed'}
+        properties["DeviceIndex"] = "%d"%(dev_index);
+        platform = Platform.getPlatformByName('CUDA')
+    
     fbsolu = 0.05/picosecond
     nonbond_cutoff = 2.0*nanometer
     switch_cutoff = 1.8*nanometer
     constraint_tolerance = 0.00001
     top = psf.topology
-    # re-name residues that are changed by openmm
-    for resid, res in enumerate(top.residues()):
-        if res.name != psf_pmd.residues[resid].name:
-            res.name = psf_pmd.residues[resid].name
-    platform = Platform.getPlatformByName('CPU')
-    system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
-        nonbondedCutoff=nonbond_cutoff, 
-        constraints=AllBonds, removeCMMotion=False, ignoreExternalBonds=True,
-        residueTemplates=templete_map)
-    
-    custom_nb_force = system.getForce(4)
+    try:
+        system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
+            nonbondedCutoff=nonbond_cutoff, constraints=AllBonds, removeCMMotion=False, 
+            ignoreExternalBonds=True, residueTemplates=template_map)
+    except Exception as e:
+        traceback.print_exc()
+    # must set to use switching function explicitly for CG Custom Nonbond Force #
+    for force in system.getForces():
+        if force.getName() == 'CustomNonbondedForce':
+            custom_nb_force = force
+            break
+    # custom_nb_force = system.getForce(4)
     custom_nb_force.setUseSwitchingFunction(True)
     custom_nb_force.setSwitchingDistance(switch_cutoff)
+    # End set to use switching function explicitly for CG Custom Nonbond Force #
     
     if tag_restart_prod[index-1] == 1:
         integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
         integrator.setConstraintTolerance(constraint_tolerance)
-        simulation = Simulation(top, system, integrator, platform, properties)
-        with open('traj/'+str(index)+'.chk', 'rb') as f: simulation.context.loadCheckpoint(f.read())
+        # Attempt of creating the simulation object (sometimes fail due to CUDA environment)
+        i_attempt = 0
+        while True:
+            try:
+                simulation = Simulation(top, system, integrator, platform, properties)
+            except Exception as e:
+                print('Error occurred at attempt %d...'%(i_attempt+1))
+                traceback.print_exc()
+                i_attempt += 1
+                continue
+            else:
+                break
+
+        try:
+            rst = pmd.load_file('traj/'+str(index)+'.ncrst')
+            simulation.context.setPositions(rst.coordinates[0]*angstrom)
+            simulation.context.setVelocities(rst.velocities[0]*angstrom/picosecond)
+        except Exception as e:
+            print(e)
+            print('Warning: Fail to load checkpoint, use the last frame and random velocity instead.')
+            try:
+                dcd_traj = mdt.load('traj/'+str(index)+'_prod.dcd', top=psffile)
+            except Exception as e:
+                dcd_traj = mdt.load('traj/'+str(index)+'_equil.dcd', top=psffile)
+            dcd_traj[-1].save('traj/'+str(index)+'_prod.pdb', force_overwrite=True)
+            current_cor = PDBFile('traj/'+str(index)+'_prod.pdb')
+            os.system('rm -f traj/'+str(index)+'_prod.pdb')
+            simulation.context.setPositions(current_cor.getPositions())
+            simulation.context.setVelocitiesToTemperature(temp_prod)
         simulation.reporters = []
-        simulation.reporters.append(CheckpointReporter('traj/'+str(index)+'.chk', nsteps_save))
+        simulation.reporters.append(pmd.openmm.reporters.RestartReporter('traj/'+str(index)+'.ncrst', nsteps_save, netcdf=True))
         if current_step[index-1] == 0:
             simulation.reporters.append(DCDReporter('traj/'+str(index)+'_prod.dcd', nsteps_save, append=False))
         else:
@@ -70,35 +109,87 @@ def run_TQ_LD(index, rand):
         integrator = LangevinIntegrator(temp_equil, fbsolu, timestep)
         integrator.setConstraintTolerance(constraint_tolerance)
         if tag_restart_equil[index-1] == 1:
-            simulation = Simulation(top, system, integrator, platform, properties)
-            with open('traj/'+str(index)+'.chk', 'rb') as f: simulation.context.loadCheckpoint(f.read())
+            # Attempt of creating the simulation object (sometimes fail due to CUDA environment)
+            i_attempt = 0
+            while True:
+                try:
+                    simulation = Simulation(top, system, integrator, platform, properties)
+                except Exception as e:
+                    print('Error occurred at attempt %d...'%(i_attempt+1))
+                    traceback.print_exc()
+                    i_attempt += 1
+                    continue
+                else:
+                    break
+            
+            try:
+                rst = pmd.load_file('traj/'+str(index)+'.ncrst')
+                simulation.context.setPositions(rst.coordinates[0]*angstrom)
+                simulation.context.setVelocities(rst.velocities[0]*angstrom/picosecond)
+            except Exception as e:
+                print(e)
+                print('Warning: Fail to load checkpoint, use the last frame and random velocity instead.')
+                dcd_traj = mdt.load('traj/'+str(index)+'_equil.dcd', top=psffile)
+                dcd_traj[-1].save('traj/'+str(index)+'_equil.pdb', force_overwrite=True)
+                current_cor = PDBFile('traj/'+str(index)+'_equil.pdb')
+                os.system('rm -f traj/'+str(index)+'_equil.pdb')
+                simulation.context.setPositions(current_cor.getPositions())
+                simulation.context.setVelocitiesToTemperature(temp_equil)
         else:
             integrator.setRandomNumberSeed(rand)
-            simulation = Simulation(top, system, integrator, platform, properties)
+            # Attempt of creating the simulation object (sometimes fail due to CUDA environment)
+            i_attempt = 0
+            while True:
+                try:
+                    simulation = Simulation(top, system, integrator, platform, properties)
+                except Exception as e:
+                    print('Error occurred at attempt %d...'%(i_attempt+1))
+                    traceback.print_exc()
+                    i_attempt += 1
+                    continue
+                else:
+                    break
             simulation.context.setPositions(start_cor.positions)
             simulation.context.setVelocitiesToTemperature(temp_prod) 
         simulation.reporters = []
         simulation.reporters.append(StateDataReporter('output/'+str(index)+'_equil.out', nsteps_save, step=True,
             potentialEnergy=True, temperature=True, progress=True, remainingTime=True,
             speed=True, totalSteps=nsteps_equil-current_step[index-1], separator='\t'))
-        simulation.reporters.append(CheckpointReporter('traj/'+str(index)+'.chk', nsteps_save))
-        simulation.reporters.append(PDBReporter('traj/'+str(index)+'_equil.pdb', nsteps_equil-current_step[index-1]))
+        simulation.reporters.append(pmd.openmm.reporters.RestartReporter('traj/'+str(index)+'.ncrst', nsteps_save, netcdf=True))
+        if tag_restart_equil[index-1] == 1:
+            simulation.reporters.append(DCDReporter('traj/'+str(index)+'_equil.dcd', nsteps_save, append=True))
+        else:
+            simulation.reporters.append(DCDReporter('traj/'+str(index)+'_equil.dcd', nsteps_save, append=False))
         simulation.step(nsteps_equil - current_step[index-1])
-        pdb = pmd.load_file('traj/'+str(index)+'_equil.pdb')
-        pdb.save('traj/'+str(index)+'_equil.cor', format='charmmcrd', overwrite=True)
-        os.remove('traj/'+str(index)+'_equil.pdb')
 
         integrator = LangevinIntegrator(temp_prod, fbsolu, timestep)
         integrator.setConstraintTolerance(constraint_tolerance)
-        simulation = Simulation(top, system, integrator, platform, properties)
-        with open('traj/'+str(index)+'.chk', 'rb') as f: simulation.context.loadCheckpoint(f.read())
+        # Attempt of creating the simulation object (sometimes fail due to CUDA environment)
+        i_attempt = 0
+        while True:
+            try:
+                simulation = Simulation(top, system, integrator, platform, properties)
+            except Exception as e:
+                print('Error occurred at attempt %d...'%(i_attempt+1))
+                traceback.print_exc()
+                i_attempt += 1
+                continue
+            else:
+                break
+        rst = pmd.load_file('traj/'+str(index)+'.ncrst')
+        simulation.context.setPositions(rst.coordinates[0]*angstrom)
+        simulation.context.setVelocities(rst.velocities[0]*angstrom/picosecond)
         simulation.reporters = []
-        simulation.reporters.append(CheckpointReporter('traj/'+str(index)+'.chk', nsteps_save))
+        simulation.reporters.append(pmd.openmm.reporters.RestartReporter('traj/'+str(index)+'.ncrst', nsteps_save, netcdf=True))
         simulation.reporters.append(DCDReporter('traj/'+str(index)+'_prod.dcd', nsteps_save, append=False))
     
     folding_tag = folding_array[index-1]
     nframe = 0
-    while folding_tag == 0:
+    if tag_restart_prod[index-1] == 0:
+        step_id = nsteps_save * nframe
+    else:
+        step_id = current_step[index-1] + nsteps_save * nframe
+    while folding_tag == 0 and step_id < nsteps_prod:
         simulation.step(nsteps_save)
         nframe += 1
         if tag_restart_prod[index-1] == 0:
@@ -189,15 +280,17 @@ for opt, arg in opts:
     elif opt in ("-f", "--ctrlfile"):
         ctrlfile = arg
 
+use_gpu = 0 # 1: Use GPU; 0: Use CPU
 tpn = 20 # total number of processors
 ppn = 1 # number of processors for each trajectory
 num_traj = 500 # total number of trajectories
-nsteps_equil = 4000000 # number of steps in equilibrium simulation for each exchange, 60 ns
+nsteps_equil = 4000000 # number of steps in equilibrium simulation for thermal unfolding, 60 ns
+nsteps_prod = 6667000 # number of steps in production simulation for refolding, 100.005 ns
 temp_equil = 1000.0 * kelvin # temperature of equilibrium simulation
 temp_prod = 310.0 * kelvin # temperature of equilibrium simulation
 restart = 0 # flag of whether run restart
 log_file = 'info.log' # log file name
-psf = '' # Charmm psf file for CG model
+psffile = '' # Charmm psf file for CG model
 top = '' # Charmm top file for CG model
 param = '' # Charmm prm file for CG model
 starting_strucs = '' # starting structures (Charmm cor file)
@@ -205,10 +298,9 @@ nsteps_save = 1000 # save chk, out and dcd each nsteps_save steps
 Q_threshold = 0 # threshold for determine folding status
 secondary_structure_def = '' # secondary structure defination file
 timestep = 0.015*picoseconds # time step for simulation
-fold_time = 150*picoseconds # time to determine folding status
+fold_time = 750*picoseconds # time to determine folding status
 dist_cutoff = 8 # distance cutoff for finding native contact
 sdist = 1.2 # multiple factor of native distance to determine native contact in trajectory
-fold_nframe = int(fold_time/nsteps_save/timestep) # number of frames to determine folding status
 sleep_time = 5 # how ofen (seconds) the main process check and write the log file
 
 if not os.path.exists(ctrlfile):
@@ -225,6 +317,10 @@ try:
         if line.startswith('#'):
             # This is a comment line
             continue
+        if line.startswith('use_gpu'):
+            words = line.split('=')
+            use_gpu = int(words[1].strip())
+            continue
         if line.startswith('tpn'):
             words = line.split('=')
             tpn = int(words[1].strip())
@@ -240,6 +336,10 @@ try:
         if line.startswith('nsteps_equil'):
             words = line.split('=')
             nsteps_equil = int(words[1].strip())
+            continue
+        if line.startswith('nsteps_prod'):
+            words = line.split('=')
+            nsteps_prod = int(words[1].strip())
             continue
         if line.startswith('temp_equil'):
             words = line.split('=')
@@ -259,7 +359,7 @@ try:
             continue
         if line.startswith('psf'):
             words = line.split('=')
-            psf = words[1].strip()
+            psffile = words[1].strip()
             continue
         if line.startswith('top'):
             words = line.split('=')
@@ -272,6 +372,10 @@ try:
         if line.startswith('starting_strucs'):
             words = line.split('=')
             starting_strucs = words[1].strip()
+            continue
+        if line.startswith('nsteps_save'):
+            words = line.split('=')
+            nsteps_save = int(words[1].strip())
             continue
         if line.startswith('Q_threshold'):
             words = line.split('=')
@@ -297,7 +401,7 @@ if tpn%ppn != 0:
 if num_traj == 0:
     print('Error: no trajectory number specified.')
     sys.exit()
-if psf == '':
+if psffile == '':
     print('Error: no Charmm psf file specified.')
     sys.exit()
 if top == '':
@@ -318,6 +422,9 @@ if Q_threshold == 0:
 if secondary_structure_def == '':
     print('Error: no secondary_structure_def specified.')
     sys.exit()
+
+fold_nframe = int(fold_time/nsteps_save/timestep) # number of frames to determine folding status
+
 current_step = [0 for i in range(num_traj)]
 tag_restart_equil = [0 for i in range(num_traj)]
 tag_restart_prod = [0 for i in range(num_traj)]
@@ -352,17 +459,24 @@ log_head = ''
 log_head += 'Temperature Quenching for CG Model using OpenMM\nAuthor: Yang Jiang; Ed O\'Brien.\n'
 log_head += 'Start at '+time.asctime(time.localtime(time.time()))+'\n'
 log_head += 'Total number of processors: '+str(tpn)+'\n'
+if use_gpu == 1:
+    log_head += 'Simulations will be run on GPUs\n'
+    ppn = 1
+else:
+    log_head += 'Simulations will be run on CPUs\n'
 log_head += 'Number of processors for each trajectory: '+str(ppn)+'\n'
 log_head += 'Number of trajectories: '+str(num_traj)+'\n'
 log_head += 'Number of steps in equilibrium for each trajectory: '+str(nsteps_equil)+'\n'
+log_head += 'Maximum number of steps in production for each trajectory: '+str(nsteps_prod)+'\n'
 log_head += 'Temperature of equilibrium simulation: '+str(temp_equil)+'\n'
 log_head += 'Temperature of production simulation: '+str(temp_prod)+'\n'
 log_head += 'Log file name: '+str(log_file)+'\n'
-log_head += 'Charmm psf file: '+str(psf)+'\n'
+log_head += 'Charmm psf file: '+str(psffile)+'\n'
 log_head += 'Charmm top file: '+str(top)+'\n'
 log_head += 'Charmm prm file: '+str(param)+'\n'
 log_head += 'Secondary structure defination file: '+str(secondary_structure_def)+'\n'
 log_head += 'Q threshold: '+str(Q_threshold)+'\n'
+log_head += 'Simulations will stop when reaching Q threshold or the maximum step (the one comes first).\n'
 if restart == 0:
     log_head += 'No restart requested\n'
 else:
@@ -386,20 +500,37 @@ elif restart == 0:
 
 ###### Temperature Quenching ######
 nprocess = int(tpn/ppn)
-psf_pmd = pmd.charmm.psf.CharmmPsfFile(psf)
-psf = CharmmPsfFile(psf)
+psf = CharmmPsfFile(psffile)
 forcefield = ForceField(xml_param)
 top = psf.topology
 start_cor = CharmmCrdFile(starting_strucs)
+psf_pmd = pmd.charmm.CharmmPsfFile(psffile)
 # re-name residues that are changed by openmm
 for resid, res in enumerate(top.residues()):
     if res.name != psf_pmd.residues[resid].name:
         res.name = psf_pmd.residues[resid].name
-templete_map = {}
+template_map = {}
 for chain in top.chains():
     for res in chain.residues():
-        templete_map[res] = res.name
-properties = {'Threads': str(ppn)}
+        template_map[res] = res.name
+
+# assign GPU device index
+dev_index_list = []
+if use_gpu != 0:
+    if os.getenv('CUDA_VISIBLE_DEVICES') != None:
+        dev_index_list = os.getenv('CUDA_VISIBLE_DEVICES').strip().split(',')
+        dev_index_list = [int(d) for d in dev_index_list]
+    elif os.getenv('PBS_GPUFILE') != None or os.getenv('PBS_GPUFILE') != '':
+        gpu_file = open(os.getenv('PBS_GPUFILE'))
+        dev_index_list = gpu_file.readlines()
+        gpu_file.close()
+        dev_index_list = [i for i in range(len(dev_index_list))]
+    else:
+        print('Error: No CUDA environment detected!')
+        sys.exit()
+    if len(dev_index_list) != int(tpn/ppn):
+        print('Error: # of available GPU devices (%d) does not equal to tpn/ppn (%d)'%(len(dev_index_list), int(tpn/ppn)))
+        sys.exit()
 
 ### contact map and distance map for start structure ###
 native_cor = start_cor.positions.value_in_unit(angstrom)

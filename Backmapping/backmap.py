@@ -144,10 +144,14 @@ def cacb_energy_minimization(cor, prefix, prm_file):
             template_map[res] = res.name
                 
     
-    system = forcefield.createSystem(top, nonbondedCutoff=2.0*nanometer, 
-                                     constraints=None, removeCMMotion=False, ignoreExternalBonds=True,
+    system = forcefield.createSystem(top, nonbondedCutoff=2.0*nanometer, constraints=None, 
+                                     removeCMMotion=False, ignoreExternalBonds=True,
                                      residueTemplates=template_map)
-    custom_nb_force = system.getForce(4)
+    for force in system.getForces():
+        if force.getName() == 'CustomNonbondedForce':
+            custom_nb_force = force
+            break
+    # custom_nb_force = system.getForce(4)
     custom_nb_force.setUseSwitchingFunction(True)
     custom_nb_force.setSwitchingDistance(1.8*nanometer)
     custom_nb_force.setNonbondedMethod(custom_nb_force.CutoffNonPeriodic)
@@ -185,30 +189,6 @@ def cacb_energy_minimization(cor, prefix, prm_file):
     print('   Potential energy after minimization: %.4f kcal/mol'%energy)
     current_cor = simulation.context.getState(getPositions=True).getPositions()
     return current_cor
-
-# remove bond constraints of 0 mass atoms
-def rm_cons_0_mass(system):
-    tag = 0
-    while tag == 0 and system.getNumConstraints() != 0:
-        for i in range(system.getNumConstraints()):
-            con_i = system.getConstraintParameters(i)[0]
-            con_j = system.getConstraintParameters(i)[1]
-            mass_i = system.getParticleMass(con_i).value_in_unit(dalton)
-            mass_j = system.getParticleMass(con_j).value_in_unit(dalton)
-            if mass_i == 0 and mass_j == 0:
-                system.removeConstraint(i)
-                #print('Constraint %d is removed, range is %d'%(i, system.getNumConstraints()))
-                tag = 0
-                break
-            elif mass_i == 0 or mass_j == 0:
-                system.removeConstraint(i)
-                #print('Constraint %d is removed, range is %d'%(i, system.getNumConstraints()))
-                system.getForce(0).addBond(con_i, con_j, 3.81*angstroms, 50*kilocalories/mole/angstroms**2)
-                tag = 0
-                break
-            else:
-                tag = 1
-# END remove bond constraints of 0 mass atoms
 
 # energy decomposition 
 def forcegroupify(system):

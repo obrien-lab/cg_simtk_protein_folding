@@ -58,11 +58,15 @@ def run_REX_LD(psf_file, psf, forcefield, templete_map, cor, temp, strtemp, outn
             res.name = psf_pmd.residues[resid].name
     platform = Platform.getPlatformByName('CPU')
     system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
-        nonbondedCutoff=nonbond_cutoff, 
-        constraints=AllBonds, removeCMMotion=True, ignoreExternalBonds=True,
-        residueTemplates=templete_map)
+                                     nonbondedCutoff=nonbond_cutoff, constraints=AllBonds, 
+                                     removeCMMotion=True, ignoreExternalBonds=True,
+                                     residueTemplates=templete_map)
     # must set to use switching function explicitly for CG Custom Nonbond Force #
-    custom_nb_force = system.getForce(4)
+    for force in system.getForces():
+        if force.getName() == 'CustomNonbondedForce':
+            custom_nb_force = force
+            break
+    # custom_nb_force = system.getForce(4)
     custom_nb_force.setUseSwitchingFunction(True)
     custom_nb_force.setSwitchingDistance(switch_cutoff)
     # End set to use switching function explicitly for CG Custom Nonbond Force #
