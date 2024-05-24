@@ -13,6 +13,12 @@ import parmed as pmd
 import numpy as np
 import mdtraj as mdt
 
+usage = '''python post_trans_single_run_v2.py <psf file> <ncrst file> <prm file> <temperature> 
+                                          <# CPUs> <outname> <random seed> <simulation step> 
+                                          <2nd structure> <Q_threshold> <native cor> <gpu> 
+                                          <restraint radius>
+'''
+
 ###### convert time seconds to hours ######
 def convert_time(seconds):
     return seconds/3600
@@ -56,23 +62,67 @@ def calc_Q_mod(Q_ts):
     return Q_mod
 ###### END Q mod filter ######
 
+# remove bond constraints of LIG atoms
+def rm_cons_LIG(system, psf_pmd, forcefield, templete_map):
+    system_new = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
+                 nonbondedCutoff=2.0*nanometer, 
+                 constraints=None, removeCMMotion=False, ignoreExternalBonds=True, 
+                 residueTemplates=templete_map)
+    for force in system_new.getForces():
+        if force.getName() == 'HarmonicBondForce':
+            bond_force = force
+            break
+    bond_parameter_list = [bond_force.getBondParameters(i) for i in range(bond_force.getNumBonds())]
+    for force in system.getForces():
+        if force.getName() == 'HarmonicBondForce':
+            hbf = force
+            break
+    tag = 0
+    while tag == 0 and system.getNumConstraints() != 0:
+        for i in range(system.getNumConstraints()):
+            con_i = system.getConstraintParameters(i)[0]
+            con_j = system.getConstraintParameters(i)[1]
+            segid_i = psf_pmd.atoms[con_i].residue.segid
+            segid_j = psf_pmd.atoms[con_j].residue.segid
+            if segid_i == 'LIG' and segid_j == 'LIG':
+                system.removeConstraint(i)
+                # print('Constraint %d is removed, range is %d'%(i, system.getNumConstraints()))
+                for bp in bond_parameter_list:
+                    if (con_i == bp[0] and con_j == bp[1]) or (con_i == bp[1] and con_j == bp[0]):
+                        hbf.addBond(*bp)
+                        break
+                tag = 0
+                break
+            else:
+                tag = 1
+# END remove bond constraints of LIG atoms
+
 ############## MAIN #################
+if len(sys.argv) == 12:
+    use_gpu = -1
+    restraint_radius = 200
+elif len(sys.argv) == 13:
+    use_gpu = int(sys.argv[12])
+    restraint_radius = 200
+elif len(sys.argv) == 14:
+    use_gpu = int(sys.argv[12])
+    restraint_radius = float(sys.argv[13])
+else:
+    print('Error: Wrong number of arguments.')
+    print(usage)
+    sys.exit()
 psffile = sys.argv[1]
-corfile = sys.argv[2]
+ncrstfile = sys.argv[2]
 prmfile = sys.argv[3]
 temp = float(sys.argv[4])
 ppn = sys.argv[5]
 outname = sys.argv[6]
 rand = int(sys.argv[7])
-vecfile = sys.argv[8]
-sim_step = int(sys.argv[9])
-secondary_structure_def = sys.argv[10]
-Q_threshold = float(sys.argv[11])
-native_cor = sys.argv[12]
-if len(sys.argv) == 14:
-    use_gpu = int(sys.argv[13])
-else:
-    use_gpu = -1
+sim_step = int(sys.argv[8])
+secondary_structure_def = sys.argv[9]
+Q_threshold = float(sys.argv[10])
+native_cor = sys.argv[11]
+    
 cpfile = outname+'.ncrst'
 
 timestep = 0.015*picoseconds
@@ -161,7 +211,7 @@ for i in range(len(native_cor)-4):
 
 psf = CharmmPsfFile(psffile)
 psf_pmd = pmd.load_file(psffile)
-cor = CharmmCrdFile(corfile)
+rst = pmd.load_file(ncrstfile)
 forcefield = ForceField(prmfile)
 top = psf.topology
 # re-name residues that are changed by openmm
@@ -173,8 +223,8 @@ for chain in top.chains():
     for res in chain.residues():
         templete_map[res] = res.name
 system = forcefield.createSystem(top, nonbondedMethod=CutoffNonPeriodic,
-        nonbondedCutoff=2.0*nanometer, 
-        constraints=AllBonds, removeCMMotion=False, ignoreExternalBonds=True, 
+        nonbondedCutoff=2.0*nanometer, constraints=AllBonds, 
+        removeCMMotion=False, ignoreExternalBonds=True, 
         residueTemplates=templete_map)
 for force in system.getForces():
     if force.getName() == 'CustomNonbondedForce':
@@ -182,6 +232,48 @@ for force in system.getForces():
         break
 custom_nb_force.setUseSwitchingFunction(True)
 custom_nb_force.setSwitchingDistance(1.8*nanometer)
+
+# for inter-molecular nonbonding interactions
+molecule_dict = {}
+for residue in psf_pmd.residues:
+    if residue.segid == 'LIG':
+        molecule_dict["%s_%d"%(residue.segid, residue.idx)] = [atom.idx for atom in residue.atoms]
+    elif not residue.segid in list(molecule_dict.keys()):
+        molecule_dict[residue.segid] = [atom.idx for atom in residue.atoms]
+    else:
+        molecule_dict[residue.segid] += [atom.idx for atom in residue.atoms]
+if len(list(molecule_dict.keys())) > 1: # multiple molecules
+    custom_nb_force_copy = custom_nb_force.__copy__()
+    custom_nb_force_copy.setEnergyFunction('ke*charge1*charge2/ep/r*exp(-r/ld)+kv*(a/13/r^12 - c/2/r^6); '+
+                                           'ke=ke1*ke2; ep=ep1*ep2; ld=ld1*ld2; kv=kv1*kv2; '+
+                                           'a=acoef(index1, index2); c=ccoef(index1, index2)')
+    custom_nb_force_copy.setNonbondedMethod(0) # No cutoff
+    custom_nb_force_copy.setUseSwitchingFunction(False) # No switch
+    # add inter-molecular interactions
+    mol_list = list(molecule_dict.keys())
+    for i in range(len(mol_list)-1):
+        for j in range(i+1, len(mol_list)):
+            custom_nb_force_copy.addInteractionGroup(molecule_dict[mol_list[i]], molecule_dict[mol_list[j]])
+    system.addForce(custom_nb_force_copy)
+    # add intra-molecular interactions
+    for mol, idx_list in molecule_dict.items():
+        for i in range(len(idx_list)-1):
+            custom_nb_force.addInteractionGroup([idx_list[i]], idx_list[i+1:])
+    # COM distance restraint
+    k = 0.1*kilocalories/mole/angstroms**2
+    R0 = restraint_radius * angstrom
+    force = CustomCentroidBondForce(2, "k*(max(d-R0, 0))^2; d=distance(g1,g2)")
+    force.addGlobalParameter('k', k)
+    force.addGlobalParameter('R0', R0)
+    for mol, idx_list in molecule_dict.items():
+        force.addGroup(idx_list)
+    for g2_idx in range(1, len(mol_list)):
+        force.addBond([0,g2_idx])
+    system.addForce(force)
+
+# Remove ligands bond constraints
+rm_cons_LIG(system, psf_pmd, forcefield, templete_map)
+
 integrator = LangevinIntegrator(temp, fbsolu, timestep)
 integrator.setConstraintTolerance(0.00001)
 integrator.setRandomNumberSeed(rand)
@@ -225,16 +317,13 @@ if if_restart != 0:
         simulation.context.setPositions(current_cor.getPositions())
         simulation.context.setVelocitiesToTemperature(temp)
 else:
-    vec = []
-    fo = open(vecfile, 'r')
-    for line in fo:
-        vec_list = line.strip().split()
-        vec_quantity = []
-        for v in vec_list:
-            vec_quantity.append(float(v)*angstroms/picoseconds)
-        vec.append(vec_quantity)
-    simulation.context.setPositions(cor.positions)
-    simulation.context.setVelocities(vec)
+    simulation.context.setPositions(rst.coordinates[0]*angstrom)
+    try:
+        simulation.context.setVelocities(rst.velocities[0]*angstrom/picosecond)
+    except Exception as e:
+        print(e)
+        print('Warning: Fail to find velocities in checkpoint, use the random velocities instead.')
+        simulation.context.setVelocitiesToTemperature(temp)
 
 # append reporters
 simulation.reporters = []

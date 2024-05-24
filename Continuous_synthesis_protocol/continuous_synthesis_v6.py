@@ -646,7 +646,10 @@ def create_elongation_system(forcefield, top, template_map, stage, nascent_chain
     except Exception as e:
         traceback.print_exc()
     # must set to use switching function explicitly for CG Custom Nonbond Force #
-    custom_nb_force = system.getForce(4)
+    for force in system.getForces():
+        if force.getName() == 'CustomNonbondedForce':
+            custom_nb_force = force
+            break
     custom_nb_force.setUseSwitchingFunction(True)
     custom_nb_force.setSwitchingDistance(switch_cutoff)
     # End set to use switching function explicitly for CG Custom Nonbond Force #
@@ -702,22 +705,30 @@ def create_elongation_system(forcefield, top, template_map, stage, nascent_chain
     di_N_R_P_PU2_P = -161*degree
     # END FF parameters for bond interaction between tRNA and nascent chain
 
+    for force in system.getForces():
+        if force.getName() == 'HarmonicBondForce':
+            hbf = force
+        elif force.getName() == 'CustomAngleForce':
+            caf = force
+        elif force.getName() == 'PeriodicTorsionForce':
+            ptf = force
+        elif force.getName() == 'CustomTorsionForce':
+            ctf = force
+
     if stage == 1:
         # delete bond, angle, dihedral energy term involving new AA within nascent chain
         if nascent_chain_length > 1:
             system.removeConstraint(nascent_chain_length-2)
-            #system.getForce(0).setBondParameters(nascent_chain_length-2, nascent_chain_length-2, nascent_chain_length-1, 
-            #    0.381, 0.0)
         if nascent_chain_length > 2:
-            system.getForce(1).setAngleParameters(nascent_chain_length-3, nascent_chain_length-3, nascent_chain_length-2, 
+            caf.setAngleParameters(nascent_chain_length-3, nascent_chain_length-3, nascent_chain_length-2, 
                 nascent_chain_length-1, [0.0, 0.0, 0.0, 0.0, 1e10, 0.0])
         if nascent_chain_length > 3:
             for i in range(4*(nascent_chain_length-4), 4*(nascent_chain_length-3)):
-                system.getForce(2).setTorsionParameters(i, nascent_chain_length-4, nascent_chain_length-3, 
+                ptf.setTorsionParameters(i, nascent_chain_length-4, nascent_chain_length-3, 
                     nascent_chain_length-2, nascent_chain_length-1, i%4+1, 0, 0)
 
         # add bonds between new AA and A-site resid 76 ribose R
-        system.getForce(0).addBond(nascent_chain_length-1, AtR_id76_R_index, d_R_N_A, bond_harmonic_force)
+        hbf.addBond(nascent_chain_length-1, AtR_id76_R_index, d_R_N_A, bond_harmonic_force)
         haf = HarmonicAngleForce()
         # add Ep angle for new AA -- AtR:76@R -- AtR:76@P
         haf.addAngle(nascent_chain_length-1, AtR_id76_R_index, AtR_id76_R_index-1, a_P_R_N_A, angle_harmonic_force)
@@ -725,50 +736,48 @@ def create_elongation_system(forcefield, top, template_map, stage, nascent_chain
         haf.addAngle(nascent_chain_length-1, AtR_id76_R_index, AtR_id76_R_index+2, a_PU2_R_N_A, angle_harmonic_force)
         system.addForce(haf)
         # add improper dihedral potential for new AA -- AtR:76@R -- AtR:76@P -- AtR:76@PU2
-        #system.getForce(3).addTorsion(AtR_id76_R_index-1, AtR_id76_R_index, AtR_id76_R_index+2, nascent_chain_length-1, 
-        system.getForce(3).addTorsion(nascent_chain_length-1, AtR_id76_R_index, AtR_id76_R_index-1, AtR_id76_R_index+2, 
+        ctf.addTorsion(nascent_chain_length-1, AtR_id76_R_index, AtR_id76_R_index-1, AtR_id76_R_index+2, 
             [improper_dihedral_force, di_N_R_P_PU2_A])
 
         # add bonds between previous AA and P-site resid 76 ribose R
         if nascent_chain_length > 1:
-            system.getForce(0).addBond(nascent_chain_length-2, PtR_id76_R_index, d_R_N_P, bond_harmonic_force)
+            hbf.addBond(nascent_chain_length-2, PtR_id76_R_index, d_R_N_P, bond_harmonic_force)
             haf = system.getForce(system.getNumForces() - 1)
             # add Ep angle for previous AA -- PtR:76@R -- PtR:76@P
             haf.addAngle(nascent_chain_length-2, PtR_id76_R_index, PtR_id76_R_index-1, a_P_R_N_P, angle_harmonic_force)
             # add Ep angle for previous AA -- PtR:76@R -- PtR:76@PU2
             haf.addAngle(nascent_chain_length-2, PtR_id76_R_index, PtR_id76_R_index+2, a_PU2_R_N_P, angle_harmonic_force)
             # add improper dihedral potential for previous AA -- PtR:76@R -- PtR:76@P -- PtR:76@PU2
-            #system.getForce(3).addTorsion(PtR_id76_R_index-1, PtR_id76_R_index, PtR_id76_R_index+2, nascent_chain_length-2, 
-            system.getForce(3).addTorsion(nascent_chain_length-2, PtR_id76_R_index, PtR_id76_R_index-1, PtR_id76_R_index+2, 
+            ctf.addTorsion(nascent_chain_length-2, PtR_id76_R_index, PtR_id76_R_index-1, PtR_id76_R_index+2, 
                 [improper_dihedral_force, di_N_R_P_PU2_P])
 
         # add Ep angle for previous previous AA -- previous AA -- PtR:76@R
         if nascent_chain_length > 2:
-            system.getForce(1).addAngle(nascent_chain_length-3, nascent_chain_length-2, PtR_id76_R_index, 
+            caf.addAngle(nascent_chain_length-3, nascent_chain_length-2, PtR_id76_R_index, 
                 [106.4*kilocalories/mole/radian**2, 91.7*degree, 26.3*kilocalories/mole/radian**2, 
                 130*degree, 0.1*mole/kilocalories, 4.3*kilocalories/mole])
 
         # add NB interactions between new AA and adjacent AA by setting exclusion to be invalid
         if nascent_chain_length == 2:
-            system.getForce(4).setExclusionParticles(0, 0, 0)
+            custom_nb_force.setExclusionParticles(0, 0, 0)
         elif nascent_chain_length > 2:
             n = int(2*(nascent_chain_length-2))
-            system.getForce(4).setExclusionParticles(n, nascent_chain_length-1, nascent_chain_length-1)
-            system.getForce(4).setExclusionParticles(n-1, nascent_chain_length-2, nascent_chain_length-2)
+            custom_nb_force.setExclusionParticles(n, nascent_chain_length-1, nascent_chain_length-1)
+            custom_nb_force.setExclusionParticles(n-1, nascent_chain_length-2, nascent_chain_length-2)
         # add exclusion for NB between new AA and A-site resid 76 ribose R
-        system.getForce(4).addExclusion(nascent_chain_length-1, AtR_id76_R_index)
+        custom_nb_force.addExclusion(nascent_chain_length-1, AtR_id76_R_index)
         # add exclusion for NB between previous AA and P-site resid 76 ribose R
         if nascent_chain_length > 1:
-            system.getForce(4).addExclusion(nascent_chain_length-2, PtR_id76_R_index)
+            custom_nb_force.addExclusion(nascent_chain_length-2, PtR_id76_R_index)
         # add exclusion for NB between previous previous AA and P-site resid 76 ribose R
         if nascent_chain_length > 2:
-            system.getForce(4).addExclusion(nascent_chain_length-3, PtR_id76_R_index)
+            custom_nb_force.addExclusion(nascent_chain_length-3, PtR_id76_R_index)
     elif stage == 2:
         # add bonds between new AA and A-site resid 76 ribose R
-        system.getForce(0).addBond(nascent_chain_length-1, AtR_id76_R_index, d_R_N_A, bond_harmonic_force)
+        hbf.addBond(nascent_chain_length-1, AtR_id76_R_index, d_R_N_A, bond_harmonic_force)
         if nascent_chain_length > 1:
             system.removeConstraint(nascent_chain_length-2)
-            system.getForce(0).addBond(nascent_chain_length-2, nascent_chain_length-1, 3.81*angstroms, 
+            hbf.addBond(nascent_chain_length-2, nascent_chain_length-1, 3.81*angstroms, 
                 bond_harmonic_force)
         haf = HarmonicAngleForce()
         # add Ep angle for new AA -- AtR:76@R -- AtR:76@P
@@ -777,22 +786,21 @@ def create_elongation_system(forcefield, top, template_map, stage, nascent_chain
         haf.addAngle(nascent_chain_length-1, AtR_id76_R_index, AtR_id76_R_index+2, a_PU2_R_N_A, angle_harmonic_force)
         system.addForce(haf)
         # add improper dihedral potential for new AA -- AtR:76@R -- AtR:76@P -- AtR:76@PU2
-        #system.getForce(3).addTorsion(AtR_id76_R_index-1, AtR_id76_R_index, AtR_id76_R_index+2, nascent_chain_length-1, 
-        system.getForce(3).addTorsion(nascent_chain_length-1, AtR_id76_R_index, AtR_id76_R_index-1, AtR_id76_R_index+2, 
+        ctf.addTorsion(nascent_chain_length-1, AtR_id76_R_index, AtR_id76_R_index-1, AtR_id76_R_index+2, 
             [improper_dihedral_force, di_N_R_P_PU2_A])
         # add Ep angle for previous AA -- new AA -- AtR:76@R
         if nascent_chain_length > 1:
-            system.getForce(1).addAngle(nascent_chain_length-2, nascent_chain_length-1, AtR_id76_R_index, 
+            caf.addAngle(nascent_chain_length-2, nascent_chain_length-1, AtR_id76_R_index, 
                 [106.4*kilocalories/mole/radian**2, 91.7*degree, 26.3*kilocalories/mole/radian**2, 
                 130*degree, 0.1*mole/kilocalories, 4.3*kilocalories/mole])
         # add exclusion for NB between new AA and A-site resid 76 ribose R
-        system.getForce(4).addExclusion(nascent_chain_length-1, AtR_id76_R_index)
+        custom_nb_force.addExclusion(nascent_chain_length-1, AtR_id76_R_index)
         # add exclusion for NB between previous AA and A-site resid 76 ribose R
         if nascent_chain_length > 1:
-            system.getForce(4).addExclusion(nascent_chain_length-2, AtR_id76_R_index)
+            custom_nb_force.addExclusion(nascent_chain_length-2, AtR_id76_R_index)
     elif stage == 3:
         # add bonds between new AA and P-site resid 76 ribose R
-        system.getForce(0).addBond(nascent_chain_length-1, PtR_id76_R_index, d_R_N_P, bond_harmonic_force)
+        hbf.addBond(nascent_chain_length-1, PtR_id76_R_index, d_R_N_P, bond_harmonic_force)
 
         haf = HarmonicAngleForce()
         # add Ep angle for new AA -- PtR:76@R -- PtR:76@P
@@ -802,20 +810,19 @@ def create_elongation_system(forcefield, top, template_map, stage, nascent_chain
         system.addForce(haf)
 
         # add improper dihedral potential for new AA -- PtR:76@R -- PtR:76@P -- PtR:76@PU2
-        #system.getForce(3).addTorsion(PtR_id76_R_index-1, PtR_id76_R_index, PtR_id76_R_index+2, nascent_chain_length-1, 
-        system.getForce(3).addTorsion(nascent_chain_length-1, PtR_id76_R_index, PtR_id76_R_index-1, PtR_id76_R_index+2, 
+        ctf.addTorsion(nascent_chain_length-1, PtR_id76_R_index, PtR_id76_R_index-1, PtR_id76_R_index+2, 
             [improper_dihedral_force, di_N_R_P_PU2_P])
 
         # add Ep angle for previous AA -- new AA -- PtR:76@R
         if nascent_chain_length > 1:
-            system.getForce(1).addAngle(nascent_chain_length-2, nascent_chain_length-1, PtR_id76_R_index, 
+            caf.addAngle(nascent_chain_length-2, nascent_chain_length-1, PtR_id76_R_index, 
                 [106.4*kilocalories/mole/radian**2, 91.7*degree, 26.3*kilocalories/mole/radian**2, 
                 130*degree, 0.1*mole/kilocalories, 4.3*kilocalories/mole])
         # add exclusion for NB between new AA and P-site resid 76 ribose R
-        system.getForce(4).addExclusion(nascent_chain_length-1, PtR_id76_R_index)
+        custom_nb_force.addExclusion(nascent_chain_length-1, PtR_id76_R_index)
         # add exclusion for NB between previous AA and P-site resid 76 ribose R
         if nascent_chain_length > 1:
-            system.getForce(4).addExclusion(nascent_chain_length-2, PtR_id76_R_index)
+            custom_nb_force.addExclusion(nascent_chain_length-2, PtR_id76_R_index)
     elif stage == 5:
         xref = (x_eject-2)*angstrom
         k = 20*kilocalories/mole/angstroms**2
@@ -864,6 +871,11 @@ def calc_min_distance(top, current_rnc_cor):
 
 # remove bond constraints of 0 mass atoms
 def rm_cons_0_mass(system):
+    for force in system.getForces():
+        if force.getName() == 'HarmonicBondForce':
+            hbf = force
+            break
+
     tag = 0
     while tag == 0 and system.getNumConstraints() != 0:
         for i in range(system.getNumConstraints()):
@@ -879,7 +891,7 @@ def rm_cons_0_mass(system):
             elif mass_i == 0 or mass_j == 0:
                 system.removeConstraint(i)
                 #print('Constraint %d is removed, range is %d'%(i, system.getNumConstraints()))
-                system.getForce(0).addBond(con_i, con_j, 3.81*angstroms, 50*kilocalories/mole/angstroms**2)
+                hbf.addBond(con_i, con_j, 3.81*angstroms, 50*kilocalories/mole/angstroms**2)
                 tag = 0
                 break
             else:

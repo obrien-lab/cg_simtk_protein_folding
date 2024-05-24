@@ -80,7 +80,7 @@ The scripts in this toolkit have been applied in the studies reported in the fol
 
 | Scripts | Instructions |
 | ------ | ------ |
-| CG_protein_parameterization/**temperature_quenching.py** | Run temperature quenching simulation from the CG native structure of a given protein. This simulation is parallelized using multiple CPU processors. ([Learn more](../../wiki/temperature_quenching.py)) |
+| CG_protein_parameterization/**temperature_quenching.py** | Run temperature quenching simulation from the CG native structure of a given protein. This simulation is parallelized using CPUs or GPUs. ([Learn more](../../wiki/temperature_quenching.py)) |
 | CG_protein_parameterization/**T_quench.pl** | An automated script to build CG model from a pdb file and then run temperature quenching simulations. ([Learn more](../../wiki/T_quench.pl)) | 
 | CG_protein_parameterization/**analysis_Tq.pl** | Analyze the results of temperature quenching simulations, fit a single- or double- exponential function to the survival probability of the unfolded protein and then estimate the folding rate.  ([Learn more](../../wiki/analysis_Tq.pl)) | 
 
@@ -108,6 +108,7 @@ The scripts in this toolkit have been applied in the studies reported in the fol
 | Scripts | Instructions |
 | ------ | ------ |
 | Continuous_synthesis_protocol/**continuous_synthesis_v6.py** | Run continuous synthesis of a CG protein on a CG ribosome. Both parallelizations on CPU and GPU are supported. ([Learn more](../../wiki/continuous_synthesis_v6.py)) <br>Scripts needed: `Continuous_synthesis_protocol/ribosome_traffic` and `CG_protein_parameterization/parse_cg_prm.py`. |
+| Continuous_synthesis_protocol/**continuous_synthesis_v7.py** | An updated version of `continuous_synthesis_v6.py`. Interactions between nascent chain and small molecule is enabled. ([Learn more](../../wiki/continuous_synthesis_v7.py)) |
 | Continuous_synthesis_protocol/**ribosome_traffic** | Estimate the real codon translation time by taking into account of the ribosome traffic effects. ([Learn more](../../wiki/ribosome_traffic)) | 
 | Continuous_synthesis_protocol/**visualize_cont_synth.py** | Generate movies of the continuous synthesis process. ([Learn more](../../wiki/visualize_cont_synth.py)) <br>Scripts needed: `Backmapping/backmap.py`, `Continuous_synthesis_protocol/render_ecoli_RNC.tcl` and `Continuous_synthesis_protocol/render_yeast_RNC.tcl` | 
 | Continuous_synthesis_protocol/**render_ecoli_RNC.tcl** | Render the picture of *E. coli* ribosome-nascent-chain (RNC) complex in VMD.  | 
@@ -126,7 +127,8 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 
 | Scripts | Instructions |
 | ------ | ------ |
-| Post_translational_folding/**post_trans_single_run.py** | Run a single trajectory of post-translational folding. User can specify a walltime or a threshold to control the termination of the post-translational folding. ([Learn more](../../wiki/post_trans_single_run.py)) |
+| Post_translational_folding/**post_trans_single_run.py** | Run a single trajectory of post-translational folding. User can specify a walltime or a threshold to control the termination of the post-translational folding. Compatible with the old CSP code `continuous_synthesis_v6.py`. ([Learn more](../../wiki/post_trans_single_run.py)) |
+| Post_translational_folding/**post_trans_single_run_v2.py** | Updated version of `post_trans_single_run.py`. Compatible with the updated CSP code `continuous_synthesis_v7.py`. Interactions between nascent chain and small molecule is enabled. ([Learn more](../../wiki/post_trans_single_run_v2.py)) |
 | Post_translational_folding/**PTP_setup.pl** | Automated script to setup post-translation simulations after [CSP](#4-simulation-of-co-translational-folding). ([Learn more](../../wiki/PTP_setup.pl)) <br>Scripts needed: `Post-translational_folding/post_trans_single_run.py` |
 
 - To setup and run post-translation simulations on PSU ACI cluster, use `PTP_setup.pl`. [:leftwards_arrow_with_hook:](#table-of-contents)
