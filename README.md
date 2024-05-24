@@ -71,6 +71,7 @@ The scripts in this toolkit have been applied in the studies reported in the fol
 | ------ | ------ |
 | CG_protein_parameterization/**opt_nscal.pl** | An automated script to find the optimized *n*<sub>scal</sub> for each domain/interface according to 5 levels of *n*<sub>scal</sub> values trained by running the protocol in [Section 1.1](#11-tune-nscal-for-a-small-single-domain-protein-that-has-experimental-folding-stability-reported) for 18 small single-domain proteins. The MD simulator is OpenMM, which is different from that in script `opt_nscal_charmm.pl.pl`. ([Learn more](../../wiki/opt_nscal.pl)) |
 | CG_protein_parameterization/**opt_nscal_charmm.pl.pl** | This script has the same function with `opt_nscal.pl` but the levels of *n*<sub>scal</sub> values used in this script was trained by using Charmm for the same protein set. | 
+| CG_protein_parameterization/**opt_nscal.py** | An updated version of `opt_nscal.pl`, which is implemented with Python and can be run on both CPU and GPU platforms. ([Learn more](../../wiki/opt_nscal.py)) |
 
 - On PSU ACI cluster, to tune *n*<sub>scal</sub> that is compatible with OpenMM, run `opt_nscal.pl`; To tune *n*<sub>scal</sub> that is compatible with Charmm, run `opt_nscal_charmm.pl`. [:leftwards_arrow_with_hook:](#table-of-contents)
 
@@ -128,7 +129,7 @@ The large subunit of ribosome is shown in silver; The tail of tRNA  is shown in 
 | Scripts | Instructions |
 | ------ | ------ |
 | Post_translational_folding/**post_trans_single_run.py** | Run a single trajectory of post-translational folding. User can specify a walltime or a threshold to control the termination of the post-translational folding. Compatible with the old CSP code `continuous_synthesis_v6.py`. ([Learn more](../../wiki/post_trans_single_run.py)) |
-| Post_translational_folding/**post_trans_single_run_v2.py** | Updated version of `post_trans_single_run.py`. Compatible with the updated CSP code `continuous_synthesis_v7.py`. Interactions between nascent chain and small molecule is enabled. ([Learn more](../../wiki/post_trans_single_run_v2.py)) |
+| Post_translational_folding/**post_trans_single_run_v2.py** | Updated version of `post_trans_single_run.py`. Compatible with the updated CSP code `continuous_synthesis_v7.py`. Interactions between nascent chain and other molecules (e.g. small ligand or other protein chain) is enabled. ([Learn more](../../wiki/post_trans_single_run_v2.py)) |
 | Post_translational_folding/**PTP_setup.pl** | Automated script to setup post-translation simulations after [CSP](#4-simulation-of-co-translational-folding). ([Learn more](../../wiki/PTP_setup.pl)) <br>Scripts needed: `Post-translational_folding/post_trans_single_run.py` |
 
 - To setup and run post-translation simulations on PSU ACI cluster, use `PTP_setup.pl`. [:leftwards_arrow_with_hook:](#table-of-contents)
