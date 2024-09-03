@@ -139,6 +139,8 @@ def identify_entanglement_by_topoly(coor, native_contact_list, GLN_list, ref_ent
                     # Remove trivial crossings
                     if len(fingerprint['crossing_resid'][idx_ter]) > 0 and abs(int(c[1:])-fingerprint['crossing_resid'][idx_ter][-1]) <= adjacent_residue_cutoff:
                         # If same residue (or adjacent residue) pierces multiple surfaces
+                        # !!! Be careful about "adjacent_residue_cutoff = 2", 2 used here may lose some true multiple-surface crossings in the result. !!!
+                        # !!! One need to reduce it to 1 or even 0 when this situation happens. !!!
                         if fingerprint['crossing_pattern'][idx_ter][-1] == c[0]:
                             # Same piercing direction, skip this crossing
                             continue
