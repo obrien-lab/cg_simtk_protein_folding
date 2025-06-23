@@ -970,7 +970,7 @@ native_contact_map = np.zeros((len(cg_structure.residues), len(cg_structure.resi
 for i in range(len(cg_structure.residues)):
     for j in range(len(cg_structure.residues)):
         if native_ss_map[i,j] == 1 or native_bsc_map[i,j] == 1 or native_hb_map[i,j] == 1:
-            native_contact_map[i,j] == 1
+            native_contact_map[i,j] = 1
 
 ## Write prm file ##
 print('\nCreate prm\n')
