@@ -971,6 +971,7 @@ for i in range(len(cg_structure.residues)):
     for j in range(len(cg_structure.residues)):
         if native_ss_map[i,j] == 1 or native_bsc_map[i,j] == 1 or native_hb_map[i,j] == 1:
             native_contact_map[i,j] = 1
+            native_contact_map[j,i] = 1 # Force the native contact map symetric
 
 ## Write prm file ##
 print('\nCreate prm\n')
