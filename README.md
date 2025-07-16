@@ -23,6 +23,7 @@ The scripts in this toolkit have been applied in the studies reported in the fol
 2. Jiang, Y., Neti, S.S., Sitarik, I. et al. How synonymous mutations alter enzyme structure and function over long timescales. Nature Chemistry 15, 308–318 (2023). https://doi.org/10.1038/s41557-022-01091-z
 3. Quyen V. Vu, Daniel A. Nissley, Jiang, Y. et al. Is Posttranslational Folding More Efficient Than Refolding from a Denatured State: A Computational Study. The Journal of Physical Chemistry B 127, 4761-4774 (2023). https://doi.org/10.1021/acs.jpcb.3c01694
 4. Jiang, Y., Deane, C.M., Morris, G.M., O’Brien, E.P. It is theoretically possible to avoid misfolding into non-covalent lasso entanglements using small molecule drugs. PLoS Computational Biology 20, e1011901 (2024). https://doi.org/10.1371/journal.pcbi.1011901
+5. Jiang, Y., Xia, Y., Sitarik, I., Sharma, P., Song, H., Fried, S. D., & O’Brien, E. P. Protein misfolding involving entanglements provides a structural explanation for the origin of stretched-exponential refolding kinetics. Science Advances, 11(11), eads7379. (2025). https://doi.org/10.1126/sciadv.ads7379
 
 **If you use these scripts in your study, please cite our work:**
 
