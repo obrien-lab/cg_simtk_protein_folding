@@ -12,6 +12,9 @@ import getopt, os, time, multiprocessing, random, math, traceback
 import parmed as pmd
 import mdtraj as mdt
 
+# Set this to prevent Parmed error
+sys.setrecursionlimit(int(1e6))
+
 usage = '\nUsage: python temperature_quenching.py\n' \
         '       --ctrlfile | -f <TQ.ctrl> Control file for temperature quenching\n'\
         '       [--help | -h] Print this information\n\n'\
@@ -41,7 +44,9 @@ def run_TQ_LD(index, rand):
         properties = {'Threads': str(ppn)}
         platform = Platform.getPlatformByName('CPU')
     else:
-        dev_index = int(multiprocessing.current_process().name.split('-')[-1])-1
+        # dev_index = int(multiprocessing.current_process().name.split('-')[-1])-1
+        dev_index = multiprocessing.current_process().device_id
+        print(index, dev_index)
         properties = {'CudaPrecision': 'mixed'}
         properties["DeviceIndex"] = "%d"%(dev_index);
         platform = Platform.getPlatformByName('CUDA')
@@ -519,7 +524,7 @@ dev_index_list = []
 if use_gpu != 0:
     if os.getenv('CUDA_VISIBLE_DEVICES') != None:
         dev_index_list = os.getenv('CUDA_VISIBLE_DEVICES').strip().split(',')
-        dev_index_list = [int(d) for d in dev_index_list]
+        dev_index_list = [d.strip() for d in dev_index_list]
     elif os.getenv('PBS_GPUFILE') != None or os.getenv('PBS_GPUFILE') != '':
         gpu_file = open(os.getenv('PBS_GPUFILE'))
         dev_index_list = gpu_file.readlines()
@@ -588,7 +593,14 @@ for i in range(1, num_traj + 1):
 log_file_object.write(log_output)
 log_file_object.close()
 
-pool = multiprocessing.Pool(nprocess)
+def init_worker(device_queue):
+    device_id = device_queue.get()
+    multiprocessing.current_process().device_id = device_id
+device_queue = multiprocessing.Manager().Queue()
+for i in range(nprocess):
+    device_queue.put(i)
+pool = multiprocessing.Pool(processes=nprocess, initializer=init_worker, initargs=(device_queue,))
+
 for i in range(1, num_traj + 1):
     rand = random.randint(10,1000000000)
     pool.apply_async(run_TQ_LD, (i, rand))

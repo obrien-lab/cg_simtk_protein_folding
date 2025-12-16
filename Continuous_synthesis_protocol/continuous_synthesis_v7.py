@@ -63,7 +63,8 @@ def run_elongation(index, start_nascent_chain_length, total_nascent_chain_length
         platform = Platform.getPlatformByName('CPU')
     else:
         #dev_index = dev_index_list[int(multiprocessing.current_process().name.split('-')[-1])-1]
-        dev_index = int(multiprocessing.current_process().name.split('-')[-1])-1
+        #dev_index = int(multiprocessing.current_process().name.split('-')[-1])-1
+        dev_index = multiprocessing.current_process().device_id
         properties = {'CudaPrecision': 'mixed'}
         properties["DeviceIndex"] = "%d"%(dev_index);
         platform = Platform.getPlatformByName('CUDA')
@@ -262,7 +263,7 @@ def A_site_tRNA_binding(top, current_rnc_cor, nascent_chain_length, rnc_psf_pmd,
             AtR_id76_R_index = atom.index
     AtR_id76_R_coor = np.array(list(current_rnc_cor[AtR_id76_R_index-1].value_in_unit(angstroms)), 
         dtype=np.float64)
-    alpha = 10*degree
+    alpha = 15*degree # Adjust this if simulations keep crashing
     new_AA_coor = AtR_id76_R_coor + np.array([math.cos(alpha.value_in_unit(radian)), 
         math.sin(alpha.value_in_unit(radian)), 0], dtype=np.float64) * 4.27
     new_AA_coor = tuple(new_AA_coor)
@@ -1788,7 +1789,9 @@ dev_index_list = []
 if use_gpu != 0:
     if os.getenv('CUDA_VISIBLE_DEVICES') != None:
         dev_index_list = os.getenv('CUDA_VISIBLE_DEVICES').strip().split(',')
-        dev_index_list = [int(d) for d in dev_index_list]
+        print('CUDA_VISIBLE_DEVICES: ', dev_index_list)
+        # dev_index_list = [int(d) for d in dev_index_list]
+        dev_index_list = [d for d in range(len(dev_index_list))]
     elif os.getenv('PBS_GPUFILE') != None or os.getenv('PBS_GPUFILE') != '':
         gpu_file = open(os.getenv('PBS_GPUFILE'))
         dev_index_list = gpu_file.readlines()
@@ -1815,7 +1818,13 @@ log_file_object.write(log_output)
 log_file_object.close()
 
 print('Setup process pool containing %d processors'%nprocess)
-pool = multiprocessing.Pool(nprocess)
+def init_worker(device_queue):
+    device_id = device_queue.get()
+    multiprocessing.current_process().device_id = device_id
+device_queue = multiprocessing.Manager().Queue()
+for i in range(nprocess):
+    device_queue.put(i)
+pool = multiprocessing.Pool(processes=nprocess, initializer=init_worker, initargs=(device_queue,))
 for i in range(1, num_traj + 1):
     pool.apply_async(run_elongation, (start_traj_id+i-1, start_res[i-1], total_nascent_chain_length, previous_rnc_cor_list[i-1], ))
 
