@@ -290,7 +290,7 @@ for(my $i = 1; $i <= $nframe; $i++)
   if($i >= $start && $i <= $end)
   {
     my @traj_contact_number = calc_traj_contact_number(\@traj_cor, \@domain, \@sec_struc, \@native_contact_map, \@native_distance_map, \@sel_idx);
-    print "@traj_contact_number\n";
+    # print "@traj_contact_number\n";
     my $tot_tcn = 0;
     my $tot_ncn = 0;
     foreach my $j (@meaningful_domain_idx)
