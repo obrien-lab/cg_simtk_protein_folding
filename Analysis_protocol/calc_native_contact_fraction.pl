@@ -290,6 +290,7 @@ for(my $i = 1; $i <= $nframe; $i++)
   if($i >= $start && $i <= $end)
   {
     my @traj_contact_number = calc_traj_contact_number(\@traj_cor, \@domain, \@sec_struc, \@native_contact_map, \@native_distance_map, \@sel_idx);
+    print "@traj_contact_number\n";
     my $tot_tcn = 0;
     my $tot_ncn = 0;
     foreach my $j (@meaningful_domain_idx)
@@ -558,87 +559,45 @@ sub calc_contact_number
   {
     my $contact_num = 0;
     my @range = @{$dom->{"range"}};
+    my @range_1 = ();
+    my @range_2 = ();
     if($dom->{"class"} eq "i")
     {
-      my @range_1 = @{$domain[$range[0]-1]->{"range"}};
-      my @range_2 = @{$domain[$range[1]-1]->{"range"}};
-      foreach my $rd_1 (@range_1)
-      {
-        for(my $i = $rd_1->[0]; $i <= $rd_1->[1]; $i++)
-        {
-          my $tag_i = 0;
-          foreach my $rs (@sec_struc)
-          {
-            if($i >= $rs->[0] && $i <= $rs->[1])
-            {
-              $tag_i = 1;
-              last;
-            }
-          }
-
-          if($tag_i eq 0)
-          {
-            next;
-          }
-
-          foreach my $rd_2 (@range_2)
-          {
-            for(my $j = $rd_2->[0]; $j <= $rd_2->[1]; $j++)
-            {
-              my $tag_j = 0;
-              foreach my $rs (@sec_struc)
-              {
-                if($j >= $rs->[0] && $j <= $rs->[1])
-                {
-                  $tag_j = 1;
-                  last;
-                }
-              }
-
-              if($tag_j eq 0)
-              {
-                next;
-              }
-
-              if($map[$i-1]->[$j-1] == 1)
-              {
-                if($sel_idx[0] eq "all")
-                {
-                  $contact_num++;
-                }
-                elsif(($i ~~ @sel_idx) || ($j ~~ @sel_idx))
-                {
-                  $contact_num++;
-                }
-              }
-            }
-          }
-        }
-      }
+      @range_1 = @{$domain[$range[0]-1]->{"range"}};
+      @range_2 = @{$domain[$range[1]-1]->{"range"}};
     }
     else
     {
-      foreach my $rd (@range)
+      @range_1 = @range;
+      @range_2 = @range;
+    }
+    foreach my $rd_1 (@range_1)
+    {
+      for(my $i = $rd_1->[0]; $i <= $rd_1->[1]; $i++)
       {
-        for(my $i = $rd->[0]; $i <= $rd->[1]-1; $i++)
+        my $tag_i = 0;
+        foreach my $rs (@sec_struc)
         {
-          my $tag_i = 0;
-          foreach my $rs (@sec_struc)
+          if($i >= $rs->[0] && $i <= $rs->[1])
           {
-            if($i >= $rs->[0] && $i <= $rs->[1])
+            $tag_i = 1;
+            last;
+          }
+        }
+
+        if($tag_i eq 0)
+        {
+          next;
+        }
+
+        foreach my $rd_2 (@range_2)
+        {
+          for(my $j = $rd_2->[0]; $j <= $rd_2->[1]; $j++)
+          {
+            if(($dom->{"class"} ne "i") && ($i > $j))
             {
-              $tag_i = 1;
-              last;
+              next;
             }
-          }
-
-          if($tag_i eq 0)
-          {
-            next;
-          }
-
-          for(my $j = $i+1; $j <= $rd->[1]; $j++)
-          {
             my $tag_j = 0;
             foreach my $rs (@sec_struc)
             {
@@ -690,96 +649,45 @@ sub calc_traj_contact_number
   {
     my $contact_num = 0;
     my @range = @{$dom->{"range"}};
+    my @range_1 = ();
+    my @range_2 = ();
     if($dom->{"class"} eq "i")
     {
-      my @range_1 = @{$domain[$range[0]-1]->{"range"}};
-      my @range_2 = @{$domain[$range[1]-1]->{"range"}};
-      foreach my $rd_1 (@range_1)
-      {
-        for(my $i = $rd_1->[0]; $i <= $rd_1->[1]; $i++)
-        {
-          my $tag_i = 0;
-          foreach my $rs (@sec_struc)
-          {
-            if($i >= $rs->[0] && $i <= $rs->[1])
-            {
-              $tag_i = 1;
-              last;
-            }
-          }
-
-          if($tag_i eq 0)
-          {
-            next;
-          }
-
-          foreach my $rd_2 (@range_2)
-          {
-            for(my $j = $rd_2->[0]; $j <= $rd_2->[1]; $j++)
-            {
-              my $tag_j = 0;
-              foreach my $rs (@sec_struc)
-              {
-                if($j >= $rs->[0] && $j <= $rs->[1])
-                {
-                  $tag_j = 1;
-                  last;
-                }
-              }
-
-              if($tag_j eq 0)
-              {
-                next;
-              }
-
-              if($c_map[$i-1]->[$j-1] == 1)
-              {
-                my $distance = 0;
-                if($coor[$i-1] ne "" && $coor[$j-1] ne "")
-                {
-                  $distance = ($coor[$i-1]->[0] - $coor[$j-1]->[0]) ** 2 + ($coor[$i-1]->[1] - $coor[$j-1]->[1]) ** 2 + ($coor[$i-1]->[2] - $coor[$j-1]->[2]) ** 2;
-                  $distance = $distance ** 0.5;
-                }
-                if($distance <= $sdist * $d_map[$i-1]->[$j-1] && $distance > 0)
-                {
-                  if($sel_idx[0] eq "all")
-                  {
-                    $contact_num++;
-                  }
-                  elsif(($i ~~ @sel_idx) || ($j ~~ @sel_idx))
-                  {
-                    $contact_num++;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
+      @range_1 = @{$domain[$range[0]-1]->{"range"}};
+      @range_2 = @{$domain[$range[1]-1]->{"range"}};
     }
     else
     {
-      foreach my $rd (@range)
+      @range_1 = @range;
+      @range_2 = @range;
+    }
+    foreach my $rd_1 (@range_1)
+    {
+      for(my $i = $rd_1->[0]; $i <= $rd_1->[1]; $i++)
       {
-        for(my $i = $rd->[0]; $i <= $rd->[1]-1; $i++)
+        my $tag_i = 0;
+        foreach my $rs (@sec_struc)
         {
-          my $tag_i = 0;
-          foreach my $rs (@sec_struc)
+          if($i >= $rs->[0] && $i <= $rs->[1])
           {
-            if($i >= $rs->[0] && $i <= $rs->[1])
+            $tag_i = 1;
+            last;
+          }
+        }
+
+        if($tag_i eq 0)
+        {
+          next;
+        }
+
+        foreach my $rd_2 (@range_2)
+        {
+          for(my $j = $rd_2->[0]; $j <= $rd_2->[1]; $j++)
+          {
+            if(($dom->{"class"} ne "i") && ($i > $j))
             {
-              $tag_i = 1;
-              last;
+              next;
             }
-          }
-
-          if($tag_i eq 0)
-          {
-            next;
-          }
-
-          for(my $j = $i+1; $j <= $rd->[1]; $j++)
-          {
             my $tag_j = 0;
             foreach my $rs (@sec_struc)
             {
